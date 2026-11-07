@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "مِيثَاق | صحبةٌ مع الوحي",
+  "short_name": "مِيثَاق",
+  "description": "رفقةٌ مع القرآن والسنة، وأبوابٌ للذكر والعبادة وطلب العلم النافع.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#06140f",
+  "theme_color": "#06140f",
+  "icons": [
+    { "src": "/brand.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/brand-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

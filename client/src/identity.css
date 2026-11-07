@@ -1,0 +1,165 @@
+/*
+ * Identity layer — "day mushaf, night mihrab".
+ * Pages read like an illuminated mushaf page (ivory paper, gold double frames, unwan headings);
+ * the hero and footer are the night mihrab. Loaded after index.css so it wins by order, not by !important,
+ * except where a legacy rule sets an inline custom property.
+ */
+
+:root {
+  --ivory: #fbf5e6;
+  --paper: #fffbef;
+  --parchment: #f2e8ce;
+  --cream: var(--ivory);
+  --line: #e3d7b6;
+  --ink: #16251f;
+  --muted: #5f6b63;
+  --emerald: #0b4a3e;
+  --night: #04201b;
+  --gold: #b08a3e;
+  --gold-ink: #7a5c1a;
+  --gold-light: #e8d49b;
+  --green: #0b4a3e;
+  --green-2: #0b4a3e;
+  --kufi: "Reem Kufi", "Cairo", sans-serif;
+  --frame: color-mix(in srgb, var(--gold) 45%, transparent);
+
+  /* pointed-arch frieze (outline) and arch peaks (solid) as tiling SVG */
+  --frieze: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='10' viewBox='0 0 28 10'%3E%3Cpath d='M0 10V6Q9 6 14 0Q19 6 28 6V10' fill='none' stroke='%23b08a3e' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E");
+  --peaks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14' viewBox='0 0 40 14'%3E%3Cpath d='M0 14V9Q14 9 20 0Q26 9 40 9V14Z'/%3E%3C/svg%3E");
+}
+.dark {
+  --ivory: #061b17;
+  --paper: #0b2a23;
+  --parchment: #0e332b;
+  --cream: var(--ivory);
+  --line: #1f4639;
+  --ink: #eef1e6;
+  --muted: #9db3a8;
+  --gold: #d4af63;
+  --gold-ink: #e3cf9b;
+  --gold-light: #ecd9a6;
+  --green: #5fc4ab;
+  --green-2: #8fdcc8;
+  --frieze: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='10' viewBox='0 0 28 10'%3E%3Cpath d='M0 10V6Q9 6 14 0Q19 6 28 6V10' fill='none' stroke='%23d4af63' stroke-opacity='.5' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* ---------- page ground ---------- */
+body, .meethaq-app { background-color: var(--ivory); color: var(--ink); }
+.meethaq-app { background-image: var(--tile-green); background-size: 64px 64px; }
+.dark .meethaq-app { background-image: var(--tile-gold); }
+
+/* ---------- header: paper strip with an arch frieze ---------- */
+.site-header { background: color-mix(in srgb, var(--ivory) 92%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--gold) 38%, transparent); }
+.site-header::after { content: ""; position: absolute; inset-inline: 0; top: 100%; height: 10px; background: var(--frieze) repeat-x center top; pointer-events: none; }
+.desktop-nav a { font-family: var(--kufi); font-weight: 500; font-size: 14px; color: var(--ink); opacity: .78; }
+.desktop-nav a:hover, .desktop-nav a.active { color: var(--green); opacity: 1; }
+.desktop-nav a.active:after { background: var(--gold); width: 26px; }
+.brand b { font-family: "Aref Ruqaa", "Amiri", serif; font-size: 25px; color: var(--green); }
+.brand small { font-family: var(--kufi); color: var(--muted); letter-spacing: 0; }
+.dark .site-header { background: color-mix(in srgb, var(--ivory) 90%, transparent); }
+
+/* ---------- buttons ---------- */
+.primary-cta { font-family: var(--kufi); font-weight: 700; border-radius: 10px; background: var(--emerald); color: #fff8e4; border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent); box-shadow: inset 0 0 0 3px var(--emerald), inset 0 0 0 4px color-mix(in srgb, var(--gold) 45%, transparent), 0 10px 22px rgba(11, 74, 62, .18); }
+.primary-cta:hover { background: #0e5a4b; }
+.dark .primary-cta { background: #1d7a66; color: #fff; box-shadow: inset 0 0 0 3px #1d7a66, inset 0 0 0 4px color-mix(in srgb, var(--gold) 55%, transparent); }
+.hero-bg .primary-cta { background: linear-gradient(180deg, #f2dfa6, #cfa95c); color: #23190a; border-color: #f6e7b8; box-shadow: inset 0 0 0 3px #e3c984, inset 0 0 0 4px rgba(255, 244, 205, .6), 0 12px 28px rgba(0, 0, 0, .3); }
+.secondary-cta { font-family: var(--kufi); border-radius: 10px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- headings: kicker with a star, ornament under titles ---------- */
+.kicker, .eyebrow { font-family: var(--kufi); font-weight: 500; font-size: 13px; color: var(--gold-ink); }
+.kicker::before { content: ""; width: 12px; height: 12px; flex: none; background: currentColor; clip-path: polygon(50% 0, 61% 32%, 93% 17%, 78% 46%, 100% 50%, 78% 54%, 93% 83%, 61% 68%, 50% 100%, 39% 68%, 7% 83%, 22% 54%, 0 50%, 22% 46%, 7% 17%, 39% 32%); }
+.section-heading h2, .page-hero h1, .login-card h1 { font-family: "Amiri", serif; font-weight: 700; color: var(--ink); }
+.section-heading > p { color: var(--muted); max-width: 34ch; font-size: 14px; line-height: 2; }
+
+/* ---------- unwan: inner-page banner (full width, double gold frame) ---------- */
+.page-hero, .page-hero.compact, .page-hero.ex-hero, .page-hero.ex-cover {
+  max-width: none; width: 100%; margin-inline: 0; text-align: center; display: flex; flex-direction: column; align-items: center;
+  padding: 44px 28px 40px; border-radius: 8px; border: 1px solid var(--gold);
+  background: var(--tile-gold) center / 64px 64px, radial-gradient(90% 140% at 50% 0, #0f6b5a 0%, #08382f 55%, #052a24 100%);
+  box-shadow: inset 0 0 0 7px #08382f, inset 0 0 0 8px color-mix(in srgb, var(--gold) 70%, transparent), 0 18px 40px rgba(5, 42, 36, .22);
+}
+.page-hero::before, .page-hero::after { display: none; }
+.page-hero h1 { color: #fff8e4 !important; font-size: clamp(32px, 5vw, 52px); }
+.page-hero h1::after { margin-inline: auto; }
+.page-hero p { color: #cfe0d6 !important; max-width: 54ch; margin-inline: auto; }
+.page-hero .kicker { color: var(--gold-light); justify-content: center; }
+.page-hero .page-icon, .page-icon { animation: none; margin-inline: auto; }
+
+/* khatam (8-point star) container for every icon: one shape, one palette */
+.card-icon, .page-icon, .continue-icon, .control-icon, .tool-ic, .atlas-ic, .ic {
+  width: 50px; height: 50px; display: grid; place-items: center; border-radius: 0 !important; box-shadow: none !important;
+  color: var(--gold-ink); background: color-mix(in srgb, var(--gold) 20%, transparent);
+  clip-path: polygon(50% 0, 62% 20%, 85% 15%, 80% 38%, 100% 50%, 80% 62%, 85% 85%, 62% 80%, 50% 100%, 38% 80%, 15% 85%, 20% 62%, 0 50%, 20% 38%, 15% 15%, 38% 20%);
+}
+.page-hero .page-icon { color: var(--gold-light); background: rgba(232, 212, 155, .16); }
+.dark .card-icon, .dark .atlas-ic { color: var(--gold-light); }
+
+/* ---------- cards: paper with a double gold hairline, one palette ---------- */
+.atlas-card, .start-card, .library-card, .today-item, .feature-card, .continue-card, .ex-card, .login-card, .login-features, .access-card, .coming-panel, .daily-card, .trust-strip > * {
+  --c: var(--gold) !important;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 5px color-mix(in srgb, var(--gold) 38%, transparent), 0 10px 26px rgba(40, 30, 8, .06);
+}
+.atlas-card::after { display: none; }
+.atlas-card, .start-card, .library-card { transition: transform .25s, border-color .25s, box-shadow .25s; }
+.atlas-card:hover, .start-card:hover, .library-card:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 5px var(--gold), 0 16px 34px rgba(40, 30, 8, .12); }
+.atlas-card h3, .start-card h3, .library-card h3 { font-family: "Amiri", serif; color: var(--ink); }
+.atlas-card p, .start-card p, .library-card p { color: var(--muted); }
+.start-card.featured { background: linear-gradient(160deg, #0f6b5a, #08382f); color: #fff8e4; border-color: var(--gold); box-shadow: inset 0 0 0 4px #08382f, inset 0 0 0 5px color-mix(in srgb, var(--gold) 75%, transparent), 0 16px 34px rgba(5, 42, 36, .25); }
+.start-card.featured h3 { color: #fff8e4; } .start-card.featured p, .start-card.featured span { color: #cfe0d6; }
+.start-card.featured .card-icon { color: var(--gold-light); background: rgba(232, 212, 155, .16); }
+.dark .start-card.featured { background: linear-gradient(160deg, #11594b, #0a2f28); }
+
+/* the sections that were solid dark bands become night mihrab bands with an arch edge */
+.library-section, .daily-card { background: var(--tile-gold) center / 64px 64px, var(--night); color: #f4efdc; border-color: var(--gold); }
+.daily-card { box-shadow: inset 0 0 0 5px var(--night), inset 0 0 0 6px color-mix(in srgb, var(--gold) 60%, transparent); }
+.library-section { position: relative; padding-block: 96px 88px; }
+.library-section::before, .site-footer::before { content: ""; position: absolute; inset-inline: 0; top: -1px; height: 14px; background: var(--ivory); -webkit-mask: var(--peaks) repeat-x center top / 40px 14px; mask: var(--peaks) repeat-x center top / 40px 14px; transform: scaleY(-1); transform-origin: center; pointer-events: none; }
+.library-section .section-heading h2, .daily-card h2 { color: #fff8e4; }
+.library-section .kicker, .daily-card .kicker { color: var(--gold-light); }
+.today-item b { font-family: "Amiri", serif; color: var(--ink); }
+.today-item { color: var(--gold-ink); }
+
+/* ---------- hero: night mihrab, ending in rising arches into the paper ---------- */
+.hero-bg { background: var(--tile-gold) center / 64px 64px, radial-gradient(110% 90% at 78% 0, #0f6b5a 0%, #08382f 45%, #031815 100%); padding-bottom: 14px; }
+.hero-bg::after { content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 14px; background: var(--ivory); -webkit-mask: var(--peaks) repeat-x center bottom / 40px 14px; mask: var(--peaks) repeat-x center bottom / 40px 14px; pointer-events: none; z-index: 3; }
+.mihrab-art { filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .35)); }
+
+/* ---------- footer: night, with the same arch edge ---------- */
+.site-footer { position: relative; background: var(--tile-gold) center / 64px 64px, var(--night); color: #d9e3d8; border-top: 0; padding-top: 22px; }
+.site-footer a { color: #e8efe5; }
+.site-footer small, .site-footer p { color: #aebfb4; }
+
+/* ---------- login ---------- */
+.login-card h1 { font-size: clamp(34px, 5vw, 46px); }
+.google-login { font-family: var(--kufi); border-radius: 10px; background: #fff; border: 1px solid #d9cfae; color: #202124; }
+.login-divider span { font-family: var(--kufi); color: var(--muted); }
+.login-card input { background: #fffdf6; border: 1px solid #d9cfae; border-radius: 10px; }
+.dark .login-card input { background: #072019; border-color: #1f4639; color: var(--ink); }
+.auth-mode-toggle { font-family: var(--kufi); color: var(--green); }
+
+/* ---------- mobile ---------- */
+@media (max-width: 800px) {
+  .page-hero, .page-hero.compact { padding: 32px 18px 30px; }
+  .site-header::after { height: 8px; }
+  .bottom-nav { background: color-mix(in srgb, var(--ivory) 94%, transparent); border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); }
+  .bottom-nav a, .bottom-nav button { font-family: var(--kufi); font-weight: 500; }
+  .library-section { padding-block: 80px 70px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-card, .start-card, .library-card { transition: none; }
+  .atlas-card:hover, .start-card:hover, .library-card:hover { transform: none; }
+}
+
+/* footer brand on night ground */
+.site-footer .brand b { color: var(--gold-light); }
+.site-footer .brand small { color: #aebfb4; }
+.page-hero + * , .page-hero + .explore-groups { margin-top: 36px; }
+
+/* Arabic joins must never be tracked */
+.kicker, .eyebrow, .desktop-nav a, .primary-cta, .secondary-cta, .google-login, .auth-mode-toggle, .brand small, .bottom-nav a, .bottom-nav button, .login-divider span, .hero-ctas a { letter-spacing: 0 !important; word-spacing: 0; }
+.login-card .ornament { display: none; }
+.ornament, .ornament svg { color: var(--gold); fill: currentColor; }
+.ornament i { background: linear-gradient(90deg, transparent, var(--gold)); }
