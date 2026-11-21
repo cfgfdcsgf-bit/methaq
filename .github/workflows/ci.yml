@@ -76,8 +76,15 @@ jobs:
         run: docker build -t meethaq:ci .
       - name: Check production runtime without a database
         run: |
-          docker run --rm -d --name meethaq-ci -p 127.0.0.1:5107:3000 \
+          docker run -d --name meethaq-ci -p 127.0.0.1:5107:3000 \
             -e MEETHAQ_SESSION_SECRET=isolated-docker-ci-session-secret meethaq:ci
-          trap 'docker stop meethaq-ci >/dev/null 2>&1 || true' EXIT
-          curl --retry 15 --retry-connrefused --retry-delay 1 --max-time 5 -fsS http://127.0.0.1:5107/ >/dev/null
+          cleanup() {
+            result=$?
+            if [ "$result" -ne 0 ]; then docker logs meethaq-ci || true; fi
+            docker rm -f meethaq-ci >/dev/null 2>&1 || true
+            exit "$result"
+          }
+          trap cleanup EXIT
+          curl --retry 15 --retry-all-errors --retry-delay 1 --retry-max-time 30 --max-time 3 -fsS http://127.0.0.1:5107/ >/dev/null
           test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:5107/api/health)" = 503
+          test "$(docker exec meethaq-ci id -u)" != 0
