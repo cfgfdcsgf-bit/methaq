@@ -1,9 +1,10 @@
 import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { defineConfig, loadEnv, type Plugin, type UserConfig, type ViteDevServer } from "vite";
 import { publicPlatformScript } from "./server/_core/publicConfig";
 
 // =============================================================================
@@ -198,7 +199,7 @@ function vitePluginCuratedPublicAssets(): Plugin {
       const emitDirectory = (directory: string, relativeDirectory = "") => {
         for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
           const relativePath = path.posix.join(relativeDirectory, entry.name);
-          if (excludedPaths.some(excluded => relativePath === excluded || relativePath.startsWith(`${excluded}/`))) continue;
+          if (relativePath === "service-worker.js" || excludedPaths.some(excluded => relativePath === excluded || relativePath.startsWith(`${excluded}/`))) continue;
           const absolutePath = path.join(directory, entry.name);
           if (entry.isDirectory()) emitDirectory(absolutePath, relativePath);
           else if (entry.isFile()) this.emitFile({ type: "asset", fileName: relativePath, source: fs.readFileSync(absolutePath) });
@@ -209,9 +210,76 @@ function vitePluginCuratedPublicAssets(): Plugin {
   };
 }
 
-const plugins = [vitePluginCuratedPublicAssets(), vitePluginPublicPlatformConfig(), react(), tailwindcss(), { ...jsxLocPlugin(), apply: "serve" as const }, vitePluginManusDebugCollector()];
+function vitePluginOfflineShell(): Plugin {
+  return {
+    name: "meethaq-offline-shell",
+    apply: "build",
+    generateBundle: {
+      order: "post",
+      handler(_options, bundle) {
+        const source = fs.readFileSync(path.join(PROJECT_ROOT, "client/public/service-worker.js"), "utf8");
+        const filenames = [
+          "index.html",
+          "theme-init.js",
+          "manifest.webmanifest",
+          "brand.svg",
+          "brand-512.png",
+          "adhan.mp3",
+          "images/meethaq-dawn-hero.jpg",
+          "images/meethaq-journey.jpg",
+          "images/meethaq-dusk.jpg",
+          "images/meethaq-ward.jpg",
+          "images/meethaq-courtyard.jpg",
+          "images/meethaq-arcade.jpg",
+          "images/meethaq-mushaf-real.jpg",
+          "images/mushaf-page-border.svg",
+          "images/mushaf-qcf-banner.png",
+          "images/reference-refraction.png",
+          "data/quran/quran-hafs.tsv",
+          "data/quran/print-be0091b2/001.webp",
+          "data/quran/print-be0091b2/002.webp",
+          "data/quran/print-be0091b2/ayah-regions.json",
+          "fonts/kfgqpc-hafs-uthmanic-script.ttf",
+          "fonts/ArefRuqaa-Regular.ttf",
+          "fonts/ArefRuqaa-Bold.ttf",
+          "fonts/Cairo-Variable.ttf",
+          "fonts/Amiri-Regular.ttf",
+          "fonts/Amiri-Bold.ttf",
+          "fonts/NotoNaskhArabic-Variable.ttf",
+          "fonts/ReemKufi-Variable.ttf",
+          ...Object.keys(bundle).filter(name => name.startsWith("assets/")).sort(),
+        ];
+        const hash = createHash("sha256").update(source);
+        for (const filename of filenames) {
+          const file = bundle[filename];
+          if (!file) this.error(`Missing offline asset: ${filename}`);
+          hash.update(filename).update(file.type === "chunk" ? file.code : file.source);
+        }
+        const precache = {
+          version: hash.digest("hex").slice(0, 16),
+          urls: filenames.map(filename => filename === "index.html" ? "/" : `/${filename}`),
+        };
+        this.emitFile({
+          type: "asset",
+          fileName: "service-worker.js",
+          source: source.replace("/* build:precache */ { version: \"dev\", urls: [] }", JSON.stringify(precache)),
+        });
+      },
+    },
+  };
+}
 
-export default defineConfig({
+const plugins = [
+  vitePluginCuratedPublicAssets(),
+  vitePluginPublicPlatformConfig(),
+  vitePluginOfflineShell(),
+  react(),
+  tailwindcss(),
+  { ...jsxLocPlugin(), apply: "serve" as const },
+  ...(process.env.MEETHAQ_DEV_DEBUG === "1" ? [vitePluginManusDebugCollector()] : []),
+];
+
+export const viteConfig: UserConfig = {
   plugins,
   resolve: {
     alias: {
@@ -229,7 +297,7 @@ export default defineConfig({
     copyPublicDir: false,
     rollupOptions: {
       output: {
-        // Stable vendor groups cache across deploys; heavy libs (three.js) stay in their own lazy chunks.
+        // Keep the main dependency groups cacheable across deploys.
         manualChunks(id: string) {
           if (!id.includes("node_modules")) return undefined;
           if (/[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return "react";
@@ -256,4 +324,10 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+};
+
+export default defineConfig(({ mode }) => {
+  const port = Number(loadEnv(mode, PROJECT_ROOT, "PORT").PORT || 3000);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Invalid PORT");
+  return { ...viteConfig, server: { ...viteConfig.server, port } };
 });

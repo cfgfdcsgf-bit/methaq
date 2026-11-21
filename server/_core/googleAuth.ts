@@ -97,18 +97,22 @@ export function registerGoogleAuthRoutes(app: Express) {
       const { payload } = await jwtVerify(tokenData.id_token, GOOGLE_JWKS, {
         issuer: ["https://accounts.google.com", "accounts.google.com"],
         audience: ENV.googleClientId,
+        algorithms: ["RS256"],
+        requiredClaims: ["exp", "sub", "nonce"],
       });
       const subject = typeof payload.sub === "string" ? payload.sub : "";
       const email = typeof payload.email === "string" ? payload.email.trim().toLowerCase() : "";
       const name = typeof payload.name === "string" ? payload.name.slice(0, 100) : null;
-      if (!subject || !email || payload.email_verified !== true || payload.nonce !== nonce) {
+      if (!subject || !email || email.length > 320 || payload.email_verified !== true || payload.nonce !== nonce) {
         throw new Error("Google identity could not be verified");
       }
 
-      const user = await db.upsertGoogleUser({ subject, email, name });
+      const emailAuthoritative = email.endsWith("@gmail.com") || (typeof payload.hd === "string" && payload.hd.length > 0);
+      const user = await db.upsertGoogleUser({ subject, email, emailAuthoritative, name });
       const sessionToken = await sdk.createSessionToken(user.openId, {
         name: user.name ?? name ?? "",
         expiresInMs: SESSION_TTL_MS,
+        tokenVersion: user.tokenVersion,
       });
       res.cookie(COOKIE_NAME, sessionToken, {
         ...getSessionCookieOptions(req),

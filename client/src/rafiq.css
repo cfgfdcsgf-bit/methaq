@@ -1,0 +1,159 @@
+.rafiq-shell {
+  --chat-surface: #fffdf8;
+  --chat-inset: #f6f5ef;
+  --chat-border: #dce3da;
+  --chat-text: #1b3029;
+  --chat-muted: #4c625a;
+  --chat-accent: #0e5a4d;
+  --chat-question: #e2efe8;
+  max-width: 920px;
+  color: var(--chat-text);
+}
+
+.dark .rafiq-shell {
+  --chat-surface: #102923;
+  --chat-inset: #0b211c;
+  --chat-border: #355048;
+  --chat-text: #f1f3eb;
+  --chat-muted: #b1c5bc;
+  --chat-accent: #8ad5b8;
+  --chat-question: #203e34;
+}
+
+.rafiq-panel {
+  background: var(--chat-surface);
+  border: 1px solid var(--chat-border);
+  border-radius: 22px;
+  overflow: hidden;
+  margin-block-start: 18px;
+  box-shadow: 0 18px 52px #04140f18;
+}
+.rafiq-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  border-block-end: 1px solid var(--chat-border);
+}
+.rafiq-panel-header h1 { font: 700 30px/1.2 Amiri, serif; margin: 0; }
+.rafiq-panel-header p { font-size: 13px; color: var(--chat-muted); margin-block-start: 3px; }
+.rafiq-brand-icon, .rafiq-welcome-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--chat-question);
+  color: var(--chat-accent);
+}
+.rafiq-thread { display: flex; flex-direction: column; min-width: 0; }
+.rafiq-transcript {
+  height: clamp(300px, 52vh, 630px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--chat-border) transparent;
+  padding: 22px 24px;
+}
+.rafiq-welcome {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.rafiq-welcome h2 { font: 700 clamp(27px,4vw,40px)/1.35 Amiri, serif; margin: 0; }
+.rafiq-suggestions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.rafiq-suggestions button, .rafiq-error button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--chat-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--chat-inset);
+  color: var(--chat-text);
+  font-size: 13px;
+}
+.rafiq-suggestions button:hover, .rafiq-error button:hover { border-color: var(--chat-accent); }
+
+.rafiq-messages { display: flex; flex-direction: column; gap: 22px; }
+.rafiq-turn { max-width: min(100%, 690px); min-width: 0; }
+.rafiq-turn-user { align-self: flex-start; max-width: 86%; }
+.rafiq-turn-assistant { align-self: flex-start; width: 100%; }
+.rafiq-speaker { display: block; color: var(--chat-muted); font-size: 12px; font-weight: 700; margin: 0 4px 6px; }
+.rafiq-question, .rafiq-answer {
+  margin: 0;
+  padding: 12px 15px;
+  border: 1px solid var(--chat-border);
+  border-radius: 14px;
+  background: var(--chat-inset);
+  color: var(--chat-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 1.95;
+}
+.rafiq-question { background: var(--chat-question); }
+.rafiq-answer > * { margin: 0; }
+.rafiq-answer > * + * { margin-block-start: 10px; }
+.rafiq-answer h3 { font-size: 1.12em; font-weight: 700; }
+.rafiq-answer :is(ol, ul) { padding-inline-start: 1.6em; }
+.rafiq-answer ol { list-style: decimal; }
+.rafiq-answer ul { list-style: disc; }
+.rafiq-answer li + li { margin-block-start: 5px; }
+.rafiq-references { margin: 8px 4px 0; font-size: 13px; color: var(--chat-muted); }
+.rafiq-references summary { cursor: pointer; width: fit-content; color: var(--chat-accent); }
+.rafiq-references ul { display: grid; gap: 6px; padding: 0; margin: 8px 0 0; list-style: none; }
+.rafiq-references a { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 8px 10px; border: 1px solid var(--chat-border); border-radius: 8px; }
+.rafiq-references a:hover { border-color: var(--chat-accent); }
+.rafiq-references small { display: block; color: var(--chat-muted); }
+.rafiq-waiting, .rafiq-error { margin-block-start: 18px; color: var(--chat-muted); font-size: 13px; }
+.rafiq-waiting, .rafiq-error, .rafiq-error > span { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.rafiq-waiting svg { animation: rafiq-spin 1s linear infinite; color: var(--chat-accent); }
+@keyframes rafiq-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .rafiq-waiting svg { animation: none; } }
+
+.rafiq-composer { display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-block-start: 1px solid var(--chat-border); }
+.rafiq-composer textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  max-height: 130px;
+  resize: vertical;
+  background: var(--chat-inset);
+  color: var(--chat-text);
+  border: 1px solid var(--chat-border);
+  border-radius: 12px;
+  padding: 9px 13px;
+  font: inherit;
+  line-height: 1.5;
+}
+.rafiq-composer textarea:placeholder-shown { direction: rtl; }
+.rafiq-composer textarea::placeholder { color: var(--chat-muted); opacity: 1; }
+.rafiq-composer button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  border-radius: 11px;
+  padding: 0 14px;
+  background: #0e5a4d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+.rafiq-composer button:hover:not(:disabled) { background: #157361; }
+.rafiq-composer button:disabled { cursor: default; opacity: .58; }
+.rafiq-panel :focus-visible { outline: 2px solid var(--chat-accent); outline-offset: 3px; }
+.rafiq-panel-state { padding: 24px; color: var(--chat-muted); font-size: 14px; }
+@media (max-width: 550px) {
+  .rafiq-panel { border-radius: 15px; }
+  .rafiq-panel-header, .rafiq-transcript, .rafiq-composer { padding-inline: 13px; }
+  .rafiq-transcript { height: clamp(280px, 50svh, 525px); }
+  .rafiq-composer button span { display: none; }
+  .rafiq-suggestions { display: grid; width: 100%; }
+}

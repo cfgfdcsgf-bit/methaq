@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "مِيثَاق | صحبةٌ مع الوحي",
+  "name": "مِيثَاق | يومك مع القرآن والذكر",
   "short_name": "مِيثَاق",
-  "description": "رفقةٌ مع القرآن والسنة، وأبوابٌ للذكر والعبادة وطلب العلم النافع.",
+  "description": "أذكارك ووردك ومواقيت صلاتك ومحتوى تتعلّم منه.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/",
@@ -10,6 +10,12 @@
   "display": "standalone",
   "background_color": "#06140f",
   "theme_color": "#06140f",
+  "shortcuts": [
+    { "name": "متابعتي", "url": "/my-day" },
+    { "name": "الأذكار", "url": "/adhkar" },
+    { "name": "المصحف", "url": "/quran" },
+    { "name": "مواقيت الصلاة", "url": "/prayer" }
+  ],
   "icons": [
     { "src": "/brand.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
     { "src": "/brand-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

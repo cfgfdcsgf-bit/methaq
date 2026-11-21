@@ -1,0 +1,1995 @@
+.launch-shell {
+  --launch-canvas: #f7f6f0;
+  --launch-surface: #fffef9;
+  --launch-raised: #edf1e8;
+  --launch-text: #172a22;
+  --launch-soft: #55665d;
+  --launch-accent: #145f4c;
+  --launch-line: #dce4d9;
+  --launch-kufi: "Cairo", sans-serif;
+  --launch-serif: "Amiri", serif;
+}
+html.dark .launch-shell {
+  --launch-canvas: #0e1815;
+  --launch-surface: #15221d;
+  --launch-raised: #1e3028;
+  --launch-text: #f6f3e7;
+  --launch-soft: #acbdb2;
+  --launch-accent: #a2dec4;
+  --launch-line: #304138;
+}
+.meethaq-app.launch-shell {
+  inline-size: 100%; min-block-size: 100dvh; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+  overflow: clip;
+}
+.meethaq-app.launch-shell.launch-clean { background: var(--launch-canvas); color: var(--launch-text); }
+.meethaq-app.launch-clean::before, .meethaq-app.launch-clean::after { display: none; }
+.meethaq-app.launch-shell > .site-header {
+  position: sticky; inset-block-start: 0; z-index: 120;
+  background: color-mix(in srgb, var(--launch-canvas) 94%, transparent);
+  border-bottom: 1px solid var(--launch-line); backdrop-filter: blur(14px); box-shadow: none;
+}
+.launch-shell .site-header::after { display: none; }
+.launch-shell .header-inner {
+  width: min(100% - 68px, 1280px); max-width: none; min-height: 74px; margin: auto; padding: 0;
+  display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr); gap: clamp(10px, 2vw, 34px); align-items: center;
+}
+.launch-shell .site-header .brand { justify-self: start; }
+.launch-shell .site-header .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
+.launch-shell .site-header .brand b { font-size: 1.75rem; }
+.launch-shell .site-header .brand small { font-size: .66rem !important; line-height: 1.35; }
+.launch-shell .header-actions { justify-self: end; gap: 9px; min-width: 0; }
+.launch-shell .header-actions .icon-btn { width: 37px; height: 37px; border-radius: 10px; border-color: var(--launch-line); color: var(--launch-accent); }
+.launch-discover { padding: 7px 4px; border-radius: 8px; white-space: nowrap; color: var(--launch-accent); font: 700 .8rem/1.5 var(--launch-kufi) !important; }
+.launch-shell .header-actions :is(.login-link,.profile-chip,.logout-btn,.profile-chip span,.logout-btn span) { white-space: nowrap; font-family: var(--launch-kufi); font-size: .76rem !important; }
+.launch-shell .footer-inner { padding-block: 22px; gap: 14px; }
+.launch-shell .site-footer { border-color: var(--launch-line); }
+.launch-home, .directory-page { width: min(100% - 60px, 1184px); max-width: none; margin-inline: auto; padding: clamp(30px, 4vw, 56px) 0 54px; }
+.launch-welcome, .directory-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 23px; }
+.launch-welcome h1, .directory-heading h1 { font: 700 clamp(2.2rem, 4vw, 3.6rem)/1.06 var(--launch-serif); letter-spacing: -.012em; margin: 10px 0 0; }
+.launch-date { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; color: var(--launch-soft); font: 600 .78rem/1.6 var(--launch-kufi) !important; }
+.launch-date span { font-size: inherit !important; }
+.launch-date svg { color: var(--launch-accent); }
+.launch-settings { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid var(--launch-line); background: var(--launch-surface); color: var(--launch-accent); padding: 6px 12px; border-radius: 12px; }
+.launch-settings span { font: 700 .78rem/1.4 var(--launch-kufi) !important; }
+.launch-dashboard { display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(270px, 1fr); gap: 16px; }
+.launch-workspace { display: grid; grid-template-rows: minmax(300px, auto) auto; min-width: 0; gap: 12px; }
+.launch-focus {
+  position: relative; isolation: isolate; display: grid; align-items: center; overflow: hidden;
+  padding: clamp(24px, 4vw, 49px); border-radius: 25px; color: #fbf8eb;
+  background: #0c2c23; border: 1px solid #426250;
+}
+.launch-arch {
+  pointer-events: none; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to left, #0a281ff7 5%, #0a281fda 29%, #0a281f60 55%, #071e1833), url("/images/meethaq-dawn-hero.jpg") 33% 54% / cover no-repeat, radial-gradient(ellipse at 12% 80%, #5b806a, #154237 48%, #0c2c23 75%);
+}
+.launch-focus-content { max-width: 470px; animation: launch-rise .38s ease-out both; }
+.launch-kicker { display: flex; align-items: center; gap: 7px; margin: 0 0 6px; font: 700 .82rem/1.5 var(--launch-kufi) !important; color: #f1d69a; }
+.launch-focus h2 { margin: 0; font: 700 clamp(2.6rem, 5.2vw, 5.1rem)/1.07 var(--launch-serif); color: inherit; }
+.launch-focus-copy { margin: 11px 0 25px; color: #e0ebe2; font: 500 clamp(.86rem, 1.25vw, 1.04rem)/1.8 var(--launch-kufi) !important; }
+.launch-focus-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 11px 18px; }
+.launch-cta, .launch-text-link, .launch-section-heading a, .launch-home-links a, .launch-prayer-actions a, .launch-season a {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 11px; min-block-size: 43px;
+  font: 700 .82rem/1.55 var(--launch-kufi) !important; border-radius: 10px;
+}
+.launch-cta { background: #ecd9a8; color: #183726; padding-inline: 15px; }
+.launch-cta:hover { background: #fff0c8; }
+.launch-text-link { color: #fcf5e1; background: #0d3429af; border: 1px solid #acb9a674; }
+.launch-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.launch-tile, .launch-prayer, .launch-season, .directory-panel, .directory-nav {
+  background: var(--launch-surface); border: 1px solid var(--launch-line); border-radius: 17px; color: var(--launch-text);
+}
+.launch-tile { display: flex; align-items: center; gap: 11px; min-width: 0; min-height: 82px; padding: 14px; }
+.launch-tile > span:nth-child(2), .directory-entries a > span:nth-child(2) { display: grid; min-width: 0; gap: 2px; }
+.launch-tile strong { font: 700 .91rem/1.5 var(--launch-kufi); }
+.launch-tile small { color: var(--launch-soft); font: 500 .71rem/1.65 var(--launch-kufi) !important; }
+.launch-tile > svg:last-child, .directory-entries a > svg:last-child { margin-inline-start: auto; color: var(--launch-accent); flex: none; }
+.launch-tile-icon, .directory-entry-icon { display: inline-grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 12px; background: var(--launch-raised); color: var(--launch-accent); }
+.launch-tile:hover, .directory-entries a:hover, .launch-settings:hover { border-color: var(--launch-accent); }
+.launch-prayer { padding: clamp(16px, 2.2vw, 26px); display: flex; flex-direction: column; border-radius: 25px; }
+.launch-prayer-top, .launch-prayer-now, .launch-prayer-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.launch-prayer-top p { margin: 0; color: var(--launch-soft); font: 700 .8rem/1.5 var(--launch-kufi) !important; }
+.launch-prayer-top a { display: inline-flex; align-items: center; gap: 4px; color: var(--launch-accent); font: 700 .76rem/1.5 var(--launch-kufi) !important; }
+.launch-prayer-now { justify-content: start; align-items: baseline; gap: 10px; margin-top: 10px; }
+.launch-prayer-now h2 { margin: 0; font: 700 clamp(1.7rem, 3vw, 2.65rem)/1.25 var(--launch-serif); }
+.launch-prayer-now span { color: var(--launch-soft); font: 600 .77rem/1.5 var(--launch-kufi) !important; }
+.launch-countdown { margin: 1px 0 8px; align-self: flex-start; color: var(--launch-accent); font: 700 clamp(1.3rem, 3vw, 1.93rem)/1.25 var(--launch-kufi) !important; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.launch-prayer-list-label { margin: 6px 0 0; color: var(--launch-soft); font: 700 .76rem/1.4 var(--launch-kufi) !important; }
+.launch-prayer-list { margin: 4px 0 13px; padding: 0; list-style: none; }
+.launch-prayer-list li { border-bottom: 1px solid var(--launch-line); padding: 4px 8px; min-height: 32px; }
+.launch-prayer-list li.current { border-color: transparent; background: var(--launch-raised); color: var(--launch-accent); border-radius: 8px; }
+.launch-prayer-list li :is(span,b) { font: 600 .77rem/1.3 var(--launch-kufi) !important; }
+.launch-prayer-list li b { font-variant-numeric: tabular-nums; }
+.launch-prayer-actions { display: flex; gap: 8px; margin-top: auto; }
+.launch-prayer-actions a { flex: 1; border: 1px solid var(--launch-line); color: var(--launch-accent); }
+.launch-prayer-actions a:hover { background: var(--launch-raised); }
+.launch-study { margin-top: 32px; }
+.launch-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.launch-section-heading h2, .launch-season h2 { margin: 0; font: 700 1.8rem/1.25 var(--launch-serif); }
+.launch-section-heading a, .launch-home-links a, .launch-season a { color: var(--launch-accent); }
+.launch-study-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.launch-home-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.launch-season { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 12px; }
+.launch-season > svg { color: var(--launch-accent); flex: none; }
+.launch-season h2 { font-size: 1.5rem; }
+.launch-season p { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 0; color: var(--launch-soft); }
+.launch-season a { margin-inline-start: auto; }
+.directory-heading { margin-bottom: 20px; }
+.directory-heading p, .directory-panel-heading p { margin: 7px 0 0; color: var(--launch-soft); font: 500 .94rem/1.7 var(--launch-kufi) !important; }
+.directory-search { display: flex; align-items: center; gap: 10px; min-height: 48px; width: min(340px, 42%); padding: 5px 12px; border: 1px solid var(--launch-line); background: var(--launch-surface); color: var(--launch-accent); border-radius: 12px; }
+.directory-search input { background: none; color: var(--launch-text); border: 0; width: 100%; min-width: 0; font-family: var(--launch-kufi); }
+.directory-search button { display: grid; place-items: center; min-width: 31px; min-height: 34px; padding: 0; color: inherit; border: 0; background: transparent; }
+.directory-search:focus-within { outline: 2px solid var(--launch-accent); outline-offset: 2px; }
+.directory-search input:focus { outline: 0; }
+.directory-layout { display: grid; grid-template-columns: minmax(165px, 215px) minmax(0, 1fr); gap: 15px; align-items: start; }
+.directory-nav { display: grid; gap: 5px; padding: 8px; }
+.directory-nav a { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; color: var(--launch-soft); border-radius: 9px; }
+.directory-nav a span { font: 700 .86rem/1.5 var(--launch-kufi) !important; }
+.directory-nav a[aria-current], .directory-nav a:hover { background: var(--launch-raised); color: var(--launch-accent); }
+.directory-panel { border-radius: 23px; padding: clamp(16px, 3vw, 28px); }
+.directory-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.directory-panel-heading h2 { margin: 0; font: 700 clamp(1.75rem, 3.6vw, 2.65rem)/1.22 var(--launch-serif); }
+.directory-panel-heading > a { display: inline-flex; align-items: center; gap: 6px; color: var(--launch-accent); font: 700 .78rem/1.5 var(--launch-kufi) !important; }
+.directory-entries { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.directory-entries a { display: flex; align-items: center; gap: 10px; border: 1px solid var(--launch-line); border-radius: 12px; min-height: 70px; padding: 8px 10px; }
+.directory-entries strong { font: 700 .87rem/1.35 var(--launch-kufi); }
+.directory-entries small { color: var(--launch-soft); font: 500 .72rem/1.6 var(--launch-kufi) !important; }
+.directory-empty { color: var(--launch-soft); }
+.palette-destinations h2 { margin: 8px 0 5px; font-size: 1.05rem; }
+.palette-destinations .palette-item { gap: 8px; }
+.palette-destinations .palette-item > span { flex: 1; }
+.launch-shell :is(.launch-tile,.launch-cta,.launch-prayer-actions a,.directory-entries a,.directory-nav a,.launch-settings) { transition: background-color .18s ease, border-color .18s ease, transform .18s ease; }
+.launch-shell :is(.launch-tile,.launch-cta,.launch-prayer-actions a,.directory-entries a,.launch-settings):active { transform: scale(.985); }
+.launch-shell :is(.launch-home,.directory-page,.desktop-nav,.bottom-nav) :is(a,button):focus-visible { outline: 2px solid var(--launch-accent); outline-offset: 2px; }
+.launch-focus a:focus-visible { outline-color: #f2d384 !important; }
+@keyframes launch-rise { from { opacity: .25; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 1000px) and (min-width: 821px) {
+  .launch-shell .header-inner { width: calc(100% - 36px); grid-template-columns: auto 1fr auto; gap: 10px; }
+  .launch-shell .header-actions { gap: 4px; }
+  .launch-shell .header-actions :is(.logout-btn,.profile-chip) span { display: none; }
+}
+@media (max-width: 820px) {
+  .meethaq-app.launch-shell { padding-bottom: 68px; }
+  .launch-shell .header-inner { width: calc(100% - 34px); min-height: 60px; grid-template-columns: 1fr auto; gap: 10px; }
+  .launch-shell .launch-discover { display: none; }
+  .launch-shell .site-header .brand small { display: none; }
+  .launch-shell .site-header .brand b { font-size: 1.55rem; }
+  .launch-shell .site-header .brand-mark { width: 34px; height: 34px; }
+  .launch-shell .mobile-menu { display: inline-grid; place-items: center; min-width: 38px; min-height: 38px; }
+  .launch-shell .bottom-nav { display: grid; background: color-mix(in srgb, var(--launch-surface) 96%, transparent); border-color: var(--launch-line); }
+  .launch-shell .bottom-nav a { color: var(--launch-soft); padding-block: 5px; min-height: 42px; }
+  .launch-shell .bottom-nav a span { font: 700 .7rem/1.35 var(--launch-kufi) !important; }
+  .launch-shell .bottom-nav a.active { background: var(--launch-raised); color: var(--launch-accent); }
+  .launch-home, .directory-page { width: calc(100% - 32px); padding-top: 25px; }
+}
+@media (max-width: 670px) {
+  .launch-dashboard { grid-template-columns: minmax(0, 1fr); gap: 11px; }
+  .launch-workspace { grid-template-rows: minmax(218px, auto) auto; gap: 10px; }
+  .launch-welcome { margin-bottom: 15px; align-items: center; }
+  .launch-welcome h1 { font-size: clamp(1.95rem, 8vw, 2.55rem); }
+  .launch-date { gap: 5px; font-size: .66rem !important; }
+  .launch-settings { width: 42px; height: 42px; padding: 0; justify-content: center; flex: none; }
+  .launch-settings span { display: none; }
+  .launch-focus { padding: 20px 15px; border-radius: 19px; }
+  .launch-arch { background-position: center, 24% 50%, center; }
+  .launch-focus h2 { font-size: clamp(2.15rem, 10vw, 3rem); }
+  .launch-focus-copy { margin: 7px 0 14px; }
+  .launch-focus-actions { gap: 8px; }
+  .launch-focus :is(.launch-cta,.launch-text-link) { font-size: .72rem !important; min-height: 41px; padding-inline: 9px; }
+  .launch-quick { gap: 7px; }
+  .launch-quick .launch-tile { padding: 8px; gap: 5px; min-height: 70px; }
+  .launch-quick .launch-tile-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .launch-quick .launch-tile-icon svg { width: 16px; }
+  .launch-quick .launch-tile > svg:last-child { display: none; }
+  .launch-quick .launch-tile strong { font-size: .78rem; }
+  .launch-prayer { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 4px 8px; border-radius: 17px; padding: 13px; }
+  .launch-prayer-top, .launch-prayer-actions { grid-column: 1 / -1; }
+  .launch-prayer-now { margin: 5px 0; flex-wrap: wrap; }
+  .launch-countdown { margin: 8px 0; }
+  .launch-prayer-list, .launch-prayer-list-label { display: none; }
+  .launch-study { margin-top: 21px; }
+  .launch-study-grid { grid-template-columns: minmax(0, 1fr); gap: 7px; }
+  .launch-study-grid .launch-tile { min-height: 63px; padding-block: 8px; }
+  .directory-heading { display: grid; }
+  .directory-search { width: 100%; }
+  .directory-layout { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .directory-nav { grid-template-columns: repeat(4, minmax(0,1fr)); padding: 5px; gap: 3px; }
+  .directory-nav a { justify-content: center; gap: 4px; padding-inline: 3px; }
+  .directory-nav a svg { width: 16px; }
+  .directory-nav a span { font-size: .72rem !important; }
+  .directory-entries { grid-template-columns: minmax(0, 1fr); }
+  .directory-panel-heading { align-items: start; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-focus-content { animation: none; }
+  .launch-shell :is(.launch-tile,.launch-cta,.launch-prayer-actions a,.directory-entries a,.directory-nav a,.launch-settings) { transition: none; }
+}
+
+.launch-content-heading { display: flex; align-items: center; gap: 13px; margin-block: 8px 20px; padding-block: 12px; border-bottom: 1px solid var(--launch-line); }
+.launch-content-heading h1 { margin: 0; font: 700 clamp(2rem,5vw,3.15rem)/1.2 var(--launch-serif); }
+.launch-content-heading p { margin: 3px 0 0; color: var(--launch-soft); }
+.launch-content-heading.reader-heading { padding-block: 4px 9px; margin-bottom: 13px; }
+.launch-content-heading.reader-heading h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+
+.launch-shell > .launch-route { animation: companion-page-in .22s ease-out; }
+.meethaq-app.launch-shell > .site-footer { margin: 0; padding: 0; border-radius: 0; border-top: 1px solid var(--launch-line); background: var(--launch-canvas); color: var(--launch-text); }
+.meethaq-app.launch-shell > .site-footer::before { display: none; }
+.meethaq-app.launch-shell .site-footer .footer-inner { width: min(100% - 44px,1184px); max-width: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 26px; padding-block: 16px; }
+.meethaq-app.launch-shell .site-footer .footer-links { display: flex; flex-wrap: wrap; gap: 4px 17px; margin: 0; }
+.meethaq-app.launch-shell .site-footer .footer-links a, .meethaq-app.launch-shell .site-footer .copyright { color: var(--launch-soft); font: 600 .77rem/1.55 var(--launch-kufi) !important; }
+.meethaq-app.launch-shell .site-footer .footer-links a { display: inline-flex; align-items: center; min-height: 36px; }
+.meethaq-app.launch-shell .site-footer .footer-links a:hover { color: var(--launch-accent); }
+.meethaq-app.launch-shell .site-footer .footer-name { color: var(--launch-accent); font: 700 1.6rem/1.45 var(--launch-serif) !important; }
+.launch-shell .header-actions .launch-personal { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; inline-size: auto; min-inline-size: 38px; gap: 6px; padding-inline: 8px; }
+.launch-shell .launch-personal span { font: 800 .76rem/1.4 var(--launch-kufi) !important; }
+.launch-shell .launch-personal[aria-current="page"] { background: var(--launch-raised); }
+.launch-top-actions { display: flex; align-items: center; gap: 8px; }
+.launch-focus-shine {
+  position: absolute; inset: 0; pointer-events: none; z-index: -1;
+  background: radial-gradient(ellipse at 22% 75%, #ffe3ac32, transparent 46%);
+  animation: companion-light 1.6s ease-out both;
+}
+.launch-focus :is(.launch-cta,.launch-text-link) { transition: transform .17s ease, background-color .17s ease, box-shadow .17s ease; }
+.launch-focus .launch-cta:hover { box-shadow: 0 6px 22px #f3d58f39; }
+.launch-focus :is(.launch-cta,.launch-text-link):active { transform: scale(.975); }
+.launch-shell .mobile-drawer { border-color: var(--launch-line); background: var(--launch-canvas); color: var(--launch-text); overflow-y: auto; }
+.launch-shell .mobile-drawer .drawer-links a { color: var(--launch-text); background: var(--launch-surface); border-color: var(--launch-line); }
+.launch-shell .mobile-drawer .drawer-links a:hover { background: var(--launch-raised); color: var(--launch-accent); }
+.launch-shell :is(.content-hero,.reminder-panel,.routine-flow,.routine-saved,.ward-reader) { background: var(--launch-surface); border-color: var(--launch-line); color: var(--launch-text); }
+.launch-shell :is(.routine-flow,.routine-saved,.reminder-panel,.ward-reader) :is(h2,h3) { color: var(--launch-text); }
+.launch-shell :is(.routine-flow,.routine-saved,.reminder-panel,.ward-reader) :is(small,.reminder-note) { color: var(--launch-soft); }
+.launch-shell :is(.daily-progress,.routine-flow .daily-progress) { background: var(--launch-raised); }
+.launch-shell .daily-progress::-webkit-progress-value { background: var(--launch-accent); }
+.launch-shell .daily-progress::-moz-progress-bar { background: var(--launch-accent); }
+.companion-page { width: min(100% - 60px, 1184px); max-width: none; padding: clamp(25px,4vw,54px) 0 48px; margin-inline: auto; }
+.companion-heading { display: flex; gap: 12px; align-items: end; justify-content: space-between; margin-bottom: 18px; }
+.companion-heading h1 { margin: 5px 0 0; color: var(--launch-text); font: 700 clamp(2.15rem,4vw,3.7rem)/1.12 var(--launch-serif); }
+.companion-heading p:not(.launch-date) { margin: 4px 0 0; color: var(--launch-soft); font: 600 .91rem/1.55 var(--launch-kufi) !important; }
+.companion-panel { min-width: 0; border: 1px solid var(--launch-line); border-radius: 20px; padding: clamp(14px,2.4vw,25px); background: var(--launch-surface); color: var(--launch-text); }
+.companion-panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; text-align: start; }
+.companion-panel-head h2 { margin: 0; color: var(--launch-text); font: 700 clamp(1.55rem,3vw,2rem)/1.18 var(--launch-serif); }
+.companion-panel-head p { margin: 3px 0 0; color: var(--launch-soft); font: 600 .77rem/1.6 var(--launch-kufi) !important; }
+.companion-count { margin-inline-start: auto; border-radius: 11px; background: var(--launch-raised); color: var(--launch-accent); padding: 6px 10px; white-space: nowrap; font: 800 1.01rem/1.5 var(--launch-kufi) !important; }
+.companion-count span { font-size: inherit !important; }
+.companion-link, .companion-primary, .prayer-cover-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 6px 11px; border-radius: 10px; font: 800 .82rem/1.45 var(--launch-kufi) !important; }
+.companion-link { border: 1px solid var(--launch-line); background: var(--launch-surface); color: var(--launch-accent); }
+.companion-link:hover { border-color: var(--launch-accent); }
+.companion-primary { background: #d8efde; color: #123b2c; border: 1px solid transparent; }
+.companion-primary:hover { background: #ebf7e9; }
+.companion-private { display: flex; align-items: center; gap: 6px; margin: 12px 0 0; color: var(--launch-soft); font: 600 .77rem/1.5 var(--launch-kufi) !important; }
+.companion-private svg { flex: none; }
+.personal-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.personal-ward, .personal-notices { display: flex; flex-direction: column; align-items: start; }
+.personal-ward > .companion-primary, .personal-notices > .companion-link { margin-top: auto; }
+.personal-progress-label { margin: 6px 0 14px; color: var(--launch-soft); font: 600 .76rem/1.55 var(--launch-kufi) !important; }
+.personal-dhikr ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.personal-dhikr li a { display: flex; gap: 7px; align-items: center; min-height: 43px; border-radius: 9px; padding: 6px 9px; background: var(--launch-raised); color: var(--launch-accent); }
+.personal-dhikr li span { color: var(--launch-text); flex: 1; font: 700 .81rem/1.5 var(--launch-kufi) !important; }
+.personal-dhikr li small { color: var(--launch-soft); font: 700 .72rem/1.5 var(--launch-kufi) !important; }
+.prayer-overview { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(250px,1fr); gap: 12px; align-items: start; }
+.prayer-cover { position: relative; isolation: isolate; border-radius: 23px; overflow: hidden; min-height: 255px; color: #fbf4df; border: 1px solid #416551; background: #0b2b21; }
+.prayer-cover .launch-arch { opacity: .78; }
+.prayer-cover-body { position: relative; padding: clamp(20px,3.6vw,36px); }
+.prayer-cover-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.prayer-cover-title h2 { margin: 0; color: #fff6e6; font: 700 clamp(2.7rem,6vw,4.6rem)/1.07 var(--launch-serif); }
+.prayer-cover-title > span { color: #e7e5ce; font: 700 .96rem/1.55 var(--launch-kufi) !important; }
+.prayer-count { display: flex; align-items: center; gap: 11px; margin: 5px 0 4px; color: #f1d69a; }
+.prayer-count time { font: 800 clamp(1.5rem,4vw,2.6rem)/1.3 var(--launch-kufi); font-variant-numeric: tabular-nums; letter-spacing: .045em; }
+.prayer-count span { font: 600 .77rem/1.55 var(--launch-kufi) !important; }
+.prayer-elapsed { display: block; width: min(255px,100%); height: 5px; border: 0; border-radius: 8px; overflow: hidden; background: #d1d9ce4d; margin-block: 4px 10px; }
+.prayer-elapsed::-webkit-progress-bar { background: transparent; }
+.prayer-elapsed::-webkit-progress-value { background: #ecd19a; }
+.prayer-elapsed::-moz-progress-bar { background: #ecd19a; }
+.prayer-cover-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
+.prayer-cover-actions a { color: #fff7e4; background: #10382ce6; border: 1px solid #9eb2a183; }
+.prayer-city-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.prayer-city-controls select, .prayer-tuning-fields :is(select,input) { min-height: 43px; width: auto; max-width: 100%; color: var(--launch-text); background: var(--launch-raised); border: 1px solid var(--launch-line); border-radius: 10px; padding: 6px 9px; font: 700 .84rem/1.45 var(--launch-kufi) !important; }
+.prayer-city-controls select { flex: 1; min-width: 115px; }
+.prayer-tuning { margin-top: 13px; }
+.prayer-tuning summary, .prayer-guide summary { display: flex; align-items: center; gap: 7px; min-height: 44px; color: var(--launch-accent); cursor: pointer; font: 800 .84rem/1.45 var(--launch-kufi) !important; }
+.prayer-tuning summary > svg:last-child, .prayer-guide summary > svg:last-child { margin-inline-start: auto; transition: transform .19s ease-out; }
+.prayer-tuning[open] summary > svg:last-child, .prayer-guide[open] summary > svg:last-child { transform: rotate(180deg); }
+.prayer-tuning-fields { display: grid; gap: 8px; margin-top: 6px; }
+.prayer-tuning-fields label { display: grid; gap: 4px; color: var(--launch-soft); font: 600 .79rem/1.5 var(--launch-kufi) !important; }
+.prayer-tuning-fields fieldset { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; padding: 7px; border: 1px solid var(--launch-line); border-radius: 9px; }
+.prayer-tuning-fields fieldset input { width: 100%; min-width: 0; }
+.prayer-tuning-fields legend { color: var(--launch-soft); }
+.prayer-tuning-fields .tool-note { margin: 0; }
+.prayer-times, .prayer-more, .prayer-page .adhan-player, .prayer-guide { margin-top: 12px; }
+.prayer-page .adhan-player:first-of-type { margin-bottom: 12px; }
+.prayer-times-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 7px; }
+.prayer-times-grid button { display: grid; justify-items: center; gap: 3px; padding: 8px 4px; min-height: 75px; color: var(--launch-text); border: 1px solid var(--launch-line); border-radius: 12px; background: var(--launch-canvas); }
+.prayer-times-grid button :is(span,b) { font: 800 .75rem/1.65 var(--launch-kufi) !important; }
+.prayer-times-grid button svg { color: var(--launch-accent); }
+.prayer-times-grid button[aria-pressed="true"] { background: var(--launch-raised); border-color: var(--launch-accent); }
+.prayer-time-detail { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 3px 12px; margin-top: 8px; padding: 8px 10px; color: var(--launch-accent); background: var(--launch-raised); border-radius: 9px; animation: companion-confirm .22s ease-out; }
+.prayer-time-detail :is(b,span) { font: 800 .79rem/1.5 var(--launch-kufi) !important; }
+.prayer-time-detail span { color: var(--launch-soft); }
+.prayer-more { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap: 12px; }
+.prayer-log, .qibla-card, .adhan-player { scroll-margin-top: 90px; }
+.prayer-week { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 4px; }
+.prayer-week button { display: grid; gap: 3px; justify-items: center; align-content: center; min-height: 62px; color: var(--launch-soft); border: 1px solid var(--launch-line); border-radius: 9px; background: var(--launch-canvas); padding: 4px 1px; }
+.prayer-week button[aria-pressed="true"] { border-color: var(--launch-accent); color: var(--launch-accent); background: var(--launch-raised); }
+.prayer-week button :is(span,strong) { font: 800 .69rem/1.35 var(--launch-kufi) !important; }
+.prayer-week button i { width: 5px; height: 5px; border-radius: 50%; background: var(--launch-line); }
+.prayer-week button i:not([data-count="0"]) { background: var(--launch-accent); }
+.prayer-log-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; animation: companion-confirm .19s ease-out; }
+.prayer-log-actions button { display: inline-flex; align-items: center; gap: 5px; min-height: 42px; padding: 6px 9px; border: 1px solid var(--launch-line); border-radius: 9px; background: var(--launch-canvas); color: var(--launch-text); font: 800 .79rem/1.5 var(--launch-kufi) !important; }
+.prayer-log-actions button[aria-pressed="true"] { color: var(--launch-accent); background: var(--launch-raised); border-color: var(--launch-accent); }
+.prayer-log-actions button[aria-pressed="true"] svg { animation: companion-pop .24s ease-out; }
+.companion-panel.qibla-card .qibla-dial { width: min(156px,100%); color: var(--launch-accent); border-color: var(--launch-line); }
+.companion-panel.qibla-card .qibla-dial.is-aligned { border-color: var(--launch-accent); box-shadow: 0 0 24px color-mix(in srgb,var(--launch-accent) 32%,transparent); }
+.companion-panel.qibla-card > p { margin: 8px 0; color: var(--launch-soft); font: 700 .8rem/1.55 var(--launch-kufi) !important; }
+.qibla-dial-point, .qibla-cardinal { color: var(--launch-accent); position: absolute; font: 800 .74rem/1.3 var(--launch-kufi) !important; }
+.qibla-dial-point { top: 7px; }
+.qibla-east { right: 7px; top: 47%; }
+.qibla-west { left: 7px; top: 47%; }
+.qibla-south { bottom: 7px; left: 50%; transform: translateX(-50%); }
+.prayer-guide .tool-verse { margin-block: 12px; }
+.companion-page :is(a,button,select,summary):focus-visible, .launch-personal:focus-visible { outline: 2px solid var(--launch-accent); outline-offset: 2px; }
+.prayer-cover-actions a:focus-visible { outline-color: #f3d48a; }
+.companion-page :is(.prayer-week button,.prayer-log-actions button,.prayer-times-grid button,.companion-link,.companion-primary,.prayer-cover-actions a) { transition: border-color .18s, background-color .18s, transform .18s; }
+.companion-page :is(.prayer-week button,.prayer-log-actions button,.prayer-times-grid button,.companion-link,.companion-primary,.prayer-cover-actions a):active { transform: scale(.97); }
+@keyframes companion-page-in { from { opacity: .62; } to { opacity: 1; } }
+@keyframes companion-confirm { from { transform: translateY(3px); opacity: .72; } to { transform: translateY(0); opacity: 1; } }
+@keyframes companion-pop { from { transform: scale(.76); } 55% { transform: scale(1.16); } to { transform: scale(1); } }
+@keyframes companion-light { from { opacity: 0; transform: translateX(-6%); } to { opacity: 1; transform: translateX(0); } }
+@media (max-width: 1080px) {
+  .launch-shell .launch-personal span { display: none; }
+}
+@media (max-width: 820px) {
+  .companion-page { width: calc(100% - 32px); }
+  .launch-shell .header-actions { gap: 6px; }
+  .launch-shell .header-actions :is(.profile-chip,.logout-btn,.login-link) { display: none; }
+  .launch-top-actions > .launch-settings:not(.launch-alert-settings) { display: none; }
+  .meethaq-app.launch-shell .site-footer .footer-inner { width: calc(100% - 32px); padding-block: 12px; gap: 6px 14px; }
+}
+@media (max-width: 680px) {
+  .companion-heading { align-items: center; }
+  .companion-heading h1 { font-size: clamp(2rem,9.5vw,2.7rem); }
+  .personal-grid, .prayer-overview, .prayer-more { grid-template-columns: minmax(0,1fr); gap: 9px; }
+  .personal-grid .prayer-log { grid-row: 2; }
+  .prayer-times-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .prayer-cover { min-height: 208px; border-radius: 19px; }
+  .prayer-cover-body { padding: 18px 15px; }
+  .prayer-cover .launch-arch { background-position: center, 24% 50%, center; }
+  .prayer-week button { min-height: 53px; }
+  .prayer-log-actions { gap: 4px; }
+  .prayer-log-actions button { min-height: 43px; padding-inline: 7px; }
+  .companion-page { padding-block: 21px 34px; }
+  .meethaq-app.launch-shell .site-footer .copyright { margin-inline-start: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-shell > .launch-route, .launch-focus-shine, .prayer-time-detail, .prayer-log-actions, .prayer-log-actions button[aria-pressed="true"] svg { animation: none; }
+  .companion-page *, .launch-focus :is(.launch-cta,.launch-text-link) { transition: none !important; }
+}
+
+.routine-count-value { display: inline-flex; align-items: center; min-height: 24px; padding-inline: 6px; border-radius: 5px; background: #fff4; font-size: inherit !important; animation: companion-pop .2s ease-out; }
+.khatma-options .chips button { min-height: 44px; }
+.khatma-page .prayer-guide { margin-top: 12px; }
+@media (prefers-reduced-motion: reduce) { .routine-count-value { animation: none; } }
+
+.study-rail-pages { display: none; }
+.ward-complete .daily-icon, .routine-finish .daily-icon { color: var(--launch-accent); animation: companion-pop .32s ease-out; }
+@media (max-width: 670px) {
+  .launch-study-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 2px; margin-inline: -2px; }
+  .launch-study-grid::-webkit-scrollbar { display: none; }
+  .launch-study-grid::after { content: ""; flex: 0 0 max(calc(17% - 7px),calc(100% - 337px)); }
+  .launch-study-grid .launch-tile { flex: 0 0 min(83%,330px); scroll-snap-align: start; }
+  .study-rail-pages { display: flex; justify-content: center; gap: 3px; }
+  .study-rail-pages button { width: 38px; min-height: 39px; display: grid; place-items: center; padding: 2px; background: transparent; }
+  .study-rail-pages button span { height: 5px; width: 6px; border-radius: 5px; background: var(--launch-soft); opacity: .65; transition: width .22s ease,opacity .22s ease; }
+  .study-rail-pages button[aria-pressed="true"] span { width: 22px; background: var(--launch-accent); opacity: 1; }
+}
+@supports (view-transition-name: meethaq-route) {
+  html[data-meethaq-motion]::view-transition { pointer-events: none; }
+  html[data-meethaq-motion] .launch-route { view-transition-name: meethaq-route; animation: none; }
+  html[data-meethaq-motion] .launch-shell > .site-header { view-transition-name: meethaq-header; }
+  html[data-meethaq-motion] .launch-shell > .bottom-nav { view-transition-name: meethaq-nav; }
+  html[data-meethaq-motion="prayer"] :is(.launch-prayer,.prayer-cover) { view-transition-name: meethaq-prayer; }
+  html[data-meethaq-motion] .launch-focus-shine { animation: none; }
+  html[data-meethaq-motion]::view-transition-old(root),
+  html[data-meethaq-motion]::view-transition-old(meethaq-header),
+  html[data-meethaq-motion]::view-transition-old(meethaq-nav) { display: none; }
+  html[data-meethaq-motion]::view-transition-new(root),
+  html[data-meethaq-motion]::view-transition-group(meethaq-header),
+  html[data-meethaq-motion]::view-transition-group(meethaq-nav),
+  html[data-meethaq-motion]::view-transition-new(meethaq-header),
+  html[data-meethaq-motion]::view-transition-new(meethaq-nav) { animation: none; }
+  html[data-meethaq-motion]::view-transition-group(meethaq-header),
+  html[data-meethaq-motion]::view-transition-group(meethaq-nav) { z-index: 3; }
+  html[data-meethaq-motion]::view-transition-old(meethaq-route) { animation: partner-route-out .18s ease-in both; }
+  html[data-meethaq-motion]::view-transition-new(meethaq-route) { animation: partner-route-in .29s cubic-bezier(.21,.72,.23,1) both; }
+  html[data-meethaq-motion]::view-transition-group(meethaq-prayer) { animation-duration: .36s; animation-timing-function: cubic-bezier(.2,.71,.2,1); z-index: 2; }
+  html[data-meethaq-motion]::view-transition-image-pair(meethaq-prayer) { overflow: clip; border-radius: 20px; }
+}
+@keyframes partner-route-out { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes partner-route-in { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .ward-complete .daily-icon, .routine-finish .daily-icon { animation: none; }
+  .study-rail-pages button span { transition: none; }
+}
+
+@property --khatma-percent {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+.focus-khatma-progress { grid-template-columns: minmax(0,1fr) auto; gap: 12px; }
+.focus-khatma-progress .khatma-meter { align-self: end; }
+.khatma-meter {
+  display: grid; place-items: center; flex: none; inline-size: clamp(76px,10vw,118px); aspect-ratio: 1; padding: 5px;
+  color: #f5dd9d; border-radius: 50%; direction: ltr;
+  background: conic-gradient(#ecd492 0 var(--khatma-percent), #638777 0 100%);
+  box-shadow: 0 4px 24px #04120fc9;
+  transition: --khatma-percent .45s ease-out;
+}
+.khatma-meter-face {
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
+  width: 100%; height: 100%; border-radius: 50%; background: #12392e;
+}
+.khatma-meter-face b { color: #fff6dd; font: 800 clamp(.98rem,2vw,1.48rem)/1.25 var(--launch-kufi); }
+.personal-journey-grid > .personal-notices { grid-column: 1 / -1; }
+.worship-journey {
+  position: relative; isolation: isolate; overflow: hidden; scroll-margin-top: 86px; margin-bottom: 16px;
+  padding: clamp(17px,3.4vw,38px); color: #fff7de; border: 1px solid #456452; border-radius: 24px;
+  background: #0a2c24;
+}
+.worship-journey-art {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(to left,#09271ff5 0%,#09271fb3 38%,transparent 68%),
+    linear-gradient(to top,#09271ff7 0%,#09271f70 45%,transparent 82%),
+    url("/images/meethaq-journey.jpg") left center / cover no-repeat,
+    radial-gradient(ellipse at 12% 32%,#64866c,#184437 40%,#0a2c24 75%);
+}
+.journey-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; min-height: 128px; }
+.journey-heading h2 { margin: 0; color: #fff3d5; font: 700 clamp(2.05rem,4.2vw,3.6rem)/1.2 var(--launch-serif); }
+.journey-heading p { margin: 6px 0 0; color: #dbe8de; font: 600 .9rem/1.55 var(--launch-kufi) !important; }
+.journey-stations { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); list-style: none; gap: 8px; margin: 0 0 11px; padding: 0; }
+.journey-stations button {
+  display: flex; align-items: center; justify-content: center; gap: 6px; position: relative;
+  width: 100%; min-height: 60px; height: 100%; padding: 7px 5px; border-radius: 12px; cursor: pointer;
+  color: #f2ead6; background: #0d352deb; border: 1px solid #5b8071;
+  transition: background-color .19s ease, border-color .19s ease, transform .19s ease;
+}
+.journey-stations button:hover, .journey-stations button[aria-pressed="true"] { color: #fff4cd; border-color: #ddc584; background: #285141; }
+.journey-stations button:active { transform: scale(.98); }
+.journey-stations button span { font: 800 .86rem/1.4 var(--launch-kufi) !important; }
+.journey-station-icon { display: inline-grid; place-items: center; color: #f0d793; }
+.journey-station-check { color: #b7ead0; }
+.journey-detail {
+  min-height: 85px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: #0a291fe8; border: 1px solid #547868; border-radius: 12px; padding: 10px 13px;
+  animation: companion-confirm .22s ease-out;
+}
+.journey-detail h3 { margin: 0; color: #fff4da; font: 700 1.55rem/1.3 var(--launch-serif); }
+.journey-detail p { margin: 3px 0 0; color: #d7e6db; font: 600 .8rem/1.6 var(--launch-kufi) !important; }
+.journey-detail a { flex: none; }
+.worship-journey :is(a,button):focus-visible { outline: 2px solid #f3d999; outline-offset: 2px; }
+@media (max-width: 680px) {
+  .worship-journey { padding: 14px 12px; border-radius: 19px; }
+  .journey-heading { min-height: 127px; }
+  .journey-heading h2 { font-size: clamp(1.8rem,8vw,2.4rem); }
+  .journey-stations { gap: 5px; }
+  .journey-stations button { flex-direction: column; min-height: 59px; gap: 3px; }
+  .journey-stations button span { font-size: .72rem !important; }
+  .journey-station-icon > svg { width: 18px; height: 18px; }
+  .journey-station-check { position: absolute; inset-block-start: 3px; inset-inline-end: 3px; width: 12px; }
+  .journey-detail { flex-wrap: wrap; align-items: start; gap: 8px; }
+  .journey-detail a { min-height: 42px; }
+  .focus-khatma-progress { gap: 6px; }
+  .focus-khatma-progress .khatma-meter { inline-size: 69px; margin-bottom: 2px; }
+  .focus-khatma-progress h2 { font-size: clamp(1.85rem,8vw,2.7rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-detail { animation: none; }
+  .journey-stations button, .khatma-meter { transition: none; }
+}
+
+.launch-shell {
+  --release-gold: #886221;
+  --release-metal: #ddc481;
+  --release-border: color-mix(in srgb, #a77e36 30%, var(--launch-line));
+  --release-shadow: 0 14px 38px #092b1e16;
+  --launch-canvas: #f5f3ea;
+  --launch-surface: #fffdf5;
+  --launch-raised: #e9f0e5;
+}
+html.dark .launch-shell {
+  --release-gold: #f1d792;
+  --release-metal: #c5a362;
+  --release-border: #445447;
+  --release-shadow: 0 15px 36px #0005;
+  --launch-canvas: #081912;
+  --launch-surface: #10281f;
+  --launch-raised: #1a382d;
+}
+.meethaq-app.launch-shell.launch-clean {
+  background: radial-gradient(1250px 850px at 72% -170px,color-mix(in srgb,var(--launch-accent) 12%,transparent),transparent 72%), var(--launch-canvas);
+}
+.launch-shell .site-header .brand-mark {
+  border: 1px solid #b89550; background: linear-gradient(146deg,#254a37,#0a2e23 70%); color: #f4d994;
+  box-shadow: inset 0 1px 0 #f8e6aa42,0 4px 15px #102c2233;
+}
+.launch-shell .site-header .brand-mark svg { width: 19px; height: 19px; }
+html.dark .launch-shell .site-header .brand b { color: #f4dfab; }
+.release-home { padding-top: clamp(15px,2.5vw,34px); }
+.release-welcome {
+  position: relative; isolation: isolate; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  overflow: hidden; min-height: clamp(190px,17.5vw,235px); margin-bottom: 13px; padding: clamp(20px,3vw,41px);
+  color: #fffaec; border: 1px solid #917741; border-radius: 27px; background: #09291f;
+  box-shadow: var(--release-shadow);
+}
+.release-welcome::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to left,#06231df0 4%,#06231db3 35%,#06231d32 65%,#06231d18),
+    linear-gradient(0deg,#061a15b8,transparent 55%),url("/images/meethaq-dusk.jpg") 36% 56% / cover no-repeat;
+}
+.release-welcome::after {
+  content: ""; position: absolute; inset: 7px; border: 1px solid #f1d49637; border-radius: 20px; pointer-events: none;
+}
+.release-welcome-copy { animation: release-rise .4s cubic-bezier(.18,.72,.2,1) both; }
+.release-welcome .launch-date, .release-welcome .launch-date svg { color: #f0dbad; }
+.release-welcome h1 {
+  margin: 9px 0 0; color: #fff5dc; font: 700 clamp(2.55rem,6vw,5.2rem)/1.03 var(--launch-serif);
+  text-shadow: 0 4px 19px #071d16;
+}
+.release-greeting { margin: 7px 0 0; color: #f5e9c8; font: 700 .9rem/1.55 var(--launch-kufi) !important; }
+.release-welcome-bell {
+  min-width: 43px; min-height: 43px; display: grid; place-items: center; align-self: flex-start; flex: none;
+  color: #ffe29d; background: #092e25dc; border: 1px solid #d6b66e9c; border-radius: 14px;
+}
+.release-dashboard { grid-template-columns: minmax(0,1.75fr) minmax(270px,1fr); gap: 12px; }
+.release-ward {
+  grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 282px;
+  border: 1px solid #af924f; padding: clamp(20px,3.1vw,37px);
+  background: #0b2b24; box-shadow: var(--release-shadow),inset 0 1px 0 #f5d99472;
+}
+.release-ward .launch-focus-content { min-width: 0; }
+.release-ward h2 { font-size: clamp(2.2rem,5vw,4.1rem); }
+.release-book-art {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to left,#082a22 1%,#082a21e6 30%,#082a2160 62%,#06201810),url("/images/meethaq-ward.jpg") 31% 48% / cover no-repeat;
+}
+.release-ward .khatma-meter { align-self: end; }
+.release-ward .launch-cta, .worship-journey .launch-cta {
+  background: linear-gradient(145deg,#fff1bd,#d9b35f); color: #20381e;
+  border: 1px solid #fff0ab; box-shadow: 0 3px 12px #4d3a2540,inset 0 1px 0 #fff4c8;
+}
+.release-prayer {
+  position: relative; isolation: isolate; overflow: hidden; border-color: var(--release-border);
+  background: var(--launch-surface); box-shadow: var(--release-shadow);
+}
+.release-prayer::before {
+  content: ""; position: absolute; z-index: -1; top: 0; inset-inline-end: 0; width: 60%; height: 117px; pointer-events: none;
+  background: linear-gradient(to left,transparent,var(--launch-surface) 96%),linear-gradient(0deg,var(--launch-surface),#15382d5c),url("/images/meethaq-dusk.jpg") left 59% / cover no-repeat;
+  opacity: .66;
+}
+.release-prayer .launch-prayer-now h2, .release-prayer .launch-countdown { color: var(--release-gold); }
+.release-prayer .launch-prayer-top, .release-prayer .launch-prayer-actions { isolation: isolate; }
+.release-prayer .launch-prayer-top > p { color: var(--launch-text); }
+.release-prayer .launch-prayer-top a { background: var(--launch-surface); padding: 3px 6px; border-radius: 6px; }
+.release-prayer .launch-prayer-list li { min-height: 27px; }
+.release-shortcuts, .release-secondary { display: grid; gap: 9px; margin: 12px 0; }
+.release-shortcuts { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.release-shortcut {
+  --shortcut-color: #bcecdc;
+  min-height: 76px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  border-radius: 16px; border: 1px solid #5f826c; color: #fcf5e1;
+  background: radial-gradient(ellipse at 85% 0%,color-mix(in srgb,var(--shortcut-color) 17%,transparent),transparent 72%),#13372b;
+  box-shadow: inset 0 1px 0 #ffe2a63b,0 6px 14px #132e2726;
+  transition: transform .17s ease,border-color .17s ease;
+}
+.release-shortcut-amber { --shortcut-color: #f5cf78; border-color: #857344; }
+.release-shortcut-teal { --shortcut-color: #87e7ed; border-color: #527e77; }
+.release-shortcut-violet { --shortcut-color: #d7b8ff; border-color: #727281; }
+.release-shortcut span, .release-dhikr-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; color: var(--shortcut-color); background: #ffffff10; flex: none; }
+.release-shortcut strong { font: 800 .92rem/1.4 var(--launch-kufi); }
+.release-shortcut:hover { border-color: var(--shortcut-color); transform: translateY(-2px); }
+.release-shortcut:active { transform: scale(.98); }
+.release-secondary { grid-template-columns: repeat(2,minmax(0,1fr)); margin-bottom: 16px; }
+.release-dhikr {
+  min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 11px 14px;
+  border: 1px solid var(--release-border); border-radius: 15px; background: var(--launch-surface);
+}
+.release-dhikr-intro { min-width: 0; display: flex; align-items: center; gap: 8px; }
+.release-dhikr-icon { --shortcut-color: var(--release-gold); background: var(--launch-raised); }
+.release-dhikr h2 { margin: 0; color: var(--launch-text); font: 700 1.44rem/1.35 var(--launch-serif); }
+.release-dhikr p { margin: 0; color: var(--launch-soft); font: 600 .7rem/1.5 var(--launch-kufi) !important; }
+.release-dhikr .companion-link { flex: none; }
+.release-home .worship-journey { margin-block: 15px 24px; border-color: #9f874c; box-shadow: var(--release-shadow); }
+.launch-shell .worship-journey { border-color: #8e7746; }
+.launch-shell :is(.companion-panel,.reminder-panel,.routine-flow,.directory-panel) { border-color: var(--release-border); box-shadow: var(--release-shadow); }
+.launch-shell .launch-content-heading {
+  margin-block-start: 6px; padding: clamp(15px,3.2vw,34px);
+  background: var(--launch-surface); border: 1px solid var(--release-border); border-radius: 19px;
+}
+.launch-shell .launch-content-heading.reader-heading { padding-block: 8px; background: transparent; border-radius: 0; border: 0; border-bottom: 1px solid var(--release-border); }
+.launch-shell .release-content-cover {
+  position: relative; isolation: isolate; overflow: hidden; min-height: 153px; color: #fff4d2; border-color: #9b8554;
+  background: linear-gradient(to left,#092920 12%,#092920d9 35%,#09292043 75%), var(--section-art) left 54% / cover no-repeat,#092920;
+}
+.launch-shell .release-content-cover :is(h1,p) { color: #fff2d0; }
+.launch-shell .release-content-cover .launch-tile-icon { background: #204b3a; color: #f2d58b; }
+.release-content-cover[data-section="quran"] { --section-art: url("/images/meethaq-ward.jpg"); }
+.release-content-cover[data-section="adhkar"] { --section-art: url("/images/meethaq-journey.jpg"); }
+.launch-shell .prayer-cover .launch-arch { background: linear-gradient(to left,#0a281ff7 5%,#0a281fb9 34%,transparent 72%),url("/images/meethaq-dusk.jpg") left 54% / cover no-repeat; }
+.launch-shell .routine-options .daily-action { border-color: var(--release-border); background: var(--launch-surface); color: var(--launch-text); }
+.launch-shell .routine-options .daily-icon { color: var(--release-gold); background: var(--launch-raised); }
+.launch-shell .launch-route > .section-page > .page-hero:not(.compact) {
+  padding: clamp(22px,4vw,46px); border: 1px solid var(--release-border); border-radius: 22px;
+  background-color: var(--launch-surface); box-shadow: var(--release-shadow);
+}
+.launch-shell .launch-route > .section-page > .page-hero > h1 { color: var(--launch-text); }
+.launch-shell .learning-hero {
+  background: linear-gradient(to left,#0a2b21f5,#0a2b21aa 46%,#0a2b2160),url("/images/meethaq-journey.jpg") 17% center / cover no-repeat,#0a2b21;
+  border-color: #8e7746; box-shadow: var(--release-shadow);
+}
+.launch-shell :is(.learning-card,.seerah-timeline-panel,.names-card,.curated-card,.mat-card) {
+  border-color: var(--release-border);
+}
+.launch-shell :is(.seerah-hero,.names-hero) { border-color: #8e7746; box-shadow: var(--release-shadow); }
+.launch-shell .worship-journey .journey-stations button[aria-pressed="true"] .journey-station-icon {
+  filter: drop-shadow(0 0 7px #efd17b8c);
+}
+.release-login .login-card { background: var(--launch-surface); border-color: var(--release-border); color: var(--launch-text); }
+.release-login .login-features { background-color: #0c3629; }
+.release-not-found {
+  min-height: 100dvh; display: grid; place-items: center; padding: 24px;
+  background: linear-gradient(140deg,#0a291fd9,#0a281ec7),url("/images/meethaq-journey.jpg") left center / cover,#0c2d22;
+}
+.release-not-found > section { max-width: 440px; width: 100%; }
+.release-not-found h1 { margin: 12px 0 0; font: 700 2.3rem/1.25 var(--launch-serif); }
+.release-not-found p { color: var(--launch-soft); margin: 8px 0 15px; }
+@keyframes release-rise { from { opacity: .2; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 820px) {
+  .launch-shell .bottom-nav a.active { color: #f8e3aa; background: linear-gradient(145deg,#264d3d,#153429); box-shadow: inset 0 1px 0 #e0bd6f66; }
+}
+@media (max-width: 690px) {
+  .release-home { width: calc(100% - 24px); padding-top: 12px; }
+  .release-welcome { min-height: 184px; padding: 16px; border-radius: 20px; gap: 5px; }
+  .release-welcome::after { inset: 5px; border-radius: 15px; }
+  .release-welcome h1 { font-size: clamp(2.05rem,10vw,3.45rem); }
+  .release-welcome-bell { min-width: 39px; min-height: 39px; }
+  .release-dashboard { grid-template-columns: minmax(0,1fr); gap: 8px; }
+  .release-ward { min-height: 160px; padding: 14px 12px; border-radius: 18px; }
+  .release-ward h2 { font-size: clamp(1.95rem,8.5vw,2.8rem); }
+  .release-ward .launch-focus-copy { margin-bottom: 9px; font-size: .77rem !important; }
+  .release-ward .khatma-meter { inline-size: 65px; padding: 4px; }
+  .release-prayer { padding: 12px; }
+  .release-shortcuts { gap: 6px; margin-block: 9px; }
+  .release-shortcut { flex-direction: column; gap: 2px; min-height: 69px; border-radius: 13px; }
+  .release-shortcut span { width: 32px; height: 32px; border-radius: 10px; }
+  .release-shortcut span svg { width: 19px; height: 19px; }
+  .release-shortcut strong { font-size: .73rem; }
+  .release-secondary { grid-template-columns: minmax(0,1fr); gap: 7px; }
+  .release-dhikr { padding: 8px 10px; }
+  .release-dhikr .companion-link { min-height: 39px; padding-inline: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .release-welcome-copy { animation: none; }
+  .release-shortcut { transition: none; }
+}
+
+@font-face {
+  font-family: "Aref Ruqaa";
+  src: url("/fonts/ArefRuqaa-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Aref Ruqaa";
+  src: url("/fonts/ArefRuqaa-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Background light catches the edges of the glass. Reading surfaces stay opaque. */
+.launch-shell {
+  --launch-serif: "Aref Ruqaa", "Amiri", serif;
+  --launch-canvas: #eff4ed;
+  --launch-surface: #fbfdf9;
+  --launch-raised: #e1eee4;
+  --launch-line: #cbded1;
+  --launch-soft: #486258;
+  --glass-tint: #f1faf2dc;
+  --glass-edge: #719d813b;
+  --glass-light: #fff;
+  --glass-shadow: 0 12px 32px #204d3114, inset 0 1px 0 var(--glass-light);
+  --glass-panel: linear-gradient(150deg, #ffffffd9, #ecf6ed99 55%, #fff9edab);
+  --glass-aura: #bad9c2;
+  --glass-horizon: #f0dfb4;
+  --glass-gold: #7d5b1f;
+  --glass-radius: 27px;
+  --glass-ease: cubic-bezier(.2,.75,.27,1);
+}
+html.dark .launch-shell {
+  --launch-canvas: #081b17;
+  --launch-surface: #102722;
+  --launch-raised: #1b3b30;
+  --launch-line: #2f4e41;
+  --launch-soft: #b3c8bd;
+  --glass-tint: #102a23d9;
+  --glass-edge: #b2d9bb3b;
+  --glass-light: #d9f5c72b;
+  --glass-shadow: 0 15px 38px #00120e45, inset 0 1px 0 var(--glass-light);
+  --glass-panel: linear-gradient(150deg,#23463bd9,#112c24ed 54%,#172b20ea);
+  --glass-aura: #204e42;
+  --glass-horizon: #423722;
+  --glass-gold: #eed598;
+}
+
+.meethaq-app.launch-shell.launch-clean {
+  background:
+    radial-gradient(ellipse 58rem 39rem at 86% 3%,var(--glass-aura),transparent 72%),
+    radial-gradient(ellipse 46rem 49rem at 3% 19%,var(--glass-horizon),transparent 70%),
+    var(--launch-canvas);
+}
+.meethaq-app.launch-shell > .site-header,
+.meethaq-app.launch-shell .bottom-nav {
+  background: var(--glass-tint);
+  border-color: var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+}
+.launch-shell .bottom-nav a { border-radius: 100px; }
+.launch-shell .site-header .brand b { font-family: var(--launch-serif); line-height: 1.25; }
+.meethaq-app.launch-shell > .site-footer { background: transparent; border-color: var(--glass-edge); }
+
+.launch-shell .launch-route :is(
+  .release-dhikr,.release-prayer,.directory-panel,.companion-panel,
+  .reminder-panel,.routine-saved,.ward-reader,.page-hero,.owner-stat-grid > article,
+  .owner-control-card,.about-principles > article,.about-cta,.access-card,.dashboard-head,
+  .permissions-table-wrap,.admin-controls,.rafiq-panel,.curated-card,.mat-card,
+  .learning-card,.learning-hero-progress,.learning-outline,.learning-case-card,
+  .seerah-timeline-panel,.names-card,.coming-panel
+) {
+  border-color: var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+}
+.launch-shell .launch-route :is(
+  .release-dhikr,.release-prayer,.directory-panel,.companion-panel,
+  .reminder-panel,.owner-stat-grid > article,.owner-control-card,.about-principles > article,
+  .about-cta,.access-card,.dashboard-head,.curated-card,.mat-card,.learning-card,.names-card
+) {
+  background: var(--glass-panel);
+  color: var(--launch-text);
+}
+.launch-shell .launch-route :is(.section-page,.companion-page,.dashboard-page) { min-width: 0; }
+.launch-shell :is(.section-heading,.page-hero,.coming-panel,.dashboard-head,.access-card) :is(h1,h2),
+.launch-shell .launch-route :is(.learning-page,.seerah-page,.names-page) :is(h1,h2),
+.launch-shell :is(.quran-reader-heading,.routine-flow-head,.about-principles) :is(h2,h3) {
+  font-family: var(--launch-serif);
+  line-height: 1.36;
+}
+.launch-shell :is(a,button,summary,select,input,textarea):focus-visible {
+  outline: 2px solid var(--launch-accent);
+  outline-offset: 3px;
+}
+.launch-shell :is(.primary-cta,.detail-btn,.companion-link,.header-actions .icon-btn) { border-radius: 100px; }
+.launch-shell :is(.primary-cta,.detail-btn,.companion-link,.desktop-nav a,.bottom-nav a,.dhikr-session-card,.owner-control-card) {
+  transition: background-color .2s,border-color .2s,transform .22s var(--glass-ease),box-shadow .22s;
+}
+.launch-shell :is(.primary-cta,.detail-btn,.companion-link,.desktop-nav a,.bottom-nav a,.dhikr-session-card,.owner-control-card):active {
+  transform: scale(.97);
+}
+@media (hover: hover) {
+  .launch-shell :is(.dhikr-session-card,.owner-control-card,.release-dhikr a):hover {
+    transform: translateY(-3px);
+    border-color: var(--launch-accent);
+  }
+}
+
+.glass-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr) auto;
+  align-items: center;
+  gap: clamp(16px,3vw,32px);
+  padding: clamp(22px,4.4vw,58px);
+  margin-block: 0 clamp(18px,3vw,30px);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--glass-radius);
+  color: var(--launch-text);
+  background:
+    radial-gradient(ellipse 28rem 20rem at 8% 0%, color-mix(in srgb,var(--glass-horizon) 75%,transparent),transparent),
+    var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+}
+.glass-heading h1 {
+  margin: 0;
+  font: 700 clamp(2.4rem,6vw,4.7rem)/1.23 var(--launch-serif);
+}
+.glass-heading-copy p {
+  max-width: 56ch;
+  margin: 8px 0 0;
+  color: var(--launch-soft);
+  font: 600 .92rem/1.85 var(--launch-kufi);
+}
+.glass-eyebrow {
+  display: block;
+  color: var(--glass-gold);
+  font: 700 .82rem/1.55 var(--launch-kufi);
+}
+.glass-heading-icon {
+  display: grid;
+  place-items: center;
+  width: clamp(45px,7vw,76px);
+  aspect-ratio: 1;
+  border-radius: 34%;
+  background: var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-edge);
+  color: var(--glass-gold);
+}
+.glass-about-heading { min-height: clamp(220px,25vw,345px); }
+.glass-privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  margin: 0;
+}
+.glass-privacy-grid > div {
+  min-width: 0;
+  padding: clamp(16px,2.5vw,28px);
+  border: 1px solid var(--glass-edge);
+  border-radius: 22px;
+  background: var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+}
+.glass-privacy-grid dt { margin-bottom: 7px; color: var(--launch-text); font: 700 1.7rem/1.3 var(--launch-serif); }
+.glass-privacy-grid dd { margin: 0; color: var(--launch-soft); font: 500 .9rem/1.9 var(--launch-kufi); }
+
+.launch-shell .launch-route .quran-reader-panel {
+  margin-block: 0 24px;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--glass-radius);
+  background: var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+}
+.launch-shell .quran-reader-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.launch-shell .quran-reader-heading p { margin: 3px 0 0; color: var(--launch-soft); font: 600 .82rem/1.7 var(--launch-kufi); }
+.launch-shell .quran-bookmark-button { align-self: center; min-height: 44px; border-radius: 100px; }
+.launch-shell :is(.quran-reader-controls,.mushaf-page-nav,.quran-listen-bar,.quran-verse-study) {
+  border-color: var(--glass-edge);
+  color: var(--launch-text);
+}
+.launch-shell .launch-route :is(.quran-verse-study,.learning-reader) { background: var(--launch-surface); }
+.launch-shell :is(.quran-reader-panel,.quran-verse-study,.quran-search-panel) { color: var(--launch-text); }
+.launch-shell :is(.quran-surah-picker,.quran-page-picker,.quran-search,.quran-listen-bar,.quran-listen-bar select) {
+  background: var(--launch-surface);
+  border-color: var(--glass-edge);
+  color: var(--launch-soft);
+}
+.launch-shell .quran-reader-panel :is(.quran-reader-controls,.quran-listen-bar) :is(select,option,input) {
+  font-family: var(--launch-kufi);
+  color: var(--launch-text);
+}
+.launch-shell .quran-reader-panel :is(select option,.quran-search-panel) { background: var(--launch-surface); }
+.launch-shell .quran-reader-panel :is(.quran-bookmark-button,.mushaf-page-nav button,.quran-listen-bar button,.quran-study-actions button) {
+  color: var(--launch-accent);
+  background: var(--launch-raised);
+  border-color: var(--glass-edge);
+}
+.launch-shell .quran-reader-panel :is(.mushaf-page-nav span,.mushaf-page-nav small,.quran-search-summary,.quran-listen-bar label,.quran-search input::placeholder) {
+  color: var(--launch-soft);
+}
+
+.dhikr-hub { margin-block: 23px; }
+.dhikr-hub h2 { margin: 0 0 12px; color: var(--launch-text); font: 700 clamp(1.8rem,3vw,2.45rem)/1.3 var(--launch-serif); }
+.launch-shell .dhikr-hub .routine-options {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: clamp(10px,2vw,18px);
+}
+.dhikr-session-card {
+  --session-tint: #e5a73732;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: start;
+  gap: 14px 8px;
+  min-width: 0;
+  padding: clamp(14px,2.4vw,26px);
+  border: 1px solid var(--glass-edge);
+  border-radius: 23px;
+  color: var(--launch-text);
+  background: radial-gradient(ellipse at 8% 0%,var(--session-tint),transparent 78%),var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+}
+.dhikr-session-card[data-session="evening"] { --session-tint: #5eaa8c49; }
+.dhikr-session-card[data-session="sleep"] { --session-tint: #9a86d23a; }
+.dhikr-session-card .daily-icon { color: var(--glass-gold); background: var(--glass-panel); box-shadow: var(--glass-shadow); }
+.dhikr-session-title { grid-row: 1; display: grid; }
+.dhikr-session-title strong { font: 700 clamp(1.55rem,3vw,2.1rem)/1.45 var(--launch-serif); }
+.dhikr-session-title small { color: var(--glass-gold); font: 700 .76rem/1.6 var(--launch-kufi); }
+.dhikr-session-action { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 6px; align-items: center; min-height: 34px; color: var(--launch-accent); font: 700 .8rem/1.5 var(--launch-kufi); }
+.launch-shell .routine-flow { border-color: var(--glass-edge); border-radius: var(--glass-radius); }
+.launch-shell .routine-entry { background: var(--launch-surface); border-color: var(--glass-edge); }
+.launch-shell .routine-entry-head .icon-btn[aria-pressed="true"] { color: var(--glass-gold); background: var(--launch-raised); }
+.launch-shell .routine-count { min-height: 48px; }
+
+.glass-settings-grid { display: grid; gap: 18px; grid-template-columns: minmax(0,1.7fr) minmax(210px,.65fr); align-items: start; }
+.glass-settings-grid .reminder-panel { margin: 0; min-width: 0; }
+.glass-settings-grid .reminder-install { order: 2; }
+.launch-shell .reminder-panel h2 { font: 700 1.9rem/1.35 var(--launch-serif); }
+.launch-shell .reminder-panel > p,
+.launch-shell .reminder-panel fieldset { font: 600 .86rem/1.8 var(--launch-kufi); }
+.launch-shell .reminder-panel fieldset {
+  background: var(--launch-surface);
+  border-color: var(--glass-edge);
+  border-radius: 18px;
+  padding-inline: 12px;
+}
+.launch-shell .reminder-panel legend { padding-inline: 6px; color: var(--launch-accent); }
+.launch-shell .reminder-row { min-height: 51px; }
+.launch-shell .reminder-row input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  inline-size: 42px;
+  block-size: 25px;
+  flex: none;
+  border: 1px solid var(--glass-edge);
+  border-radius: 100px;
+  background: var(--launch-raised);
+  box-shadow: inset 0 1px 3px #051a181a;
+  cursor: pointer;
+}
+.launch-shell .reminder-row input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  inline-size: 17px;
+  block-size: 17px;
+  border-radius: 50%;
+  background: var(--launch-soft);
+}
+.launch-shell .reminder-row input[type="checkbox"]:checked { background: var(--launch-accent); }
+.launch-shell .reminder-row input[type="checkbox"]:checked::before {
+  inset-inline-start: calc(100% - 20px);
+  background: var(--launch-canvas);
+}
+.launch-shell .reminder-row input[type="checkbox"]:disabled { opacity: .6; cursor: default; }
+@media (prefers-reduced-motion: no-preference) {
+  .launch-shell .reminder-row input[type="checkbox"]::before { transition: inset-inline-start .2s var(--glass-ease); }
+}
+@media (forced-colors: active) {
+  .launch-shell .reminder-row input[type="checkbox"] { appearance: auto; }
+  .launch-shell .reminder-row input[type="checkbox"]::before { display: none; }
+}
+.launch-shell .reminder-row :is(select,input[type="time"]) { min-height: 38px; border-radius: 12px; }
+.launch-shell .reminder-actions { gap: 9px; }
+.launch-shell .owner-stat-grid article b { color: var(--launch-accent); font-variant-numeric: tabular-nums; }
+.launch-shell .owner-control-card { border-radius: 22px; }
+.launch-shell .permissions-table-wrap { overflow-x: auto; }
+
+.launch-shell .launch-route :is(.release-welcome,.release-ward,.release-content-cover,.learning-hero,.worship-journey,.prayer-cover) {
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+}
+.launch-shell .launch-route .learning-hero { border: 1px solid var(--glass-edge); background: var(--glass-panel); }
+.launch-shell .launch-route .learning-hero :is(h1,strong) { color: var(--launch-text); }
+.launch-shell .launch-route .learning-hero :is(p,label,small) { color: var(--launch-soft); }
+.launch-shell .launch-route .learning-hero-progress { background: var(--launch-surface); }
+.launch-shell .learning-filters button[aria-pressed="true"] { background: var(--launch-raised); color: var(--launch-accent); border-color: var(--glass-edge); }
+.launch-shell .learning-card progress { width: 100%; accent-color: var(--launch-accent); margin-block: 0 12px; }
+
+@keyframes glass-arrive {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glass-heading, .dhikr-session-card, .journey-detail { animation: glass-arrive .36s var(--glass-ease) both; }
+  .dhikr-session-card:nth-child(2) { animation-delay: 45ms; }
+  .dhikr-session-card:nth-child(3) { animation-delay: 90ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-shell :is(.primary-cta,.detail-btn,.companion-link,.desktop-nav a,.bottom-nav a,.dhikr-session-card,.owner-control-card) {
+    transition: none;
+  }
+}
+@media (max-width: 850px) {
+  .glass-privacy-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .glass-settings-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 620px) {
+  .launch-shell { --glass-radius: 21px; }
+  .glass-heading { grid-template-columns: minmax(0,1fr) auto; gap: 12px; padding: 18px; }
+  .glass-heading-icon { grid-column: 2; grid-row: 1; align-self: start; }
+  .glass-heading-copy { grid-column: 1; grid-row: 1; }
+  .glass-heading-action { grid-column: 1 / -1; }
+  .glass-privacy-grid, .launch-shell .dhikr-hub .routine-options { grid-template-columns: minmax(0,1fr); }
+  .dhikr-session-card { align-items: center; grid-template-columns: auto minmax(0,1fr) auto; gap: 10px; padding: 11px 13px; }
+  .dhikr-session-title { grid-column: 2; }
+  .dhikr-session-action { grid-column: auto; }
+  .launch-shell .quran-bookmark-button { flex: none; min-width: 44px; }
+  .launch-shell .quran-reader-heading p { font-size: .77rem; }
+}
+
+/* Decorative scenes live behind the interface. The reader keeps an opaque paper surface. */
+.atmosphere-shell {
+  --scene-courtyard: url("/images/meethaq-courtyard.jpg");
+  --scene-arcade: url("/images/meethaq-arcade.jpg");
+  --scene-mushaf: url("/images/meethaq-mushaf-real.jpg");
+  --scene-fade: #edf3ec;
+  --scene-veil: #f1f6ef5c;
+  --liquid-rim: #fafff5ba;
+  --liquid-glow: #fffffe8a;
+  position: relative;
+  isolation: isolate;
+}
+html.dark .atmosphere-shell {
+  --scene-fade: #081b17;
+  --scene-veil: #071b186e;
+  --liquid-rim: #bceede88;
+  --liquid-glow: #b0ffee47;
+}
+.meethaq-app.atmosphere-shell.launch-clean::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  block-size: clamp(550px, 78vw, 1060px);
+  background: linear-gradient(180deg, var(--scene-veil), var(--scene-fade) 98%),
+    linear-gradient(90deg,transparent,var(--scene-fade) 94%),
+    var(--scene-courtyard) left 38% / cover no-repeat;
+  opacity: .85;
+  pointer-events: none;
+  mask-image: linear-gradient(#000 65%, transparent);
+}
+.meethaq-app.atmosphere-shell > .site-header {
+  background: linear-gradient(160deg, #d5fbeb16 5%, transparent 48%), var(--glass-tint);
+  box-shadow: inset 0 1px 0 var(--liquid-rim), 0 9px 27px #071d1725;
+  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  backdrop-filter: blur(24px) saturate(165%);
+}
+.meethaq-app.atmosphere-shell .bottom-nav {
+  box-shadow: inset 0 1px 0 var(--liquid-rim), 0 7px 24px #0316104a;
+}
+.atmosphere-shell .desktop-nav a.active,
+.atmosphere-shell .bottom-nav a.active,
+.atmosphere-shell .scene-secondary-action {
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--liquid-rim), inset 0 -3px 9px #91af9c20, 0 3px 10px #05181035;
+}
+.atmosphere-shell .scene-secondary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 7px 14px;
+  color: #fff2cb;
+  border-color: #c9e1ca59;
+  border-radius: 100px;
+  background: linear-gradient(155deg, #ecffde2d, #1744359b);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font: 700 .82rem/1.5 var(--launch-kufi);
+}
+
+.atmosphere-shell .scene-welcome,
+.atmosphere-shell .scene-ward,
+.atmosphere-shell .scene-prayer,
+.atmosphere-shell .khatma-scene {
+  border: 1px solid #d2e7c456;
+  box-shadow: inset 0 1px 1px #e6ffed8c, 0 16px 42px #001b1472;
+}
+.atmosphere-shell .scene-welcome {
+  min-height: clamp(244px,27vw,348px);
+  padding: clamp(20px,4.4vw,61px);
+  margin-bottom: clamp(14px,2vw,23px);
+  background: #09271e;
+}
+.atmosphere-shell .scene-welcome::before {
+  inset: -11px;
+  background: linear-gradient(to left,#071e1eef 0%,#071e1e91 39%,transparent 76%),
+    linear-gradient(0deg,#041b16a8,transparent 55%),var(--scene-courtyard) left 61% / cover no-repeat;
+  transform: translate(var(--art-x,0px),var(--art-y,0px));
+  transition: transform .45s var(--glass-ease);
+}
+.atmosphere-shell .scene-welcome h1 {
+  font-size: clamp(3rem,7.3vw,6.4rem);
+  line-height: 1.17;
+}
+.atmosphere-shell .release-dashboard { gap: clamp(12px,2vw,21px); }
+.atmosphere-shell .scene-ward {
+  min-height: clamp(295px,33vw,414px);
+  grid-template-columns: minmax(0,1fr) auto;
+}
+.atmosphere-shell .scene-ward h2 { line-height: 1.24; }
+.atmosphere-shell .scene-ward .launch-focus-content { max-width: 66%; }
+.atmosphere-shell .scene-ward .release-book-art {
+  inset: -12px;
+  background: linear-gradient(to left,#0a2d24ef,#0a2d24af 37%,transparent 68%),
+    var(--scene-mushaf) left 58% / cover no-repeat;
+  transform: translate(var(--art-x,0px),var(--art-y,0px));
+  transition: transform .45s var(--glass-ease);
+}
+.atmosphere-shell .scene-ward .khatma-meter { z-index: 1; }
+.launch-shell.atmosphere-shell .launch-route .scene-prayer {
+  background:
+    linear-gradient(180deg,#103a2ec4,#0b2d24f7 73%),
+    var(--scene-arcade) left 56% / cover no-repeat;
+  --launch-text: #fff6df;
+  --launch-soft: #d6e7d7;
+  --launch-accent: #c8efda;
+  --launch-line: #bef4d235;
+  --launch-raised: #1b4f41;
+  --launch-surface: #12382dde;
+  --release-gold: #f5dd9d;
+}
+.atmosphere-shell .scene-prayer::before { display: none; }
+.atmosphere-shell .scene-prayer .launch-prayer-actions a { background: #0e3228bd; }
+.atmosphere-shell .prayer-cover .launch-arch {
+  background: linear-gradient(to left,#08271fef,#08271f8a 44%,transparent 80%),
+    var(--scene-arcade) left 62% / cover no-repeat;
+  inset: -10px;
+  transform: translate(var(--art-x,0px),var(--art-y,0px));
+  transition: transform .4s var(--glass-ease);
+}
+.atmosphere-shell .release-content-cover[data-section="quran"] { --section-art: var(--scene-mushaf); }
+.atmosphere-shell .release-shortcut { min-height: 73px; border-radius: 21px; }
+.study-scene[data-art="courtyard"] { --study-art: var(--scene-courtyard); }
+.study-scene[data-art="mushaf"] { --study-art: var(--scene-mushaf); }
+.study-scene[data-art="arcade"] { --study-art: var(--scene-arcade); }
+.atmosphere-shell .study-scene {
+  align-content: end;
+  min-height: 166px;
+  align-items: end;
+  color: #fff7df;
+  border-radius: 22px;
+  border-color: #aacbb56a;
+  background: linear-gradient(0deg,#09221ffa 4%, #09221fac 46%,#09221f22 100%),
+    var(--study-art) left 50% / cover no-repeat;
+  box-shadow: inset 0 1px 0 #e1fce16b,0 10px 30px #00211933;
+}
+.atmosphere-shell .study-scene small { color: #e4ede1; }
+.atmosphere-shell .study-scene .launch-tile-icon { background: #153f32dd; color: #f4db9f; }
+.atmosphere-shell .study-scene > svg:last-child { color: #f4db9f; }
+
+.khatma-scene {
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 13px;
+  padding: clamp(20px,4.8vw,57px);
+  min-height: clamp(265px,33vw,415px);
+  border-radius: var(--glass-radius);
+  background: #0a2a23;
+  color: #fff4d7;
+}
+.khatma-scene::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -12px;
+  background: linear-gradient(to left,#0a2b22f3, #08281fa6 42%, transparent 78%),
+    var(--scene-mushaf) left 56% / cover no-repeat;
+  transform: translate(var(--art-x,0px),var(--art-y,0px));
+  transition: transform .45s var(--glass-ease);
+}
+.khatma-scene-copy { max-width: 65%; }
+.khatma-scene h1 { margin: 4px 0; font: 700 clamp(2.5rem,6.5vw,5.5rem)/1.18 var(--launch-serif); }
+.khatma-scene-copy > p:not(.launch-kicker) { margin: 5px 0 17px; color: #e5f1e7; font: 600 .92rem/1.7 var(--launch-kufi); }
+.khatma-glance {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: clamp(8px,2vw,18px);
+  margin: clamp(14px,2vw,22px) 0;
+}
+.khatma-glance > div {
+  padding: clamp(11px,2vw,24px);
+  border: 1px solid var(--glass-edge);
+  border-radius: 19px;
+  background: var(--glass-panel);
+  box-shadow: var(--glass-shadow);
+}
+.khatma-glance dt { color: var(--launch-soft); font: 700 .81rem/1.65 var(--launch-kufi); }
+.khatma-glance dd { margin: 0; color: var(--launch-text); font: 800 clamp(1.3rem,3vw,2rem)/1.4 var(--launch-kufi); }
+.khatma-glance dd small { font-size: .76rem; }
+.khatma-scene + .personal-grid { margin-top: 18px; }
+.khatma-estimate { color: var(--launch-accent); font: 700 .9rem/1.6 var(--launch-kufi); }
+.atmosphere-shell .khatma-options .chips button[aria-pressed="true"] {
+  background: var(--launch-raised);
+  border-color: var(--launch-accent);
+  color: var(--launch-accent);
+  box-shadow: inset 0 1px 0 var(--liquid-rim);
+}
+
+/* A shallow cover and stacked paper edges frame the actual typeset page. */
+.atmosphere-shell .mushaf-page-frame {
+  padding: clamp(6px,1.3vw,13px);
+  background: linear-gradient(110deg,#19332b,#27463a 52%,#132922);
+  border: 1px solid #987e49;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px #061b1780, inset 0 0 0 2px #d2b5703b;
+}
+.atmosphere-shell .mushaf-scanned-book {
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #e2ceb1, 0 4px 0 #a28558, 0 7px 14px #0007;
+}
+.atmosphere-shell .qcf-page {
+  background-color: #faf5e7;
+  background-image: linear-gradient(90deg,#6b47101a,transparent 9%,transparent 92%,#6b471012);
+}
+.atmosphere-shell .qcf-local-text { background-color: #faf5e7; }
+
+.atmosphere-shell :is([data-glass-light],.glass-heading,.dhikr-session-card,.learning-card,.directory-entries a,.owner-control-card,.companion-panel) {
+  position: relative;
+  isolation: isolate;
+}
+.atmosphere-shell :is([data-glass-light],.glass-heading,.dhikr-session-card,.learning-card,.directory-entries a,.owner-control-card,.companion-panel)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 220px 130px at var(--light-x,50%) var(--light-y,50%), var(--liquid-glow), transparent 78%) padding-box,
+    radial-gradient(ellipse 208px 122px at var(--light-x,50%) var(--light-y,50%),var(--liquid-rim),transparent 82%) border-box;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: opacity .28s var(--glass-ease);
+}
+html:not(.dark) .atmosphere-shell :is([data-glass-light],.glass-heading,.dhikr-session-card,.learning-card,.directory-entries a,.owner-control-card,.companion-panel)::after {
+  --liquid-glow: #7dc6a223;
+  --liquid-rim: #528d746a;
+  mix-blend-mode: normal;
+}
+.atmosphere-shell .scene-welcome::after { inset: 0; }
+@media (any-hover: hover) and (any-pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .launch-shell.atmosphere-shell [data-glass-active]::after { opacity: .92; }
+  .atmosphere-shell :is(.release-shortcut,.scene-secondary-action,.study-scene) {
+    transition: transform .25s var(--glass-ease), border-color .25s, box-shadow .25s;
+  }
+  .atmosphere-shell :is(.release-shortcut,.scene-secondary-action,.study-scene):hover {
+    transform: translateY(-3px);
+    border-color: var(--liquid-rim);
+    box-shadow: 0 8px 20px #06251952, inset 0 1px 0 var(--liquid-rim);
+  }
+}
+.atmosphere-shell :is(.release-shortcut,.scene-secondary-action,.study-scene,.launch-cta):active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere-shell .scene-welcome::before,
+  .atmosphere-shell .khatma-scene::before,
+  .atmosphere-shell :is(.release-book-art,.prayer-cover .launch-arch) { transition: none; }
+  .atmosphere-shell :is(.release-shortcut,.scene-secondary-action,.study-scene,.launch-cta):active { transform:none; }
+}
+@media (max-width: 620px) {
+  .atmosphere-shell .scene-welcome { padding: 19px 16px; min-height: 214px; }
+  .atmosphere-shell .scene-welcome h1 { font-size: clamp(2.65rem,10vw,3.75rem); }
+  .atmosphere-shell .scene-welcome::before { background-position: left 62%; }
+  .atmosphere-shell .scene-ward { min-height: 270px; padding: 17px 14px; gap: 5px; }
+  .atmosphere-shell .scene-ward .launch-focus-content { max-width: 78%; }
+  .atmosphere-shell .scene-ward .release-book-art,
+  .khatma-scene::before { background-position: left 50%; }
+  .atmosphere-shell .scene-ward .launch-cta,
+  .atmosphere-shell .scene-secondary-action { font-size: .75rem; }
+  .atmosphere-shell .study-scene { min-height: 128px; }
+  .khatma-scene { min-height: 240px; align-items: end; }
+  .khatma-scene-copy { max-width: 76%; }
+  .khatma-glance dd small { display: block; }
+}
+
+/* Shared glass navigation and the Mithaq home layout. */
+.meethaq-app.launch-shell.reference-shell {
+  --ref-ink: #fff9ef;
+  --ref-muted: #d4e9df;
+  --ref-gold: #ffd478;
+  --ref-deep: #02201e;
+  --ref-sheen: #b5fff4;
+  --ref-ease: cubic-bezier(.2,.8,.25,1);
+  color: var(--ref-ink);
+  background: radial-gradient(ellipse at 68% 37%,#124746 0%,transparent 51%),#011716;
+}
+.meethaq-app.reference-shell.launch-clean::before {
+  block-size: clamp(760px,57vw,1060px);
+  mask-image: linear-gradient(#000 89%,transparent);
+  opacity: 1;
+}
+.reference-shell .launch-route { animation: none; }
+.reference-shell :is(.reference-main,.reference-header,.reference-side) :is(h1,h2,h3,b,strong,a,button) { color: inherit; }
+.reference-shell :is(.reference-main,.reference-header) :is(a,button,summary):focus-visible {
+  outline: 2px solid #fff1b0;
+  outline-offset: 3px;
+}
+.meethaq-app.reference-shell > .reference-header {
+  color: var(--ref-ink);
+  background: linear-gradient(180deg,#04201eea,#011815c0);
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: blur(18px) saturate(140%);
+  min-height: 95px;
+}
+.reference-header-row {
+  direction: rtl;
+  display: grid;
+  grid-template-columns: minmax(220px,287px) minmax(0,1fr) auto;
+  align-items: center;
+  gap: clamp(10px,1.3vw,24px);
+  min-height: 94px;
+  padding: 0 clamp(17px,1.4vw,24px) 0 clamp(33px,4.7vw,79px);
+}
+.reference-top-nav, .reference-header-actions {
+  direction: rtl; display: flex; align-items: center; justify-content: flex-start;
+  gap: clamp(8px,.94vw,16px); min-width: 0;
+}
+.reference-top-nav a,
+.reference-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  min-height: 46px;
+  padding: 7px clamp(10px,1.06vw,18px);
+  border: 1px solid #78e7d244;
+  border-radius: 99px;
+  background: linear-gradient(162deg,#5fe6cc3a 2%,#0b3838ad 31%,#082a2c89 65%,#00796c67);
+  box-shadow: inset 0 1px 1px #a3fff659,inset 0 -3px 8px #37d1bc22,0 4px 9px #0008;
+  color: var(--ref-ink);
+  font: 650 clamp(.76rem,.96vw,.98rem)/1.4 var(--launch-kufi);
+  backdrop-filter: blur(10px) saturate(175%);
+}
+.reference-top-nav a[aria-current="page"], .reference-side-nav a[aria-current="page"] {
+  color: #fff4d0;
+  border-color: #fff1a8;
+  background: linear-gradient(180deg,#f5ba49e8 0%,#674e23e8 56%,#b67d24a0 100%);
+  box-shadow: inset 0 1px 5px #fffacb,inset 0 -5px 11px #ffcc5c88,0 0 17px #f8ba4494;
+}
+.reference-search { direction: rtl; color:#f7e9c6; min-width: 204px; }
+.reference-search svg, .reference-play { color: var(--ref-gold); }
+.reference-search span { font-weight: 500; }
+.reference-round, .reference-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: #fff9e9;
+  border: 1px solid #a7e5de20;
+  background: #021c1c;
+  cursor: pointer;
+}
+.reference-avatar {
+  width: 62px;
+  border: 2px solid #f6d18d;
+  box-shadow: 0 0 0 3px #001918,inset 0 0 0 1px #fff7ce;
+}
+.reference-account-menu {
+  position: fixed;
+  inset: calc(var(--mithaq-header-height) + 7px) auto auto var(--mithaq-header-pad);
+  margin: 0;
+  width: min(230px,calc(100vw - 2 * var(--mithaq-header-pad)));
+  max-height: calc(100dvh - var(--mithaq-header-height) - 22px);
+  overflow: auto;
+  color: var(--ref-ink);
+  padding: 8px;
+  border: 1px solid #b5fff453;
+  border-radius: 19px;
+  background: #082e2bf5;
+  box-shadow: 0 12px 35px #0009;
+  backdrop-filter: blur(18px);
+}
+.reference-account-menu :is(a,button) {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 8px;
+  min-height: 43px; text-align: start; border-radius: 12px;
+  font: 700 .83rem/1.5 var(--launch-kufi);
+}
+.reference-account-menu :is(a,button):hover { background: #79ead52c; }
+.reference-menu { display: none; }
+.reference-optics { position: absolute; pointer-events: none; }
+@supports (backdrop-filter: url("#mithaq-liquid-lens")) {
+  .reference-shell :is(.reference-search,.reference-hero-actions .reference-outline,.reference-arrow,.reference-top-nav a[aria-current="page"]) {
+    backdrop-filter: url("#mithaq-liquid-lens") blur(2px) saturate(155%);
+  }
+  .reference-shell .bottom-nav {
+    backdrop-filter: url("#mithaq-liquid-lens") blur(9px) saturate(150%);
+  }
+}
+.reference-shell :is(.reference-outline,.reference-arrow,.reference-search) {
+  box-shadow: inset 0 1px 2px #fffce1a1,inset -2px 0 7px #42dad763,inset 2px -1px 5px #f8c8793b,0 5px 14px #001f1f72;
+}
+
+
+.reference-home {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) clamp(192px,14.25vw,238px);
+  gap: clamp(10px, .85vw, 15px);
+  max-width: 1840px;
+  min-width: 0;
+  padding-inline: clamp(15px,1.35vw,23px) clamp(25px,2.6vw,44px);
+  margin-inline: auto;
+  padding-bottom: 21px;
+}
+.reference-main { min-width: 0; display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(10px,.84vw,14px); }
+.reference-side {
+  position: relative;
+  align-self: start;
+  margin-top: 26px;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 292px;
+  overflow: hidden;
+  border-radius: 45px;
+  border: 1px solid #a3f4e145;
+  box-shadow: 0 4px 20px #000a,0 0 19px #51ffde38,inset 0 1px 3px #e7fff197;
+  background: #072727c0;
+}
+.reference-side-nav {
+  position: relative; z-index: 1;
+  display: grid;
+  padding: 30px 11px 29px;
+  border-radius: 44px 44px 35px 35px;
+  border: 1px solid #8df6dc5c;
+  background: linear-gradient(148deg,#6deed75b,#082624bd 25%,#001c1bd2 75%,#219b9472);
+  box-shadow: inset 1px 1px 3px #fff4baaf,inset 0 -6px 20px #46dbc944,0 5px 19px #00211d95;
+  backdrop-filter: blur(16px) saturate(175%);
+}
+.reference-side-nav a {
+  direction: ltr;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 19px;
+  padding: 4px clamp(8px,1.45vw,24px);
+  min-height: clamp(43px,2.88vw,49px);
+  color: var(--ref-ink);
+  border: 1px solid transparent;
+  border-radius: 99px;
+  white-space: nowrap;
+  font: 650 clamp(.82rem,1.02vw,1.03rem)/1.4 var(--launch-kufi);
+}
+.reference-side-nav svg { width: 29px; height: 29px; flex: none; }
+.reference-side-nav a[aria-current="page"] {
+  min-height: 54px;
+  margin-bottom: 4px;
+  border-color: #fffacaaa;
+  background: linear-gradient(110deg,#f6bf3fd6,#436147c0 37%,#153e33dc 78%,#abfbcdab);
+  box-shadow: 0 0 13px #d8b44c85,inset 0 1px 7px #edf7b4ab;
+}
+.reference-sidebar-art { margin-top: -7px; }
+
+.reference-hero {
+  position: relative;
+  min-height: clamp(267px,19.25vw,322px);
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid #a8ded199;
+  border-radius: clamp(29px,3.3vw,54px);
+  background:
+    radial-gradient(ellipse at 13% 13%,#1c9f8d92,transparent 27%),
+    radial-gradient(ellipse at 76% 83%,#133634a0,#021f20 60%);
+  box-shadow: inset 0 1px 3px #e9fff5a0,inset 0 -6px 24px #28d8c837,0 7px 33px #0009;
+}
+.reference-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: url("/images/mushaf-ornament-tile.svg") left top / 60px;
+  mask-image: radial-gradient(ellipse 175px 360px at 0 0,#000,transparent 90%);
+  opacity: .3;
+}
+.reference-hero-art {
+  position: absolute;
+  inset: -20px -30px -18px 18%;
+  translate: var(--art-x,0) var(--art-y,0);
+  transition: translate .38s var(--ref-ease);
+}
+.reference-hero-copy {
+  display: flex; align-items: center; flex-direction: column;
+  direction: rtl;
+  margin-right: auto;
+  margin-left: clamp(0px,1vw,15px);
+  width: min(51%,680px);
+  min-height: 300px;
+  padding: 4px 12px 22px;
+  justify-content: center;
+  text-align: center;
+  text-shadow: 0 1px 10px #000e;
+}
+.reference-hero h1 {
+  margin: 0; min-height: clamp(64px,7.9vw,132px);
+  display:grid; place-items: center;
+  color: #ffe5a0;
+  font: 700 clamp(2.55rem,5.1vw,5.6rem)/1.22 var(--launch-serif);
+}
+.reference-hero h2 { margin: 1px 0 3px; color: #fff5e0; font: 800 clamp(1.04rem,1.5vw,1.65rem)/1.45 var(--launch-kufi); }
+.reference-shell .reference-hero-copy p {
+  max-width: 335px; margin:0 0 14px; color:#f6f7ee;
+  font: 550 clamp(.82rem,1.07vw,1.12rem)/1.45 var(--launch-kufi) !important;
+}
+.reference-hero-actions { display:flex; flex-direction: row-reverse; justify-content: center; gap:clamp(7px,1.65vw,27px); max-width:100%; }
+.reference-hero-actions a {
+  display:flex; align-items:center; justify-content:center; gap:9px; min-height:44px;
+  padding: 6px clamp(11px,2.15vw,36px);
+  border:1px solid #eaffecaa; border-radius: 99px; white-space:nowrap;
+  font: 800 clamp(.76rem,1.04vw,1.05rem)/1.3 var(--launch-kufi);
+  transition: transform .22s var(--ref-ease),filter .22s,box-shadow .22s;
+}
+.reference-shell .reference-gold {
+  color: #211b11; text-shadow: none; border-color:#fff1ae;
+  background: linear-gradient(#fff0ad,#eeb546 58%,#ffdc6c);
+  box-shadow: 0 0 17px #ffaa48c0,inset 0 1px 3px #fff5c4;
+}
+.reference-shell .reference-outline { color: #fcffef; background:#082a29ae; box-shadow:inset 0 1px 6px #d0fff16e; backdrop-filter:blur(12px); }
+.reference-arrow {
+  position: absolute;
+  display:grid; place-items:center;
+  z-index: 3;
+  top: 50%; transform: translateY(-50%);
+  width: clamp(33px,3vw,51px); aspect-ratio:1;
+  border: 1px solid #d3ffed97; border-radius: 50%;
+  color: var(--ref-ink);
+  background: linear-gradient(140deg,#b9ffec41,#052525c5 55%,#a0efd164);
+  box-shadow: inset 0 1px 4px #d5fff579,0 5px 16px #0008;
+  backdrop-filter:blur(10px) saturate(175%);
+  transition: scale .18s,filter .18s;
+}
+.reference-hero-prev { inset-inline-start: clamp(6px,1.05vw,18px); }
+.reference-hero-next { inset-inline-end: clamp(6px,2vw,34px); }
+.reference-dots {
+  position:absolute; right:50%; translate:50% 0; bottom:7px;
+  z-index: 3; display:flex; gap:1px; align-items:center; justify-content:center;
+}
+.reference-dots button { min-width:21px; height:25px; display:grid; place-items:center; padding:3px; }
+.reference-dots button span { display:block; width:12px; height:12px; border-radius:100px; background:#a0bbb8aa; transition:width .2s,background-color .2s; }
+.reference-dots button[aria-pressed="true"] span { width:24px; background:linear-gradient(#fff0af,#f3c663); box-shadow:inset 0 1px 1px #fff9ce,0 0 9px #fbe29680; }
+
+.reference-tiles { min-width:0; display:grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: clamp(7px,.75vw,13px); padding-inline: 1px; }
+.reference-glass {
+  --ref-edge: #8ffff4a0;
+  --ref-base: #103837c7;
+  --ref-spark: #21d6ce;
+  min-width:0;
+  position:relative;
+  isolation:isolate;
+  border:1px solid var(--ref-edge);
+  border-radius:26px;
+  background: radial-gradient(ellipse at 15% 7%,#98fff332,transparent 55%),
+    linear-gradient(155deg,#3f7d7133,transparent 45%,#101e25bd),var(--ref-base);
+  box-shadow: inset 0 1px 2px #e8fff1a0,inset 0 -2px 9px #8debd34a,0 5px 21px #001414af;
+  backdrop-filter:blur(14px) saturate(165%);
+}
+.reference-glass::before {
+  content:""; position:absolute; z-index:-1; inset:0; border-radius:inherit;
+  background: url("/images/mushaf-ornament-tile.svg") 50% / 62px;
+  opacity:.08;
+  mask-image:linear-gradient(148deg,#000,transparent 59%);
+  pointer-events:none;
+}
+.reference-feature {
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  min-height:clamp(116px,8vw,134px);
+  gap:2px; padding:8px 3px 11px; text-align:center;
+  box-shadow: inset 0 1px 2px #f2fff5b8,inset 0 -3px 11px color-mix(in srgb,var(--ref-spark),transparent 55%),0 0 13px color-mix(in srgb,var(--ref-spark),transparent 74%);
+}
+.reference-feature:is([data-color="library"],[data-color="lecture"]) { --ref-edge:#f2b9fec5; --ref-base:#341e53d7; --ref-spark:#d994fa; }
+.reference-feature[data-color="quran"] { --ref-edge:#ffdf8d; --ref-base:#65421ce6; --ref-spark:#ffc547; box-shadow:inset 0 0 7px #ffecab,inset 0 -5px 15px #ffcf635e,0 0 16px #ffd05b80; }
+.reference-feature[data-color="dhikr"] { --ref-edge:#4fc4fec9; --ref-base:#062e54e0; --ref-spark:#3db9ff; }
+.reference-feature[data-color="prayer"] { --ref-edge:#6cdeddb5; --ref-base:#064140e8; --ref-spark:#5be6e2; }
+.reference-feature[data-color="plan"] { --ref-edge:#8ee6b7ac; --ref-base:#0a4331e0; --ref-spark:#59d99c; }
+.reference-feature[data-color="tasbih"] { --ref-edge:#b9e4b9bd; --ref-base:#204631e8; --ref-spark:#8cdfad; }
+.reference-feature b { font: 800 clamp(.86rem,1.22vw,1.27rem)/1.35 var(--launch-kufi); }
+.reference-shell .reference-feature > span { color:#faf6e8; font: 600 clamp(.61rem,.79vw,.87rem)/1.42 var(--launch-kufi) !important; }
+.reference-feature > i {
+  display:grid; place-items:center; position:absolute; inset-inline-start: 10px; top:10px; width:26px; aspect-ratio:1;
+  border:1px solid #b8fff143; border-radius:50%; background:#b8fff122; color:#f1fff5;
+  box-shadow:inset 0 1px 4px #b8fff150;
+}
+.reference-details { min-width:0; margin-top:10px; }
+.reference-daily-heading { margin: 15px 0; }
+.reference-daily-heading h2 { margin:0; font:700 2rem/1.35 var(--launch-serif); }
+.reference-shell #reference-features { scroll-margin-top:110px; }
+
+@media (prefers-reduced-motion:no-preference) {
+  .reference-hero-copy { animation: reference-arrive .36s var(--ref-ease) both; }
+  [data-reveal] { transition: opacity .42s var(--ref-ease),transform .42s var(--ref-ease); }
+  [data-reveal-pending]:not(:focus-within) { opacity:0; transform:translateY(13px); }
+}
+@keyframes reference-arrive { from { opacity:0; transform:translateY(8px); } }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .reference-shell [data-glass-tilt] { transition: transform .22s var(--ref-ease),filter .2s; }
+  .reference-shell [data-glass-tilt][data-glass-active] { transform:perspective(720px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) translateY(-2px); }
+  .reference-shell :is(.reference-top-nav,.reference-side-nav) a:hover:not([aria-current]) { background:#7fffe234; border-color:#b7fff67e; }
+  .reference-shell :is(.reference-arrow,.reference-hero-actions a,.reference-search):hover { filter:brightness(1.18); }
+  .reference-shell .reference-arrow:hover { scale:1.05; }
+}
+.reference-shell :is(.reference-arrow,.reference-search,.reference-round):active { scale:.95; }
+.reference-shell :is(.reference-hero-actions a,[data-glass-tilt]):active { transform:scale(.98); }
+@media (prefers-reduced-motion:reduce) {
+  .reference-shell .reference-hero-copy { animation:none; }
+  .reference-shell :is(.reference-hero-art,.reference-arrow,.reference-dots button span,.reference-hero-actions a) { transition:none; }
+  .reference-shell :is(.reference-arrow,.reference-search,.reference-round):active { scale:1; }
+  .reference-shell :is(.reference-hero-actions a,[data-glass-tilt]):active { transform:none; }
+}
+
+@media (min-width:1500px) {
+  .reference-home { padding-inline-start:max(8px,calc(1.35vw - (100vw - 100%))); }
+  .reference-header-row { padding-right:max(8px,calc(1.4vw - (100vw - 100%))); }
+}
+@media (max-width:1470px) {
+  .reference-header-row { grid-template-columns: minmax(155px,19vw) minmax(0,1fr) auto; padding-left:clamp(21px,3vw,45px); }
+  .reference-search { min-width:157px; }
+  .reference-top-nav a { padding-inline:10px; }
+}
+@media (max-width:1150px) {
+  .reference-header-row { grid-template-columns:auto minmax(0,1fr) auto; }
+  .reference-top-nav { justify-content:center; }
+  .reference-top-nav a { gap:5px; }
+  .reference-top-nav svg { width:16px; }
+  .reference-search { min-width:44px; width:44px; padding:5px; }
+  .reference-search span { display:none; }
+  .reference-side-nav { padding-inline:6px; }
+  .reference-side-nav a { gap:11px; }
+  .reference-hero-copy { width:55%; }
+  .reference-feature > i { width:19px; top:6px; inset-inline-start:6px; }
+}
+@media (max-width:940px) {
+  .reference-home { grid-template-columns:minmax(0,1fr); padding-inline:18px; }
+  .reference-side,.reference-top-nav { display:none; }
+  .reference-menu { display:grid; }
+  .reference-shell .mobile-drawer {
+    display:block; position:fixed; inset:0; z-index:130; overflow-y:auto;
+    padding:20px clamp(17px,4vw,38px); color:var(--ref-ink);
+    background:#052522ea; backdrop-filter:blur(20px) saturate(155%);
+  }
+  .reference-shell .drawer-links { display:grid; gap:7px; margin-top:25px; }
+  .reference-shell .drawer-links a { display:flex; align-items:center; gap:9px; padding:11px 13px; border-radius:13px; min-height:44px; }
+  .reference-shell .drawer-links a svg:last-child { margin-inline-start:auto; }
+  .reference-shell .drawer-top { display:flex; align-items:center; justify-content:space-between; }
+  .reference-header-row { grid-template-columns:auto auto; justify-content:space-between; min-height:69px; padding-inline:18px; }
+  .meethaq-app.reference-shell > .reference-header { min-height:69px; }
+  .reference-header-actions { gap:7px; }
+  .reference-avatar { width:45px; }
+  .reference-round { width:42px; }
+}
+@media (max-width:640px) {
+  .reference-home { padding-inline:12px; }
+  .reference-header-row { padding-inline:12px; }
+  .reference-header-actions { gap:4px; }
+  .reference-header-actions :is(.reference-search,.reference-round,.reference-avatar) { width:38px; min-width:38px; min-height:38px; }
+  .reference-header-actions svg { width:19px; }
+  .reference-header-row,.meethaq-app.reference-shell > .reference-header { min-height:60px; }
+  .reference-hero { min-height:285px; }
+  .reference-hero-art { inset-inline: -30px; }
+  .reference-hero-copy { width:100%; min-height:284px; margin-left:0; padding:14px 27px 28px; }
+  .reference-shell .reference-hero-copy p { margin-bottom:11px; }
+  .reference-hero-actions { gap:6px; }
+  .reference-hero-actions a { padding-inline:7px; font-size:clamp(.63rem,3vw,.77rem); }
+  .reference-hero-actions svg { width:15px; }
+  .reference-hero-prev,.reference-hero-next { top:43%; }
+  .reference-tiles { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .reference-feature { min-height:105px; border-radius:19px; }
+  .reference-feature > i { display:none; }
+  .reference-shell #reference-features { scroll-margin-top:74px; }
+}
+@media (max-width:360px) {
+  .reference-header-row { padding-inline:9px; }
+  .reference-header-actions :is(.reference-search,.reference-round,.reference-avatar) { width:35px; min-width:35px; min-height:35px; }
+  .reference-hero-actions { flex-wrap:wrap; }
+}
+
+/* The same frame, brand and controls stay in place between sections. */
+.meethaq-app.launch-shell.reference-shell {
+  --mithaq-header-height: 78px;
+  --mithaq-header-pad: clamp(14px,2.2vw,42px);
+  --mithaq-rim: #94e5d655;
+  --mithaq-surface: linear-gradient(145deg, #2f67634d, transparent 58%), #082a29ee;
+  --mithaq-field: #061f20;
+  --mithaq-shadow: inset 0 1px 0 #c6ffea52, inset 0 -2px 12px #64e5d01e, 0 10px 24px #0015135c;
+  --mithaq-banner: linear-gradient(112deg, #124745de, #092724 64%);
+}
+html:not(.dark) .meethaq-app.reference-shell {
+  --mithaq-rim: #59897857;
+  --mithaq-surface: linear-gradient(145deg,#ffffffde,#e1f0e8db),#edf5ee;
+  --mithaq-field: #f5faf5;
+  --mithaq-shadow: inset 0 1px 0 #ffffffef,0 8px 22px #12393218;
+  --mithaq-banner: linear-gradient(115deg,#d0e5dc,#f7f9eb 68%);
+}
+html:not(.dark) .meethaq-app.launch-shell.mithaq-inner-shell {
+  background: radial-gradient(ellipse at 78% 0,#b8dbce,#edf5ee 69%);
+}
+.meethaq-app.reference-shell.launch-clean::before {
+  position:fixed;
+  inset:0;
+  block-size:auto;
+  mask-image:none;
+  background:linear-gradient(90deg,#052320e8 5%,#08292381 66%,#05231f98),
+    var(--scene-arcade) 36% center / cover no-repeat;
+  opacity:.57;
+}
+html:not(.dark) .meethaq-app.mithaq-inner-shell.launch-clean::before { opacity:.13; }
+.meethaq-app.reference-shell > .reference-header {
+  min-height: 72px;
+  z-index: 120;
+  border-bottom:1px solid #83daca3b;
+  background: linear-gradient(175deg,#0a2e2be8,#041c1df0);
+  box-shadow:0 8px 23px #00161553,inset 0 1px 0 #beffe621;
+}
+.reference-shell .reference-header-row {
+  grid-template-columns: max-content minmax(0,1fr) max-content;
+  min-height:72px;
+  gap:clamp(10px,1.2vw,22px);
+  padding-inline:var(--mithaq-header-pad);
+}
+.reference-shell .mithaq-brand { gap:10px; align-items:center; min-inline-size:0; inline-size:max-content; color:#fff8df; }
+.reference-shell .mithaq-brand b { font:700 clamp(1.6rem,2.2vw,2.35rem)/1.25 var(--launch-serif) !important; color:#fff2cb; }
+.reference-shell .mithaq-brand small { display:block; color:#d2e8dd; }
+.reference-shell .reference-top-nav {
+  display:flex; justify-content:center; gap:clamp(4px,.8vw,14px);
+  min-width:0;
+}
+.reference-shell .reference-top-nav a { flex:0 1 auto; min-width:0; gap:6px; padding-inline:clamp(6px,1.1vw,18px); }
+.reference-shell .reference-top-nav a svg { width:19px; min-width:17px; flex:none; }
+.reference-shell .reference-top-nav a span { overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.reference-shell .reference-header-actions { gap:8px; }
+.reference-shell .reference-search { min-width:44px; width:44px; min-height:44px; padding:6px; }
+.reference-shell .reference-search span { display:none; }
+.reference-shell .reference-round,.reference-shell .reference-avatar { width:43px; flex:none; }
+.reference-shell .reference-avatar {
+  background:linear-gradient(160deg,#457e707d,#092e2d);
+  border:1px solid #d8dd9d8c; color:#ffe5a5;
+}
+.reference-shell .reference-home {
+  grid-template-columns:clamp(192px,14.25vw,238px) minmax(0,1fr);
+  grid-template-areas:"sidebar content";
+  padding-inline:clamp(12px,2.2vw,34px);
+}
+.reference-home > :is(.reference-main,.mithaq-inner-content) { grid-area:content; }
+.reference-shell .reference-side {
+  grid-area:sidebar;
+  margin-top:16px;
+  gap:12px;
+  grid-template-rows:auto auto;
+  overflow:visible;
+  border:0;
+  background:none;
+  box-shadow:none;
+}
+.reference-shell .reference-side-nav { border-radius:26px 26px 24px 24px; padding:12px 8px 14px; }
+.reference-shell .reference-side-nav a { direction:rtl; gap:10px; padding-inline:11px; min-height:43px; }
+.reference-shell .reference-side-nav a svg { width:21px; height:21px; }
+.reference-shell .reference-side-nav a[aria-current="page"] { margin-bottom:0; border-radius:16px; }
+.reference-shell .reference-sidebar-art {
+  margin:0;
+  aspect-ratio:4 / 5;
+  border:1px solid var(--mithaq-rim);
+  border-radius:22px;
+  background:linear-gradient(180deg,#08272724,transparent 58%,#08272719),
+    var(--scene-arcade) 23% 50% / cover no-repeat;
+  box-shadow:var(--mithaq-shadow);
+}
+.reference-shell .reference-hero { margin-top:14px; border-radius:32px; touch-action:pan-y pinch-zoom; --scene-shift:-24px; }
+.reference-shell .reference-hero[data-direction="previous"] { --scene-shift:24px; }
+.reference-shell .reference-hero:focus-visible { outline:2px solid #fff1b0; outline-offset:4px; }
+.reference-shell .reference-hero::before {
+  translate:calc(var(--art-x,0px) * -.35) calc(var(--art-y,0px) * -.35);
+  transition:translate .4s var(--ref-ease);
+}
+.reference-shell .reference-hero h1 { min-height:0; line-height:1.24; text-shadow:0 4px 22px #001b17; }
+.reference-shell .reference-hero-copy { justify-content:center; gap:3px; }
+.reference-shell .reference-hero-actions a.reference-gold { color:#261c12; }
+.reference-shell .reference-hero-copy p { margin-bottom:17px; }
+.reference-shell .reference-hero-art { --mithaq-scene: var(--scene-courtyard); }
+.reference-shell .reference-hero-art:is([data-story="1"],[data-story="2"]) { --mithaq-scene: var(--scene-mushaf); }
+.reference-shell .reference-hero-art[data-story="3"] { --mithaq-scene: var(--scene-arcade); }
+.reference-shell .reference-hero-art[data-story="4"] { --mithaq-scene: url("/images/meethaq-journey.jpg"); }
+.reference-hero-media {
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  mask-image:linear-gradient(90deg,transparent 28%,#000 66%);
+}
+.reference-shell .reference-hero-art::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(270deg,#001d1935,transparent 70%),var(--mithaq-scene) left center / cover;
+  scale:-1 1;
+}
+.reference-shell .reference-feature { gap:3px; }
+.reference-shell .reference-feature .mithaq-feature-mark,
+.reference-shell .mithaq-tracking-mark {
+  display:grid; place-items:center;
+  width:48px; height:48px; flex:none;
+  border-radius:17px;
+  background:linear-gradient(145deg,#ecfff338,#6cfed70b);
+  color:color-mix(in srgb,var(--ref-spark) 55%,#fff7d8);
+  box-shadow:inset 0 1px 1px #e4ffef6b,inset 0 -3px 10px #aef7db21;
+}
+.reference-shell .mithaq-tracking-mark { color:#ffe29a; width:56px; height:56px; }
+.reference-shell .reference-streak-total .mithaq-tracking-mark { width:42px; height:42px; }
+.reference-shell .reference-streak-total strong { direction:rtl; font-size:clamp(.95rem,1.5vw,1.4rem); }
+
+.mithaq-inner-frame { align-items:start; }
+.mithaq-inner-content { min-width:0; }
+.meethaq-app.reference-shell .mithaq-inner-content > .section-wrap {
+  width:100%; max-width:none; margin-inline:0;
+  padding-top:clamp(13px,2vw,28px);
+}
+.mithaq-inner-content .page-crumb { margin-bottom:13px; }
+.meethaq-app.reference-shell .mithaq-inner-content :is(
+  .glass-heading,.companion-heading,.launch-content-heading:not(.reader-heading),
+  .page-hero,.directory-heading,.dashboard-head,.learning-hero,
+  .learning-course-head,.learning-case-head,.rafiq-panel-header
+) {
+  color:var(--launch-text);
+  border:1px solid var(--mithaq-rim);
+  border-radius:24px;
+  background:var(--mithaq-banner);
+  box-shadow:var(--mithaq-shadow);
+}
+.mithaq-inner-content :is(.companion-heading,.directory-heading,.learning-course-head,.learning-case-head) {
+  padding:clamp(15px,2.7vw,32px);
+  margin-bottom:16px;
+}
+.meethaq-app.reference-shell .mithaq-inner-content :is(
+  .companion-panel,.reminder-panel,.quran-reader-panel,.about-principles > article,
+  .about-cta,.glass-privacy-grid > div,.mat-card,.curated-card,.ex-card,
+  .coming-panel,.directory-panel,.learning-card,
+  .learning-outline,.learning-hero-progress,.learning-reader,.seerah-timeline-panel,
+  .names-card,.routine-flow,.routine-saved,.owner-control-card,.owner-stat-grid > article,
+  .permissions-table-wrap,.admin-controls,.access-card,.rafiq-panel,.tool-card,
+  .khatma-glance > div,.ward-reader
+),.meethaq-app.reference-shell :is(.login-card,.release-not-found > section) {
+  color:var(--launch-text);
+  border-color:var(--mithaq-rim);
+  background:var(--mithaq-surface);
+  box-shadow:var(--mithaq-shadow);
+}
+.meethaq-app.reference-shell .mithaq-inner-content :is(
+  .prayer-cover,.khatma-scene,.release-content-cover,.worship-journey,.seerah-hero,.names-hero
+) {
+  border-color:var(--mithaq-rim);
+  box-shadow:var(--mithaq-shadow);
+}
+.meethaq-app.reference-shell .mithaq-inner-content .release-content-cover {
+  background:linear-gradient(270deg,#092c26f7 6%,#092c26bd 52%,#08272432),var(--section-art) left 52% / cover;
+}
+.mithaq-inner-content :is(.card-grid,.curated-grid,.learning-cards,.owner-stat-grid) > * { min-width:0; }
+.mithaq-inner-content :is(.quran-reader-heading,.quran-reader-controls,.quran-verse-study,.quran-listen-bar,.content-tools) {
+  border-color:var(--mithaq-rim);
+}
+.mithaq-inner-content :is(.quran-surah-picker,.quran-page-picker,.quran-search,.quran-display-options) {
+  background:var(--mithaq-field);
+  border-color:var(--mithaq-rim);
+}
+.mithaq-inner-content :is(.tool-input input,.content-search input,.form-grid input,.form-grid textarea) {
+  background:var(--mithaq-field);
+  border-color:var(--mithaq-rim);
+  color:var(--launch-text);
+}
+.mithaq-inner-content .directory-entries a { border-color:var(--mithaq-rim); }
+.mithaq-inner-content .rafiq-panel-header { border-width:0 0 1px; border-radius:18px 18px 0 0; }
+.reference-shell > .site-footer .footer-inner { width:min(1480px,95%); }
+
+.meethaq-app.reference-shell.release-not-found {
+  display:grid; place-items:center; min-height:100dvh; padding:24px;
+}
+.release-not-found .mithaq-brand { margin-bottom:14px; }
+@media (min-width:1540px) {
+  .reference-shell .reference-search { width:clamp(136px,12vw,196px); }
+  .reference-shell .reference-search span { display:inline; overflow:hidden; text-overflow:ellipsis; }
+}
+@keyframes mithaq-scene-enter {
+  from { opacity:0; transform:translateX(var(--scene-shift)) scale(1.025); }
+  to { opacity:1; transform:none; }
+}
+@keyframes mithaq-scene-leave {
+  from { transform:none; }
+  to { transform:translateX(calc(-1 * var(--scene-shift))) scale(1.025); }
+}
+@keyframes mithaq-copy-enter {
+  from { opacity:0; transform:translateX(var(--scene-shift)); }
+  to { opacity:1; transform:translateX(0); }
+}
+.reference-shell .reference-hero-art.scene-outgoing { display:none; }
+@keyframes mithaq-panel-reveal {
+  from { opacity:.65; translate:0 9px; }
+  to { opacity:1; translate:0 0; }
+}
+@media (prefers-reduced-motion:no-preference) {
+  .reference-shell .scene-current { animation:mithaq-scene-enter .52s var(--ref-ease) both; }
+  .reference-shell .reference-hero-art.scene-outgoing { display:block; animation:mithaq-scene-leave .52s var(--ref-ease) both; }
+  .reference-shell .reference-hero-copy { animation:mithaq-copy-enter .38s var(--ref-ease) both; }
+  @supports (animation-timeline: view()) {
+    .mithaq-inner-content :is(.learning-card,.curated-card,.ex-card,.glass-privacy-grid > div):nth-child(-n+9):not(:focus-within) {
+      animation:mithaq-panel-reveal both;
+      animation-timeline:view();
+      animation-range:entry 3% cover 20%;
+    }
+  }
+  html:not([data-meethaq-motion]) .mithaq-inner-shell > .launch-route {
+    animation:companion-page-in .22s var(--ref-ease);
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .reference-shell .reference-hero::before { transition:none; }
+}
+@media (min-width:941px) and (max-width:1140px) {
+  .reference-shell .reference-top-nav a { padding-inline:9px; }
+  .reference-shell .reference-top-nav a svg { display:none; }
+}
+@media (max-width:940px) {
+  .meethaq-app.launch-shell.reference-shell { --mithaq-header-height:70px; }
+  .reference-shell .reference-home { grid-template-columns:minmax(0,1fr); grid-template-areas:"content"; }
+  .reference-shell .reference-header-row { grid-template-columns:max-content max-content; min-height:66px; }
+  .meethaq-app.reference-shell > .reference-header { min-height:66px; }
+  .reference-shell .reference-top-nav { display:none; }
+  .reference-shell .reference-hero { margin-top:10px; }
+}
+@media (max-width:640px) {
+  .meethaq-app.launch-shell.reference-shell { --mithaq-header-pad:10px; --mithaq-header-height:60px; }
+  .reference-shell .reference-header-row { min-height:59px; gap:5px; }
+  .meethaq-app.reference-shell > .reference-header { min-height:59px; }
+  .reference-shell .mithaq-brand { gap:7px; }
+  .reference-shell .mithaq-brand small { display:none; }
+  .reference-shell .reference-header-actions { gap:4px; }
+  .reference-shell .reference-header-actions :is(.reference-search,.reference-round,.reference-avatar) { width:37px; min-width:37px; min-height:37px; }
+  .reference-hero-media { opacity:.48; mask-image:linear-gradient(#000,transparent 95%); }
+  .reference-shell .reference-hero-copy { gap:3px; }
+  .reference-shell .reference-feature .mithaq-feature-mark { width:36px; height:36px; border-radius:12px; }
+  .reference-shell .reference-feature .mithaq-feature-mark svg { width:22px; height:22px; }
+  .reference-shell .mithaq-tracking-mark { width:38px; height:38px; border-radius:12px; }
+  .reference-shell .mithaq-tracking-mark svg { width:23px; height:23px; }
+  .reference-shell .reference-streak-total .mithaq-tracking-mark { width:32px; height:32px; }
+  .mithaq-inner-content :is(.glass-heading,.companion-heading,.learning-hero,.directory-heading) { border-radius:18px; }
+}
+.launch-route [hidden] { display:none !important; }
+.hadith-citation { display:flex; align-items:baseline; flex-wrap:wrap; gap:.3rem .6rem; line-height:1.55; }
+.hadith-citation b { border:1px solid currentColor; border-radius:20rem; padding:0 .45rem; }
+.hadith-citation small { color:var(--muted); }
+.material-report summary { display:flex; align-items:center; gap:.55rem; cursor:pointer; }
+.material-report form { display:grid; gap:.5rem; margin-block-start:.75rem; }
+.material-report label { display:grid; gap:.25rem; }
+.prayer-monthly summary { cursor:pointer; font-weight:700; }
+.prayer-monthly-print h2 { margin-block:.85rem; }
+.prayer-monthly-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-block:.6rem 1rem; }
+@media print {
+  body:has(.prayer-monthly[open]) :is(.reference-header,.reference-side,.site-footer,.bottom-nav,.prayer-page > :not(.prayer-monthly),.prayer-monthly > summary,.prayer-monthly-actions) { display:none !important; }
+  body:has(.prayer-monthly[open]) :is(.meethaq-app,.launch-route,.reference-home,.mithaq-inner-content,.prayer-page,.prayer-monthly,.ramadan-times) {
+    display:block; max-width:none; width:100%; height:auto; margin:0; padding:0; border:0; overflow:visible; background:#fff; color:#111;
+  }
+  body:has(.prayer-monthly[open]) .meethaq-app::before { display:none; }
+  body:has(.prayer-monthly[open]) .prayer-monthly-print * { color:#111; background:#fff; }
+  body:has(.prayer-monthly[open]) tr { break-inside:avoid; }
+}
+.meethaq-app .bottom-nav { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.reference-header-actions svg { width:21px; height:21px; }
+html:not(.dark) .meethaq-app.launch-shell.reference-shell { --ref-ink:#163a2e; --ref-muted:#345a4b; }
+html:not(.dark) :is(.reference-hero,.reference-feature,.reference-side-nav) { --ref-ink:#fff9ef; --ref-muted:#d4e9df; }
+html:not(.dark) .meethaq-app.reference-shell > .reference-header { background:#eff8f1; color:#173a2e; }
+html:not(.dark) .reference-header :is(.reference-top-nav a,.reference-search,.reference-round,.reference-avatar) {
+  color:#173a2e; background:#e2f0e7; border-color:#8cb8a6; box-shadow:none;
+}
+html:not(.dark) .reference-header a[aria-current="page"] { color:#3a260b; background:#f2dda2; border-color:#c2a259; }
+html:not(.dark) .reference-header .reference-search svg { color:#5a4317; }
+html:not(.dark) .reference-header .reference-account-menu { color:#173a2e; background:#eff8f1; }
+.reference-side-nav svg { width:21px; height:21px; }
+html:not(.dark) .meethaq-app.launch-shell.reference-shell:not(.mithaq-inner-shell) {
+  background:radial-gradient(ellipse at 75% 3%,#c9e1d6,#f7f9f3 66%);
+}
+html:not(.dark) .meethaq-app.reference-shell.launch-clean::before { opacity:.13; }
+html[data-effects="reduced"] .meethaq-app :where(*, *::before, *::after) {
+  animation-duration:.01ms !important;
+  transition-duration:.01ms !important;
+  scroll-behavior:auto !important;
+  backdrop-filter:none !important;
+}
+html[data-effects="reduced"] .meethaq-app [data-glass-active] { transform:none !important; }
+html[data-effects="reduced"] .meethaq-app [data-reveal] { opacity:1 !important; }

@@ -1,0 +1,139 @@
+.seerah-page {
+  --seerah-paper: #fffcf4;
+  --seerah-ink: #20352c;
+  --seerah-muted: #506358;
+  --seerah-gold: #845b21;
+  --seerah-line: #d8dfd5;
+  --seerah-wash: #edf2e8;
+  --seerah-link: #105b46;
+  max-width: 1120px;
+  color: var(--seerah-ink);
+}
+
+.dark .seerah-page {
+  --seerah-paper: #102820;
+  --seerah-ink: #f5f0e4;
+  --seerah-muted: #b9c9be;
+  --seerah-gold: #e3c17f;
+  --seerah-line: #3a5648;
+  --seerah-wash: #1b382c;
+  --seerah-link: #a5d8bb;
+}
+
+.seerah-page :is(a, button, input):focus-visible { outline: 2px solid var(--seerah-gold); outline-offset: 3px; }
+.seerah-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 54px) 20px;
+  background: radial-gradient(ellipse at 50% 10%, #2c523b, transparent 65%), #0e241b;
+  color: #f7ecce;
+  text-align: center;
+  border: 1px solid #7a8055;
+  border-radius: 24px;
+}
+.seerah-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/images/mushaf-ornament-tile.svg") center / 88px;
+  opacity: .28;
+  mask-image: linear-gradient(90deg, #000, transparent 30%, transparent 70%, #000);
+}
+.seerah-hero h1 { color: #efcf92; font: 700 clamp(18px, 2.5vw, 25px)/1.4 Cairo, sans-serif; margin: 0; }
+.seerah-wordmark {
+  display: grid; justify-items: center; gap: 7px;
+  margin: clamp(23px, 4vw, 42px) auto 18px;
+  padding: 5px 0 20px;
+  border-block-end: 1px solid #d5bd7f69;
+  max-width: 460px;
+  color: #f7da9d;
+}
+.seerah-wordmark-name { font: 700 clamp(93px, 14vw, 155px)/1.13 Amiri, serif; }
+.seerah-wordmark-salutation { font: 700 clamp(24px, 4vw, 38px)/1.35 Amiri, serif; }
+.seerah-hero p { max-width: 56ch; margin: 0 auto; line-height: 1.9; }
+.seerah-hero-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-block-start: 22px; }
+.seerah-hero-actions a {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px;
+  padding: 6px 13px; border: 1px solid #849279; border-radius: 8px; font-weight: 700; font-size: 14px;
+}
+.seerah-hero-actions a:first-child { background: #edcf91; color: #1a3427; border-color: #edcf91; }
+.seerah-hero-actions a:hover { box-shadow: inset 0 0 0 1px #efcf92; }
+
+.seerah-search {
+  display: flex; align-items: center; gap: 10px; min-height: 48px;
+  margin-block-start: 26px; padding-inline: 13px; background: var(--seerah-paper);
+  color: var(--seerah-muted); border: 1px solid var(--seerah-line); border-radius: 10px;
+}
+.seerah-search label { display: flex; cursor: text; }
+.seerah-search:focus-within { outline: 2px solid var(--seerah-gold); outline-offset: 2px; }
+.seerah-search input { min-width: 0; flex: 1; min-height: 46px; color: var(--seerah-ink); background: transparent; }
+.seerah-search input:focus-visible { outline: none; }
+.seerah-search input::placeholder { color: var(--seerah-muted); opacity: 1; }
+.seerah-search input::-webkit-search-cancel-button { appearance: none; }
+.seerah-search button { display: grid; place-items: center; min-width: 40px; min-height: 40px; }
+.seerah-section { margin-block: 34px 55px; scroll-margin-block-start: 110px; }
+.seerah-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-block-end: 16px; }
+.seerah-section-heading h2 { margin: 0; font: 700 clamp(29px, 5vw, 43px)/1.3 Amiri, serif; }
+.seerah-section-heading p { margin: 4px 0 0; color: var(--seerah-muted); }
+.seerah-section-heading > :is(span, output) { color: var(--seerah-muted); font-size: 14px; flex-shrink: 0; }
+
+.seerah-timeline, .seerah-chapter-list, .seerah-results { list-style: none; margin: 0; padding: 0; }
+.seerah-timeline { display: grid; gap: 13px; padding-inline-start: 19px; }
+.seerah-timeline > li { position: relative; border-inline-start: 1px solid var(--seerah-line); padding-inline-start: 30px; }
+.seerah-timeline-number {
+  position: absolute; inset-inline-start: -16px; top: 19px;
+  display: grid; place-items: center; width: 31px; height: 31px; border-radius: 50%;
+  border: 1px solid var(--seerah-gold); background: var(--seerah-paper); color: var(--seerah-gold); font-size: 14px;
+}
+.seerah-timeline-panel, .seerah-empty {
+  padding: clamp(13px, 3vw, 21px); min-width: 0;
+  border: 1px solid var(--seerah-line); border-radius: 13px; background: var(--seerah-paper);
+}
+.seerah-timeline-panel h3 { margin: 0; font: 700 clamp(24px, 3.5vw, 33px)/1.35 Amiri, serif; }
+.seerah-timeline-panel p { margin: 4px 0 12px; color: var(--seerah-muted); line-height: 1.8; }
+.seerah-timeline .seerah-chapter-list, .seerah-topic-grid, .seerah-results {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr)); gap: 8px;
+}
+.seerah-topic-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 12px; }
+.seerah-chapter-list a, .seerah-chapter-nav a {
+  display: flex; align-items: center; justify-content: space-between; gap: 7px; min-height: 45px;
+  padding: 8px 10px; border: 1px solid var(--seerah-line); border-radius: 7px; color: var(--seerah-ink);
+}
+.seerah-chapter-list a:hover, .seerah-chapter-nav a:hover, .seerah-results a:hover { border-color: var(--seerah-gold); background: var(--seerah-wash); }
+.seerah-chapter-list a small, .seerah-results a small, .seerah-chapter-nav small {
+  display: block; color: var(--seerah-muted); margin-block-start: 2px; font-size: 12px;
+}
+.seerah-chapter-list svg, .seerah-chapter-nav svg { flex: 0 0 auto; color: var(--seerah-gold); }
+.seerah-topic-grid .seerah-chapter-list { display: grid; gap: 5px; }
+.seerah-results a { display: grid; height: 100%; gap: 5px; padding: 12px; border: 1px solid var(--seerah-line); border-radius: 10px; background: var(--seerah-paper); }
+.seerah-results a span { color: var(--seerah-muted); line-height: 1.75; font-size: 14px; }
+
+.seerah-reader {
+  max-width: 845px; margin: 0 auto 58px; padding: clamp(16px, 4vw, 38px);
+  background: var(--seerah-paper); border: 1px solid var(--seerah-line); border-radius: 15px;
+}
+.seerah-back { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; color: var(--seerah-link); }
+.seerah-back:hover { text-decoration: underline; text-underline-offset: 4px; }
+.seerah-reader-meta { display: flex; flex-wrap: wrap; gap: 8px 13px; color: var(--seerah-gold); font-size: 14px; }
+.seerah-reader h1 { margin: 5px 0 8px; font: 700 clamp(34px, 6vw, 53px)/1.26 Amiri, serif; scroll-margin-block-start: 150px; }
+.seerah-reader h1:focus { outline: none; }
+.seerah-standfirst { margin: 0 0 14px; color: var(--seerah-muted); }
+.seerah-prose { padding-block-start: 2px; border-block-start: 1px solid var(--seerah-line); font-size: clamp(16px, 2vw, 18px); line-height: 2.03; }
+.seerah-prose p { margin-block: 16px; }
+.seerah-note { margin: 12px 0; padding: 11px 13px; border-inline-start: 3px solid var(--seerah-gold); background: var(--seerah-wash); line-height: 1.8; }
+.seerah-reader h2 { margin: 0 0 8px; font-size: 17px; }
+.seerah-evidence, .seerah-sources { margin-block-start: 20px; }
+.seerah-evidence .local-passage-citation { color: var(--seerah-muted); font-size: 13px; }
+.seerah-sources ul { margin: 0; padding-inline-start: 20px; color: var(--seerah-muted); line-height: 1.85; }
+.seerah-chapter-nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-block-start: 19px; padding-block-start: 14px; border-block-start: 1px solid var(--seerah-line); }
+
+@media (max-width: 560px) {
+  .seerah-section-heading { align-items: start; }
+  .seerah-timeline { padding-inline-start: 11px; }
+  .seerah-timeline > li { padding-inline-start: 20px; }
+  .seerah-timeline-number { inset-inline-start: -12px; width: 24px; height: 24px; font-size: 12px; }
+  .seerah-chapter-nav a { flex: 1 1 100%; }
+}

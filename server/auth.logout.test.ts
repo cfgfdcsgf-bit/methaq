@@ -19,6 +19,8 @@ function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] }
     email: "sample@example.com",
     name: "Sample User",
     loginMethod: "manus",
+    passwordHash: "test-only-password-hash",
+    emailVerified: true,
     role: "user",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -52,11 +54,17 @@ describe("auth.logout", () => {
     expect(clearedCookies).toHaveLength(1);
     expect(clearedCookies[0]?.name).toBe(COOKIE_NAME);
     expect(clearedCookies[0]?.options).toMatchObject({
-      maxAge: -1,
       secure: true,
       sameSite: "lax",
       httpOnly: true,
       path: "/",
     });
+  });
+});
+
+describe("auth.me", () => {
+  it("returns only the account fields used by the client", async () => {
+    const { ctx } = createAuthContext();
+    await expect(appRouter.createCaller(ctx).auth.me()).resolves.toEqual({ id: 1, name: "Sample User", role: "user", loginMethod: "manus" });
   });
 });

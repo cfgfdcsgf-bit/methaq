@@ -3,5 +3,13 @@ dist
 .git
 .env
 .env.*
+.meethaq-session-secret
 .manus-logs
+.work
+temp
+tmp
+_kfgqpc_v2_work
+**/_kfgqpc_v2_work
+vendor
+*.log
 *.manus-starter-*

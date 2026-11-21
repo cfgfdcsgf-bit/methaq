@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
+  <defs>
+    <linearGradient id="teal" x2="0" y2="1">
+      <stop stop-color="#4b7164"/>
+      <stop offset=".52" stop-color="#386255"/>
+      <stop offset="1" stop-color="#2c5146"/>
+    </linearGradient>
+    <g id="flower" fill="none" stroke-linejoin="round">
+      <path d="M15 1.2 18 8.4 25.7 5.7 22.8 13.3 29 15 22.8 17.8 25.7 24.5 18 22.2 15 29 12 22.2 4.3 24.5 7.2 17.8 1 15 7.2 13.3 4.3 5.7 12 8.4Z" fill="#e1c778" stroke="#f6e9bd" stroke-width=".75"/>
+      <g fill="#a36b65" stroke="#cfb4a4" stroke-width=".65">
+        <ellipse cx="15" cy="7.2" rx="2.5" ry="5"/><ellipse cx="22.8" cy="15" rx="2.5" ry="5" transform="rotate(90 22.8 15)"/>
+        <ellipse cx="15" cy="22.8" rx="2.5" ry="5"/><ellipse cx="7.2" cy="15" rx="2.5" ry="5" transform="rotate(90 7.2 15)"/>
+        <ellipse cx="9.5" cy="9.5" rx="2" ry="4" transform="rotate(-45 9.5 9.5)"/><ellipse cx="20.5" cy="9.5" rx="2" ry="4" transform="rotate(45 20.5 9.5)"/>
+        <ellipse cx="20.5" cy="20.5" rx="2" ry="4" transform="rotate(-45 20.5 20.5)"/><ellipse cx="9.5" cy="20.5" rx="2" ry="4" transform="rotate(45 9.5 20.5)"/>
+      </g>
+      <circle cx="15" cy="15" r="3.1" fill="#f7e8b4" stroke="#fff5d9" stroke-width=".7"/>
+      <circle cx="15" cy="15" r="1.25" fill="#126d6a" stroke="none"/>
+    </g>
+    <pattern id="horizontal" width="30" height="30" patternUnits="userSpaceOnUse">
+      <rect width="30" height="30" fill="url(#teal)"/>
+      <path d="M0 0 15 15 30 0M0 30 15 15 30 30M0 15h30M15 0v30" fill="none" stroke="#b6c6a5" stroke-width=".65" opacity=".75"/>
+      <path d="M0 4 15 15 30 4M0 26 15 15 30 26" fill="none" stroke="#e1c778" stroke-width=".45" opacity=".7"/>
+      <g transform="translate(7.5 7.5) scale(.5)"><use href="#flower"/></g>
+      <circle cx="2" cy="2" r=".8" fill="#f6e8c0"/><circle cx="28" cy="28" r=".8" fill="#f6e8c0"/>
+    </pattern>
+    <pattern id="vertical" width="30" height="30" patternUnits="userSpaceOnUse">
+      <rect width="30" height="30" fill="url(#teal)"/>
+      <path d="M0 0 15 15 0 30M30 0 15 15 30 30M15 0v30M0 15h30" fill="none" stroke="#b6c6a5" stroke-width=".65" opacity=".75"/>
+      <path d="M4 0 15 15 4 30M26 0 15 15 26 30" fill="none" stroke="#e1c778" stroke-width=".45" opacity=".7"/>
+      <g transform="translate(7.5 7.5) scale(.5)"><use href="#flower"/></g>
+      <circle cx="2" cy="28" r=".8" fill="#f6e8c0"/><circle cx="28" cy="2" r=".8" fill="#f6e8c0"/>
+    </pattern>
+    <g id="corner">
+      <rect width="30" height="30" fill="url(#teal)"/>
+      <path d="M0 0 30 30M30 0 0 30M15 0v30M0 15h30" stroke="#d8c178" stroke-width=".7" fill="none"/>
+      <path d="M15 1 18 9 27 6 23 15 27 24 18 21 15 29 12 21 3 24 7 15 3 6 12 9Z" fill="#527766" stroke="#e6d28b" stroke-width=".9"/>
+      <g transform="translate(7.5 7.5) scale(.5)"><use href="#flower"/></g>
+      <circle cx="2" cy="2" r="1" fill="#f7e8c0"/><circle cx="28" cy="28" r="1" fill="#f7e8c0"/>
+    </g>
+  </defs>
+  <rect width="90" height="90" fill="#fbf8ef"/>
+  <rect x="30" width="30" height="30" fill="url(#horizontal)"/>
+  <rect x="30" y="60" width="30" height="30" fill="url(#horizontal)"/>
+  <rect y="30" width="30" height="30" fill="url(#vertical)"/>
+  <rect x="60" y="30" width="30" height="30" fill="url(#vertical)"/>
+  <use href="#corner"/>
+  <use href="#corner" x="60"/>
+  <use href="#corner" y="60"/>
+  <use href="#corner" x="60" y="60"/>
+  <path d="M30 0h30M30 90h30M0 30v30M90 30v30" stroke="#f4e8c4" stroke-width="1.2"/>
+</svg>

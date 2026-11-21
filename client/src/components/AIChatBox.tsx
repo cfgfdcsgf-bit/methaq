@@ -1,334 +1,157 @@
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { Loader2, Send, User, Sparkles } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { AlertCircle, ArrowLeft, ExternalLink, Loader2, RotateCw, Send, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { RAFIQ_MESSAGE_LENGTH } from "@shared/const";
 
-/**
- * Message type matching server-side LLM Message interface
- */
 export type Message = {
-  role: "system" | "user" | "assistant";
+  role: "user" | "assistant";
   content: string;
+  sources?: { title: string; url: string; publisher: string }[];
 };
 
-export type AIChatBoxProps = {
-  /**
-   * Messages array to display in the chat.
-   * Should match the format used by invokeLLM on the server.
-   */
+type AIChatBoxProps = {
+  initialQuestion?: string;
   messages: Message[];
-
-  /**
-   * Callback when user sends a message.
-   * Typically you'll call a tRPC mutation here to invoke the LLM.
-   */
-  onSendMessage: (content: string) => void;
-
-  /**
-   * Whether the AI is currently generating a response
-   */
-  isLoading?: boolean;
-
-  /**
-   * Placeholder text for the input field
-   */
-  placeholder?: string;
-
-  /**
-   * Custom className for the container
-   */
-  className?: string;
-
-  /**
-   * Height of the chat box (default: 600px)
-   */
-  height?: string | number;
-
-  /**
-   * Empty state message to display when no messages
-   */
-  emptyStateMessage?: string;
-
-  /**
-   * Suggested prompts to display in empty state
-   * Click to send directly
-   */
-  suggestedPrompts?: string[];
+  onSendMessage: (question: string) => void;
+  onRetry: () => void;
+  isLoading: boolean;
+  error: string | null;
 };
 
-/**
- * A ready-to-use AI chat box component that integrates with the LLM system.
- *
- * Features:
- * - Matches server-side Message interface for seamless integration
- * - Plain-text rendering (keeps the chat bundle small; answers are short Arabic text)
- * - Auto-scrolls to latest message
- * - Loading states
- * - Uses global theme colors from index.css
- *
- * @example
- * ```tsx
- * const ChatPage = () => {
- *   const [messages, setMessages] = useState<Message[]>([
- *     { role: "system", content: "You are a helpful assistant." }
- *   ]);
- *
- *   const chatMutation = trpc.ai.chat.useMutation({
- *     onSuccess: (response) => {
- *       // Assuming your tRPC endpoint returns the AI response as a string
- *       setMessages(prev => [...prev, {
- *         role: "assistant",
- *         content: response
- *       }]);
- *     },
- *     onError: (error) => {
- *       console.error("Chat error:", error);
- *       // Optionally show error message to user
- *     }
- *   });
- *
- *   const handleSend = (content: string) => {
- *     const newMessages = [...messages, { role: "user", content }];
- *     setMessages(newMessages);
- *     chatMutation.mutate({ messages: newMessages });
- *   };
- *
- *   return (
- *     <AIChatBox
- *       messages={messages}
- *       onSendMessage={handleSend}
- *       isLoading={chatMutation.isPending}
- *       suggestedPrompts={[
- *         "Explain quantum computing",
- *         "Write a hello world in Python"
- *       ]}
- *     />
- *   );
- * };
- * ```
- */
-export function AIChatBox({
-  messages,
-  onSendMessage,
-  isLoading = false,
-  placeholder = "Type your message...",
-  className,
-  height = "600px",
-  emptyStateMessage = "Start a conversation with AI",
-  suggestedPrompts,
-}: AIChatBoxProps) {
-  const [input, setInput] = useState("");
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputAreaRef = useRef<HTMLFormElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+const prompts = ["كيف أبدأ تدبر القرآن؟", "ما الفرق بين النص والشرح؟", "كيف أتحقق من حديث منسوب؟"];
 
-  // Filter out system messages
-  const displayMessages = messages.filter((msg) => msg.role !== "system");
+function emphasis(text: string) {
+  return text.split(/\*\*([^*\r\n]+)\*\*/).map((part, index) =>
+    index % 2 === 0 ? part : <strong key={index}>{part}</strong>
+  );
+}
 
-  // Calculate min-height for last assistant message to push user message to top
-  const [minHeightForLastMessage, setMinHeightForLastMessage] = useState(0);
+function AssistantAnswer({ content }: { content: string }) {
+  const lines = content.split(/\r?\n/);
+  const blocks = [];
+  const orderedItem = /^(?:\d+|[٠-٩]+)[.)]\s+(.+)$/u;
+  const bulletItem = /^[-*•]\s+(.+)$/u;
+
+  for (let index = 0; index < lines.length;) {
+    const line = lines[index].trim();
+    const start = index++;
+    if (!line || /^-{3,}$/.test(line)) continue;
+
+    const heading = line.match(/^#{2,4}\s+(.+)$/);
+    if (heading) {
+      blocks.push(<h3 key={start}>{emphasis(heading[1])}</h3>);
+      continue;
+    }
+
+    const itemPattern = orderedItem.test(line) ? orderedItem : bulletItem;
+    const first = line.match(itemPattern);
+    if (first) {
+      const items: { text: string; bullets: string[] }[] = [{ text: first[1], bullets: [] }];
+      for (let next = index; next < lines.length; next++) {
+        const raw = lines[next];
+        const text = raw.trim();
+        if (!text) continue;
+        const nested = itemPattern === orderedItem && /^(?: {2,}|\t)/.test(raw) ? text.match(bulletItem) : null;
+        if (nested) {
+          items[items.length - 1].bullets.push(nested[1]);
+          index = next + 1;
+          continue;
+        }
+        const item = text.match(itemPattern);
+        if (!item) break;
+        items.push({ text: item[1], bullets: [] });
+        index = next + 1;
+      }
+      const List = itemPattern === orderedItem ? "ol" : "ul";
+      blocks.push(<List key={start}>{items.map((item, offset) => <li key={offset}>
+        {emphasis(item.text)}
+        {item.bullets.length > 0 && <ul>{item.bullets.map((bullet, position) =>
+          <li key={position}>{emphasis(bullet)}</li>
+        )}</ul>}
+      </li>)}</List>);
+      continue;
+    }
+
+    blocks.push(<p key={start}>{emphasis(line)}</p>);
+  }
+  return <div className="rafiq-answer" dir="auto">{blocks}</div>;
+}
+
+export function AIChatBox({ messages, onSendMessage, onRetry, isLoading, error, initialQuestion }: AIChatBoxProps) {
+  const [input, setInput] = useState(initialQuestion ?? "");
+  const transcript = useRef<HTMLDivElement>(null);
+  const latestTurn = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (containerRef.current && inputAreaRef.current) {
-      const containerHeight = containerRef.current.offsetHeight;
-      const inputHeight = inputAreaRef.current.offsetHeight;
-      const scrollAreaHeight = containerHeight - inputHeight;
-
-      // Reserve space for:
-      // - padding (p-4 = 32px top+bottom)
-      // - user message: 40px (item height) + 16px (margin-top from space-y-4) = 56px
-      // Note: margin-bottom is not counted because it naturally pushes the assistant message down
-      const userMessageReservedHeight = 56;
-      const calculatedHeight = scrollAreaHeight - 32 - userMessageReservedHeight;
-
-      setMinHeightForLastMessage(Math.max(0, calculatedHeight));
+    const element = transcript.current;
+    if (!element) return;
+    const turn = latestTurn.current;
+    if (!isLoading && !error && messages.at(-1)?.role === "assistant" && turn && turn.offsetHeight >= element.clientHeight) {
+      element.scrollTop += turn.getBoundingClientRect().top - element.getBoundingClientRect().top - 12;
+    } else {
+      element.scrollTop = element.scrollHeight;
     }
-  }, []);
+  }, [messages, isLoading, error]);
 
-  // Scroll to bottom helper function with smooth animation
-  const scrollToBottom = () => {
-    const viewport = scrollAreaRef.current?.querySelector(
-      '[data-radix-scroll-area-viewport]'
-    ) as HTMLDivElement;
-
-    if (viewport) {
-      requestAnimationFrame(() => {
-        viewport.scrollTo({
-          top: viewport.scrollHeight,
-          behavior: 'smooth'
-        });
-      });
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedInput = input.trim();
-    if (!trimmedInput || isLoading) return;
-
-    onSendMessage(trimmedInput);
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const question = input.trim();
+    if (isLoading || !question) return;
+    onSendMessage(question);
     setInput("");
+  }
 
-    // Scroll immediately after sending
-    scrollToBottom();
-
-    // Keep focus on input
-    textareaRef.current?.focus();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-
-  return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "flex flex-col bg-card text-card-foreground rounded-lg border shadow-sm",
-        className
-      )}
-      style={{ height }}
-    >
-      {/* Messages Area */}
-      <div ref={scrollAreaRef} className="flex-1 overflow-hidden">
-        {displayMessages.length === 0 ? (
-          <div className="flex h-full flex-col p-4">
-            <div className="flex flex-1 flex-col items-center justify-center gap-6 text-muted-foreground">
-              <div className="flex flex-col items-center gap-3">
-                <Sparkles className="size-12 opacity-20" />
-                <p className="text-sm">{emptyStateMessage}</p>
-              </div>
-
-              {suggestedPrompts && suggestedPrompts.length > 0 && (
-                <div className="flex max-w-2xl flex-wrap justify-center gap-2">
-                  {suggestedPrompts.map((prompt, index) => (
-                    <button
-                      key={index}
-                      onClick={() => onSendMessage(prompt)}
-                      disabled={isLoading}
-                      className="rounded-lg border border-border bg-card px-4 py-2 text-sm transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <ScrollArea className="h-full">
-            <div className="flex flex-col space-y-4 p-4">
-              {displayMessages.map((message, index) => {
-                // Apply min-height to last message only if NOT loading (when loading, the loading indicator gets it)
-                const isLastMessage = index === displayMessages.length - 1;
-                const shouldApplyMinHeight =
-                  isLastMessage && !isLoading && minHeightForLastMessage > 0;
-
-                return (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex gap-3",
-                      message.role === "user"
-                        ? "justify-end items-start"
-                        : "justify-start items-start"
-                    )}
-                    style={
-                      shouldApplyMinHeight
-                        ? { minHeight: `${minHeightForLastMessage}px` }
-                        : undefined
-                    }
-                  >
-                    {message.role === "assistant" && (
-                      <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Sparkles className="size-4 text-primary" />
-                      </div>
-                    )}
-
-                    <div
-                      className={cn(
-                        "max-w-[80%] rounded-lg px-4 py-2.5",
-                        message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-foreground"
-                      )}
-                    >
-                      {message.role === "assistant" ? (
-                        <p className="whitespace-pre-wrap text-sm leading-7">
-                          {message.content}
-                        </p>
-                      ) : (
-                        <p className="whitespace-pre-wrap text-sm">
-                          {message.content}
-                        </p>
-                      )}
-                    </div>
-
-                    {message.role === "user" && (
-                      <div className="size-8 shrink-0 mt-1 rounded-full bg-secondary flex items-center justify-center">
-                        <User className="size-4 text-secondary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {isLoading && (
-                <div
-                  className="flex items-start gap-3"
-                  style={
-                    minHeightForLastMessage > 0
-                      ? { minHeight: `${minHeightForLastMessage}px` }
-                      : undefined
-                  }
-                >
-                  <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="size-4 text-primary" />
-                  </div>
-                  <div className="rounded-lg bg-muted px-4 py-2.5">
-                    <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                  </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        )}
-      </div>
-
-      {/* Input Area */}
-      <form
-        ref={inputAreaRef}
-        onSubmit={handleSubmit}
-        className="flex gap-2 p-4 border-t bg-background/50 items-end"
-      >
-        <Textarea
-          ref={textareaRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="flex-1 max-h-32 resize-none min-h-9"
-          rows={1}
-        />
-        <Button
-          type="submit"
-          size="icon"
-          disabled={!input.trim() || isLoading}
-          className="shrink-0 h-[38px] w-[38px]"
-        >
-          {isLoading ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Send className="size-4" />
-          )}
-        </Button>
-      </form>
+  return <div className="rafiq-thread">
+    <div className="rafiq-transcript" ref={transcript}>
+      {messages.length === 0 ? <div className="rafiq-welcome">
+        <div className="rafiq-welcome-icon"><Sparkles size={24} aria-hidden="true" /></div>
+        <h2>ما سؤالك اليوم؟</h2>
+        <div className="rafiq-suggestions" aria-label="أسئلة للبدء">
+          {prompts.map(prompt => <button type="button" key={prompt} onClick={() => onSendMessage(prompt)}>
+            {prompt}<ArrowLeft size={15} aria-hidden="true" />
+          </button>)}
+        </div>
+      </div> : <div className="rafiq-messages" role="log" aria-label="رسائل المحادثة">
+        {messages.map((message, index) => <div ref={index === messages.length - 1 ? latestTurn : undefined} key={index} className={"rafiq-turn rafiq-turn-" + message.role}>
+          <span className="rafiq-speaker">{message.role === "assistant" ? "رفيق" : "أنت"}</span>
+          {message.role === "assistant"
+            ? <AssistantAnswer content={message.content} />
+            : <p className="rafiq-question" dir="auto">{message.content}</p>}
+          {message.sources && message.sources.length > 0 && <details className="rafiq-references" onToggle={event => {
+            const details = event.currentTarget;
+            if (details.open) details.scrollIntoView({ block: "nearest" });
+          }}>
+            <summary>المصادر</summary>
+            <ul>{message.sources.map(source => <li key={source.url}>
+              <a href={source.url} target="_blank" rel="noopener noreferrer">
+                <span>{source.title}<small>{source.publisher}</small></span>
+                <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            </li>)}</ul>
+          </details>}
+        </div>)}
+      </div>}
+      {isLoading && <div className="rafiq-waiting" role="status"><Loader2 size={17} aria-hidden="true" /> جارٍ إعداد الرد…</div>}
+      {error && !isLoading && <div className="rafiq-error" role="alert">
+        <span><AlertCircle size={17} aria-hidden="true" />{error}</span>
+        <button type="button" onClick={onRetry}><RotateCw size={15} aria-hidden="true" /> إعادة المحاولة</button>
+      </div>}
     </div>
-  );
+    <form className="rafiq-composer" onSubmit={submit}>
+      <textarea
+        aria-label="سؤالك لرفيق"
+        placeholder="اكتب سؤالك هنا…"
+        dir="auto"
+        rows={2}
+        maxLength={RAFIQ_MESSAGE_LENGTH}
+        value={input}
+        onChange={event => setInput(event.target.value)}
+        onKeyDown={event => {
+          if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) submit(event);
+        }}
+      />
+      <button type="submit" aria-label="إرسال السؤال" disabled={isLoading || !input.trim()}>
+        <Send size={17} aria-hidden="true" /><span>إرسال</span>
+      </button>
+    </form>
+  </div>;
 }
