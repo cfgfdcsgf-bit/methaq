@@ -6,7 +6,11 @@ type Passage = { surahName: string; text: string };
 
 const QURAN_DATA_URL = "/data/quran/quran-hafs.tsv";
 
-export default function QuranPassages({ references, compact = false }: { references: QuranPassageReference[]; compact?: boolean }) {
+export default function QuranPassages({ references, compact = false, linkToQuran = true }: {
+  references: QuranPassageReference[];
+  compact?: boolean;
+  linkToQuran?: boolean;
+}) {
   const [passages, setPassages] = useState<Map<string, Passage>>(new Map());
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const referencesJson = JSON.stringify(references);
@@ -48,10 +52,13 @@ export default function QuranPassages({ references, compact = false }: { referen
   return <div className={`local-passage-grid${compact ? " is-compact" : ""}`}>
     {references.map(reference => {
       const passage = passages.get(`${reference.surah}:${reference.ayah}`)!;
+      const citation = `سورة ${passage.surahName} · الآية ${reference.ayah.toLocaleString("ar-EG")}`;
       return <article className="local-passage-card" key={`${reference.surah}:${reference.ayah}`}>
         <span className="local-passage-label">{reference.title}</span>
         <blockquote lang="ar" dir="rtl">{passage.text}</blockquote>
-        <a href={`/quran?surah=${reference.surah}&ayah=${reference.ayah}`}>سورة {passage.surahName} · الآية {reference.ayah.toLocaleString("ar-EG")}</a>
+        {linkToQuran
+          ? <a href={`/quran?surah=${reference.surah}&ayah=${reference.ayah}`}>{citation}</a>
+          : <span className="local-passage-citation">{citation}</span>}
       </article>;
     })}
   </div>;

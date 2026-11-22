@@ -1,3 +1,4 @@
+import { setTimeout as delay } from "node:timers/promises";
 import { ENV } from "./env";
 
 export type Role = "system" | "user" | "assistant" | "tool" | "function";
@@ -275,9 +276,6 @@ const RETRY_MAX_DELAY_MS = 30_000;
 
 type FetchInit = NonNullable<Parameters<typeof fetch>[1]>;
 
-const sleep = (ms: number) =>
-  new Promise<void>(resolve => setTimeout(resolve, ms));
-
 const parseRetryAfter = (value: string | null): number | undefined => {
   if (!value) return undefined;
   const seconds = Number(value);
@@ -302,14 +300,17 @@ const computeBackoffDelay = (
 // returns the final Response so callers keep their existing error handling.
 const fetchWithBackoff = async (
   url: string,
-  init: FetchInit
+  init: FetchInit,
+  maxRetries = RETRY_MAX_RETRIES,
 ): Promise<Response> => {
+  const timeout = AbortSignal.timeout(25_000);
+  const signal = init.signal ? AbortSignal.any([init.signal, timeout]) : timeout;
   let lastError: unknown;
 
-  for (let attempt = 0; attempt <= RETRY_MAX_RETRIES; attempt++) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(url, init);
-      if (response.ok || (response.status < 500 && response.status !== 429) || attempt === RETRY_MAX_RETRIES) {
+      const response = await fetch(url, { ...init, signal });
+      if (response.ok || (response.status < 500 && response.status !== 429) || attempt === maxRetries) {
         return response;
       }
 
@@ -322,16 +323,16 @@ const fetchWithBackoff = async (
         // Body already settled; nothing to clean up.
       }
       console.warn(
-        `LLM request retry ${attempt + 1}/${RETRY_MAX_RETRIES} after status ${response.status}`
+        `LLM request retry ${attempt + 1}/${maxRetries} after status ${response.status}`
       );
-      await sleep(computeBackoffDelay(attempt, retryAfterMs));
+      await delay(computeBackoffDelay(attempt, retryAfterMs), undefined, { signal });
     } catch (error) {
       lastError = error;
-      if (attempt === RETRY_MAX_RETRIES) throw error;
+      if (signal.aborted || attempt === maxRetries) throw error;
       console.warn(
-        `LLM request retry ${attempt + 1}/${RETRY_MAX_RETRIES} after network error`
+        `LLM request retry ${attempt + 1}/${maxRetries} after network error`
       );
-      await sleep(computeBackoffDelay(attempt));
+      await delay(computeBackoffDelay(attempt), undefined, { signal });
     }
   }
 
@@ -380,9 +381,13 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   }
 
   const resolvedMaxTokens = max_tokens ?? maxTokens;
+  const requestUrl = resolveApiUrl();
+  const cloudflareGemma = resolvedModel.startsWith("@cf/google/gemma-4-")
+    && new URL(requestUrl).hostname === "api.cloudflare.com";
   if (typeof resolvedMaxTokens === "number") {
-    payload.max_tokens = resolvedMaxTokens;
+    payload[cloudflareGemma ? "max_completion_tokens" : "max_tokens"] = resolvedMaxTokens;
   }
+  if (cloudflareGemma) payload.chat_template_kwargs = { enable_thinking: false };
 
   if (thinking) {
     payload.thinking = thinking;
@@ -402,14 +407,14 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetchWithBackoff(resolveApiUrl(), {
+  const response = await fetchWithBackoff(requestUrl, {
     method: "POST",
     headers: {
       "content-type": "application/json",
       authorization: `Bearer ${activeApiKey()}`,
     },
     body: JSON.stringify(payload),
-  });
+  }, 1);
 
   if (!response.ok) {
     const errorText = await response.text();

@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck, tests, and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/meethaq_ci
+      MEETHAQ_E2E_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/meethaq_ci
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: meethaq_ci
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build production application
+        run: pnpm build
+
+      - name: Verify project data and routes
+        run: node scripts/verify-project.mjs --build
+      - name: Migrate the isolated database
+        run: pnpm db:migrate
+      - name: Install Chromium for browser tests
+        run: pnpm exec playwright install chromium --with-deps
+      - name: Run browser tests
+        run: pnpm test:e2e
+
+  docker:
+    name: Build and smoke-test the Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build the OCI image
+        run: docker build -t meethaq:ci .
+      - name: Check production runtime without a database
+        run: |
+          docker run -d --name meethaq-ci -p 127.0.0.1:5107:3000 \
+            -e MEETHAQ_SESSION_SECRET=isolated-docker-ci-session-secret meethaq:ci
+          cleanup() {
+            result=$?
+            if [ "$result" -ne 0 ]; then docker logs meethaq-ci || true; fi
+            docker rm -f meethaq-ci >/dev/null 2>&1 || true
+            exit "$result"
+          }
+          trap cleanup EXIT
+          curl --retry 15 --retry-all-errors --retry-delay 1 --retry-max-time 30 --max-time 3 -fsS http://127.0.0.1:5107/ >/dev/null
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:5107/api/health)" = 503
+          test "$(docker exec meethaq-ci id -u)" != 0

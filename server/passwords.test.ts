@@ -10,6 +10,12 @@ describe("passwords", () => {
     expect(await verifyPassword("Correct-Horse-9!", "not-a-hash")).toBe(false);
     expect(await verifyPassword("Correct-Horse-9!", hash.replace(/\$16384\$/, "$2$"))).toBe(false);
   });
+  it("preserves Arabic and Unicode password characters during hashing", async () => {
+    const password = "مِيثَاق-🕊️-سرّ";
+    const hash = await hashPassword(password);
+    expect(await verifyPassword(password, hash)).toBe(true);
+    expect(await verifyPassword(`${password}x`, hash)).toBe(false);
+  });
   it("salts every hash differently", async () => {
     expect(await hashPassword("Same-Password-1!")).not.toBe(await hashPassword("Same-Password-1!"));
   });

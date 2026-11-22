@@ -1,43 +1,45 @@
-import { lazy, Suspense, useMemo, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { lazy, Suspense, useRef, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import { startLogin } from "@/const";
+import { RAFIQ_MESSAGE_LENGTH, RAFIQ_MESSAGE_LIMIT } from "@shared/const";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import type { Message as ChatMessage } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import ContentPage, { KINDS, type Kind } from "@/components/ContentPage";
-import HeroArt from "@/components/HeroArt";
-import QuranPassages from "@/components/QuranPassages";
+import useGlassLight from "@/hooks/useGlassLight";
+import GlassHeading from "@/components/GlassHeading";
+import MithaqBrand from "@/components/MithaqBrand";
+import { MithaqMobileLinks, MithaqSidebar, ReferenceHeader } from "@/components/ReferenceHome";
+import DailyHome from "@/components/DailyHome";
+import Login from "@/pages/Login";
+import TasbihPage from "@/components/TasbihPage";
+import ReminderSettings from "@/components/ReminderSettings";
+import PersonalDashboard from "@/components/PersonalDashboard";
+import MotionLink from "@/components/MotionLink";
+import { sectionForPath, sections } from "@/lib/sections";
 import SearchPalette from "@/components/SearchPalette";
-import { useFx } from "@/lib/fx";
-import { Atlas, ExplorePage, isExplore } from "@/components/Explore";
-import { TodayStrip, ToolsHub, PrayerPage, KhatmaPage, ZakatPage, Hero, QuranQuote } from "@/components/Tools";
+import { ExplorePage, isExplore } from "@/components/Explore";
+import { ToolsHub, PrayerPage, KhatmaPage, ZakatPage } from "@/components/Tools";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import {
-  ArrowLeft, ArrowUpLeft, BookOpen, Check,
-  CircleHelp, Compass, LibraryBig,
-  Menu, Moon, Play, Search, ShieldCheck, Sparkles, Star, Target,
-  UserRound, X, Sun, RotateCcw, Home as HomeIcon, LogOut
+  ArrowLeft, Bell, BookOpen, Clock, LayoutDashboard,
+  Heart, Moon, ShieldCheck, Sparkles, Target,
+  UserRound, X, Sun, LogOut
 } from "lucide-react";
 
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then(module => ({ default: module.AIChatBox })));
 const AdminContent = lazy(() => import("@/components/AdminContent"));
+const QuranReader = lazy(() => import("@/components/QuranReader"));
 
-const navItems = [
-  { href: "/quran", label: "القرآن الكريم", icon: BookOpen },
-  { href: "/sunnah", label: "السنة النبوية", icon: Star },
-  { href: "/library", label: "المكتبة", icon: LibraryBig },
-  { href: "/explore", label: "كل الأقسام", icon: Target },
-  { href: "/rafiq", label: "رفيق AI", icon: Sparkles },
-];
-
-function Brand() {
-  return <Link href="/" className="brand" aria-label="العودة إلى الرئيسية"><span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><polygon points="12,1 14.6,6.6 20.5,3.5 17.4,9.4 23,12 17.4,14.6 20.5,20.5 14.6,17.4 12,23 9.4,17.4 3.5,20.5 6.6,14.6 1,12 6.6,9.4 3.5,3.5 9.4,6.6" fill="currentColor" /></svg></span><span><b>مِيثَاق</b><small>رفقةٌ على هدي الوحي</small></span></Link>;
-}
-
-function Header({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
+function Header({ onMenu, onSearch, menuOpen, searchOpen }: { onMenu: () => void; onSearch: () => void; menuOpen: boolean; searchOpen: boolean }) {
   const [location] = useLocation();
+  const accountMenu = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const panel = accountMenu.current;
+    if (typeof panel?.hidePopover === "function" && panel.matches(":popover-open")) panel.hidePopover();
+  }, [location, menuOpen, searchOpen]);
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -46,66 +48,59 @@ function Header({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void
     try { await logout(); window.location.assign("/"); }
     catch { setLoggingOut(false); toast.error("تعذّر تسجيل الخروج. حاول مرة أخرى."); }
   };
-  return <header className="site-header"><div className="header-inner"><Brand /><nav className="desktop-nav" aria-label="التنقل الرئيسي">{navItems.map(item => <Link key={item.href} href={item.href} className={location === item.href ? "active" : ""}>{item.label}</Link>)}</nav><div className="header-actions"><button className="icon-btn search-btn" aria-label="بحث (Ctrl+K)" onClick={onSearch}><Search size={19} /></button><button className="icon-btn" aria-label="تبديل الوضع الليلي" onClick={() => toggleTheme?.()}>{theme === "dark" ? <Sun size={19} /> : <Moon size={19} />}</button>{user ? <><Link href={user.role === "owner" ? "/owner" : user.role === "admin" ? "/dashboard" : "/login"} className="profile-chip"><UserRound size={17} /><span>{user.role === "owner" ? "لوحة المالك" : user.role === "admin" ? "لوحة الإدارة" : "حسابي"}</span></Link><button className="logout-btn" onClick={doLogout} disabled={loggingOut} aria-label="تسجيل الخروج"><LogOut size={17} /><span>{loggingOut ? "جارٍ الخروج…" : "تسجيل الخروج"}</span></button></> : <Link href="/login" className="login-link">تسجيل الدخول <ArrowLeft size={15} /></Link>}<button className="mobile-menu" onClick={onMenu} aria-label="فتح القائمة"><Menu size={21} /></button></div></div></header>;
+  return <ReferenceHeader onMenu={onMenu} menuOpen={menuOpen} onSearch={onSearch} account={
+    <>
+      <button type="button" className="reference-avatar" popoverTarget="mithaq-account-menu" aria-label="الحساب والتفضيلات">
+        <UserRound size={22} aria-hidden="true" />
+      </button>
+      <div id="mithaq-account-menu" ref={accountMenu} className="reference-account-menu" popover="auto" dir="rtl">
+        <Link href="/my-day"><LayoutDashboard size={17} />متابعتي</Link>
+        <Link href="/explore"><Target size={17} />استكشف ميثاق</Link>
+        <button type="button" onClick={toggleTheme}>{theme === "dark" ? <Sun size={17} /> : <Moon size={17} />} تبديل المظهر</button>
+        {user ? <>
+          {user.role !== "user" && <Link href={user.role === "owner" ? "/owner" : "/dashboard"}><ShieldCheck size={17} />{user.role === "owner" ? "لوحة المالك" : "لوحة الإدارة"}</Link>}
+          <button type="button" onClick={doLogout} disabled={loggingOut}><LogOut size={17} />{loggingOut ? "جارٍ الخروج…" : "تسجيل الخروج"}</button>
+        </> : <Link href="/login"><UserRound size={17} />تسجيل الدخول</Link>}
+      </div>
+    </>
+  } />;
+
 }
 
 function MobileMenu({ open, close }: { open: boolean; close: () => void }) {
   const { user, logout } = useAuth();
   const [loggingOut, setLoggingOut] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: KeyboardEvent) => { if (event.key === "Escape") close(); };
+    window.addEventListener("keydown", dismiss);
+    return () => window.removeEventListener("keydown", dismiss);
+  }, [open, close]);
   if (!open) return null;
   const doLogout = async () => { setLoggingOut(true); try { await logout(); window.location.assign("/"); } catch { setLoggingOut(false); toast.error("تعذّر تسجيل الخروج. حاول مرة أخرى."); } };
-  return <div className="mobile-drawer"><div className="drawer-top"><Brand /><button className="icon-btn" onClick={close}><X size={20} /></button></div><div className="drawer-links">{navItems.map(item => <Link key={item.href} href={item.href} onClick={close}><item.icon size={18} />{item.label}<ArrowLeft size={15} /></Link>)}{user?.role === "owner" && <><Link href="/owner" onClick={close}><ShieldCheck size={18} />مركز المالك<ArrowLeft size={15} /></Link><Link href="/dashboard" onClick={close}><BookOpen size={18} />إدارة المحتوى<ArrowLeft size={15} /></Link><Link href="/permissions" onClick={close}><UserRound size={18} />الحسابات والصلاحيات<ArrowLeft size={15} /></Link></>}{user?.role === "admin" && <Link href="/dashboard" onClick={close}><UserRound size={18} />لوحة الإدارة<ArrowLeft size={15} /></Link>}<Link href="/privacy" onClick={close}><ShieldCheck size={18} />الأمانة والخصوصية<ArrowLeft size={15} /></Link></div>{user ? <button className="drawer-logout" onClick={doLogout} disabled={loggingOut}><LogOut size={18} />{loggingOut ? "جارٍ تسجيل الخروج…" : "تسجيل الخروج"}</button> : <Link href="/login" onClick={close} className="drawer-login">ابدأ بحسابك <ArrowLeft size={16} /></Link>}</div>;
+  return <div className="mobile-drawer" id="launch-mobile-menu"><div className="drawer-top"><MithaqBrand onNavigate={close} /><button className="icon-btn" aria-label="إغلاق القائمة" onClick={close}><X size={20} /></button></div><div className="drawer-links"><MithaqMobileLinks onNavigate={close} />{user?.role === "owner" && <><Link href="/owner" onClick={close}><ShieldCheck size={18} />مركز المالك<ArrowLeft size={15} /></Link><Link href="/dashboard" onClick={close}><BookOpen size={18} />إدارة المحتوى<ArrowLeft size={15} /></Link><Link href="/permissions" onClick={close}><UserRound size={18} />الحسابات والصلاحيات<ArrowLeft size={15} /></Link></>}{user?.role === "admin" && <Link href="/dashboard" onClick={close}><UserRound size={18} />لوحة الإدارة<ArrowLeft size={15} /></Link>}<Link href="/privacy" onClick={close}><ShieldCheck size={18} />الأمانة والخصوصية<ArrowLeft size={15} /></Link></div>{user ? <button className="drawer-logout" onClick={doLogout} disabled={loggingOut}><LogOut size={18} />{loggingOut ? "جارٍ تسجيل الخروج…" : "تسجيل الخروج"}</button> : <Link href="/login" onClick={close} className="drawer-login">ابدأ بحسابك <ArrowLeft size={16} /></Link>}</div>;
 }
 
 function BottomNav() {
   const [location] = useLocation();
-  const items = [{ href: "/", label: "الرئيسية", icon: HomeIcon }, { href: "/quran", label: "القرآن", icon: BookOpen }, { href: "/library", label: "المكتبة", icon: LibraryBig }, { href: "/explore", label: "الأقسام", icon: Compass }, { href: "/rafiq", label: "رفيق", icon: Sparkles }];
-  return <nav className="bottom-nav" aria-label="تنقل سريع">{items.map(i => <Link key={i.href} href={i.href} className={location === i.href ? "active" : ""}><i.icon size={20} /><span>{i.label}</span></Link>)}</nav>;
-}
-
-function HomePage() {
-  const [query, setQuery] = useState("");
-  const [libraryTab, setLibraryTab] = useState("الكل");
-  const latest = trpc.content.list.useQuery({ limit: 12 });
-  const [last] = useState<{ id?: number; kind: string; title?: string; surah?: number; ayah?: number } | null>(() => { try { return JSON.parse(localStorage.getItem("lastRead") || "null"); } catch { return null; } });
-  const filtered = useMemo(() => (latest.data ?? []).filter(m => (libraryTab === "الكل" || KINDS[m.kind as Kind].label === libraryTab) && `${m.title} ${m.category ?? ""}`.includes(query)).slice(0, 6), [latest.data, libraryTab, query]);
-  return <>
-    <div className="hero-bg" onMouseMove={e => { const r = e.currentTarget.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height; e.currentTarget.style.setProperty("--px", String((x - 0.5) * 2)); e.currentTarget.style.setProperty("--py", String((y - 0.5) * 2)); e.currentTarget.style.setProperty("--sx", `${x * 100}%`); e.currentTarget.style.setProperty("--sy", `${y * 100}%`); }}><div className="hero-spot" /><section className="hero section-wrap"><div className="hero-copy"><div className="bsm-banner" role="img" aria-label="بسم الله الرحمن الرحيم">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div><div className="eyebrow"><span className="eyebrow-line" />مساحةٌ للقرآن والسنة والعبادة</div><h1>صحبةٌ مع الوحي،<br /><em>وأثرٌ في الحياة.</em></h1><p>من كتاب الله نبدأ، وعلى هدي رسوله ﷺ نتعلّم؛ تلاوةٌ وذكرٌ وصلاةٌ وأبوابٌ للعلم النافع، في رفقةٍ تعين على السكينة والعمل.</p><div className="hero-ctas"><Link href="/quran" className="primary-cta">ابدأ من القرآن <ArrowLeft size={18} /></Link><Link href="/explore" className="secondary-cta">تصفّح أبواب العبادة <ArrowUpLeft size={17} /></Link></div></div><div className="hero-art"><HeroArt /></div>
-    </section></div>
-    <section className="section-wrap start-section"><div className="section-heading"><div><span className="kicker">طريقك يبدأ هنا</span><h2>أبوابٌ تقرّبك من الخير</h2></div><p>ابدأ بالوحي، ثم اختر ما يعينك على العبادة والتعلّم.</p></div><div className="start-grid"><Link href="/quran" className="start-card featured"><div className="card-icon"><BookOpen size={23} /></div><div><span>تلاوةٌ وتدبّر</span><h3>القرآن الكريم</h3><p>المصحف كاملًا، مع بحث وقراءة على مهل.</p></div><ArrowLeft className="card-arrow" size={19} /></Link><Link href="/sunnah" className="start-card"><div className="card-icon"><Star size={22} /></div><div><span>هديٌ نبوي</span><h3>السنة النبوية</h3><p>تعلّم من أقوال النبي ﷺ وهديه.</p></div><ArrowLeft className="card-arrow" size={19} /></Link><Link href="/explore" className="start-card"><div className="card-icon"><Compass size={21} /></div><div><span>أبواب الخير</span><h3>كل الأقسام</h3><p>دليلٌ يجمع الوحي والعبادة والسيرة والتعلّم في مجموعات واضحة.</p></div><ArrowLeft className="card-arrow" size={19} /></Link></div></section>
-    <RevelationSection />
-    <TodayStrip />
-    <section className="section-wrap atlas-section"><div className="section-heading"><div><span className="kicker">دليل مِيثَاق</span><h2>كل قسم في مكانه</h2></div><p>تصفّح المعرفة والعبادة والأدوات ضمن مجموعات سهلة.</p></div><Atlas /></section>
-    {last && <section className="section-wrap continue-section"><div className="section-heading"><div><span className="kicker">مساحتك</span><h2>أكمل من حيث توقفت</h2></div></div><div className="continue-card"><div className="continue-icon"><BookOpen size={26} /></div><div className="continue-main"><div className="continue-top"><span>{KINDS[last.kind as Kind]?.label}</span></div><h3>{last.title || "موضع القراءة المحفوظ"}</h3></div><Link href={last.kind === "quran" && last.surah && last.ayah ? `/quran?surah=${last.surah}&ayah=${last.ayah}` : `${KINDS[last.kind as Kind]?.path}?open=${last.id ?? ""}`} className="continue-play"><Play size={17} fill="currentColor" /> متابعة القراءة</Link></div></section>}
-    <section className="library-section"><div className="section-wrap"><div className="section-heading"><div><span className="kicker light">أحدث المواد</span><h2>زادٌ من الوحي والعلم النافع</h2></div><div className="library-search"><Search size={17} /><input aria-label="ابحث في المختارات" value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث في المختارات..." /></div></div><div className="library-tabs" role="tablist" aria-label="تصفية المختارات">{["الكل", ...Object.values(KINDS).map(k => k.label)].map(tab => <button key={tab} className={libraryTab === tab ? "active" : ""} onClick={() => setLibraryTab(tab)} role="tab" aria-selected={libraryTab === tab}>{tab}</button>)}</div><div className="library-grid">{filtered.map((m, i) => <article key={m.id} className={`library-card ${["sage", "gold", "ink"][i % 3]}`}><div className="library-card-top"><span>{KINDS[m.kind as Kind].label}</span></div><h3>{m.title}</h3><p>{m.category || ""}</p><Link href={`${KINDS[m.kind as Kind].path}?open=${m.id}`}><button>افتح المادة <ArrowLeft size={15} /></button></Link></article>)}{filtered.length === 0 && <p className="empty-state">{(latest.data ?? []).length === 0 ? "ستظهر هنا أحدث المواد المنشورة." : "لم نجد نتيجة. جرّب كلمة أخرى."}</p>}</div></div></section>
-    <section className="section-wrap daily-section"><div className="daily-card"><div><span className="kicker">نافذة اليوم</span><h2>وَاذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا</h2><a className="verse-location" href="/quran?surah=33&ayah=41">اقرأ الآية كاملة في المصحف <ArrowLeft size={14} /></a><p>اجعل للذكر نصيبًا من يومك، وابدأ بما تطيق مع المواظبة والنية الصالحة.</p><Link href="/tasbih" className="secondary-cta light-cta">ابدأ الذكر <ArrowLeft size={17} /></Link></div><div className="moon-art"><Moon size={58} strokeWidth={1.3} aria-hidden="true" /><small>ورد يومي</small></div></div></section>
-  </>;
-}
-
-function RevelationSection() {
-  return <section className="section-wrap revelation-section" aria-label="آية وحديث موثقان">
-    <div className="section-heading"><div><span className="kicker">من القرآن والسنة</span><h2>نصٌّ نتلوه، وهديٌ نتعلّمه</h2></div><p>آياتٌ نتلوها وأحاديث نتعلّم من هديها.</p></div>
-    <div className="revelation-grid">
-      <article className="revelation-card quran-card">
-        <span className="revelation-label"><BookOpen size={17} /> من كتاب الله</span>
-        <QuranPassages references={[{ title: "من سورة الشرح", surah: 94, ayah: 5 }, { title: "من سورة الشرح", surah: 94, ayah: 6 }]} compact />
-      </article>
-      <article className="revelation-card hadith-card">
-        <span className="revelation-label"><Star size={17} /> من السنة النبوية</span>
-        <blockquote lang="ar">إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى</blockquote>
-      </article>
-    </div>
-  </section>;
+  const group = sectionForPath(location, useSearch());
+  const links = [...sections.slice(0, 2), { id: "prayer", href: "/prayer", label: "الصلاة", icon: Clock }, ...sections.slice(2)];
+  return <nav className="bottom-nav" aria-label="تنقل سريع">{links.map(item => {
+    const active = location === "/prayer" ? item.id === "prayer" : group?.id === item.id;
+    return <MotionLink key={item.href} href={item.href} aria-current={location === item.href ? "page" : active ? "location" : undefined} className={active ? "active" : ""}><item.icon size={20} /><span>{item.label}</span></MotionLink>;
+  })}</nav>;
 }
 
 function AboutPage() {
   return <main className="section-wrap section-page about-page">
     <div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />عن مِيثَاق</div>
-    <div className="page-hero"><div className="page-icon"><ShieldCheck size={28} /></div><span className="kicker">رسالتنا</span><h1>صحبةٌ مع الوحي، وأمانةٌ في العلم.</h1><p>مِيثَاق مساحةٌ تعين على تلاوة القرآن، وتعلّم هدي النبي ﷺ، والمواظبة على الذكر والصلاة وطلب العلم. نعامل الآية والحديث كأمانة، ونفصل النص المنقول عن الشرح، ونجعل مراجعة المادة شرطًا قبل نشرها.</p></div>
+    <GlassHeading className="glass-about-heading" icon={BookOpen} label="عن مِيثَاق" title="صحبةٌ مع الوحي، وأمانةٌ في العلم"
+      description="مساحة لتلاوة القرآن، وتعلّم هدي النبي ﷺ، والمواظبة على الذكر والصلاة. نفصل النص المنقول عن الشرح ونراجع المادة قبل نشرها."
+      action={<Link href="/quran" className="primary-cta">افتح المصحف <ArrowLeft size={16} /></Link>} />
     <section className="about-principles" aria-label="مبادئ ميثاق">
-      <article><span>١</span><div><h2>نتلو كتاب الله</h2><p>نفتح باب التلاوة والتدبّر، ونحرص على بقاء الآية في موضعها وسياقها.</p></div></article>
-      <article><span>٢</span><div><h2>نتعلّم هدي رسوله ﷺ</h2><p>نتثبت من الروايات وننبّه إلى ما يحتاج مراجعةً من أهل الاختصاص.</p></div></article>
-      <article><span>٣</span><div><h2>نحوّل المعرفة إلى عمل</h2><p>أدوات للذكر والصلاة والختمة، ومسارات للعلم؛ تعين على الخير ولا تستبدل سؤال أهل العلم.</p></div></article>
+      <article><span><BookOpen size={18} aria-hidden="true" /></span><div><h2>نتلو كتاب الله</h2><p>نفتح باب التلاوة والتدبّر، ونحرص على بقاء الآية في موضعها وسياقها.</p></div></article>
+      <article><span><ShieldCheck size={18} aria-hidden="true" /></span><div><h2>نتعلّم هدي رسوله ﷺ</h2><p>نتثبت من الروايات وننبّه إلى ما يحتاج مراجعةً من أهل الاختصاص.</p></div></article>
+      <article><span><Heart size={18} aria-hidden="true" /></span><div><h2>نحوّل المعرفة إلى عمل</h2><p>أدوات للذكر والصلاة والختمة، ومسارات للعلم؛ تعين على الخير ولا تستبدل سؤال أهل العلم.</p></div></article>
     </section>
     <div className="about-verse"><span className="kicker">دعاءٌ للعلم</span><p lang="ar">﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾</p><a href="/quran?surah=20&ayah=114">سورة طه، الآية ١١٤ · افتحها في المصحف <ArrowLeft size={15} /></a></div>
     <div className="about-cta"><div><h2>ابدأ من كتاب الله</h2><p>اختر بابًا للقراءة والذكر والتعلّم، وخذ من الخير ما ينفعك.</p></div><Link href="/quran" className="primary-cta">افتح القرآن الكريم <ArrowLeft size={17} /></Link></div>
@@ -129,16 +124,20 @@ function OwnerHome() {
   if (loading) return <main className="section-wrap dashboard-page"><div className="admin-loading">جارٍ التحقق من صلاحيات المالك…</div></main>;
   if (!user) return <main className="section-wrap dashboard-page"><div className="access-card"><ShieldCheck size={34} /><span className="kicker">منطقة المالك</span><h1>لوحة المالك</h1><p>سجّل الدخول بحساب المالك لإدارة ميثاق.</p><Link href="/login" className="primary-cta">تسجيل الدخول <ArrowLeft size={17} /></Link></div></main>;
   if (user.role !== "owner") return <main className="section-wrap dashboard-page"><div className="access-card"><ShieldCheck size={34} /><span className="kicker">صفحة خاصة بالمالك</span><h1>هذه لوحة المالك</h1><p>حسابك لا يملك صلاحية إدارة إعدادات المنصة.</p><Link href="/" className="primary-cta">العودة للرئيسية <ArrowLeft size={17} /></Link></div></main>;
-  const data = stats.data ?? { draft: 0, review: 0, published: 0 };
+  const data = stats.data;
+  const count = new Intl.NumberFormat("ar-EG");
   return <main className="section-wrap dashboard-page owner-dashboard">
     <div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />مركز المالك</div>
-    <div className="dashboard-head"><div><span className="kicker">إدارة مِيثَاق</span><h1>لوحة المالك</h1><p>أهلًا {user.name || "بك"}، من هنا تصل إلى المحتوى والحسابات والصلاحيات.</p></div><div className="admin-badge"><ShieldCheck size={18} />مالك الموقع</div></div>
+    <GlassHeading icon={ShieldCheck} label="إدارة مِيثَاق" title="لوحة المالك"
+      description={`أهلًا ${user.name || "بك"}، من هنا تدير المحتوى والحسابات.`}
+      action={<Link href="/dashboard" className="primary-cta">إدارة المحتوى <ArrowLeft size={16} /></Link>} />
     <div className="owner-stat-grid">
-      <article><span>حسابات المنصة</span><b>{users.data?.length ?? "—"}</b><small>أعضاء ومشرفون ومالك</small></article>
-      <article><span>مواد منشورة</span><b>{data.published}</b><small>ظاهرة للزوار</small></article>
-      <article><span>بانتظار المراجعة</span><b>{data.review}</b><small>تحتاج اعتماد المالك</small></article>
-      <article><span>مسودات</span><b>{data.draft}</b><small>لا تظهر للعامة</small></article>
+      <article><span>حسابات المنصة</span><b>{users.data ? count.format(users.data.length) : "—"}</b><small>أعضاء ومشرفون ومالك</small></article>
+      <article><span>مواد منشورة</span><b>{data ? count.format(data.published) : "—"}</b><small>ظاهرة للزوار</small></article>
+      <article><span>بانتظار المراجعة</span><b>{data ? count.format(data.review) : "—"}</b><small>تحتاج اعتماد المالك</small></article>
+      <article><span>مسودات</span><b>{data ? count.format(data.draft) : "—"}</b><small>لا تظهر للعامة</small></article>
     </div>
+    {(stats.isError || users.isError) && <p className="reminder-note" role="alert">تعذّر تحميل بعض الإحصاءات.</p>}
     <section className="owner-control-section">
       <div className="section-heading"><div><span className="kicker">مفاتيح الإدارة</span><h2>تحكم في المحتوى والحسابات</h2></div><p>كل تغيير هنا مرتبط بصلاحيتك كمالك.</p></div>
       <div className="owner-control-grid">
@@ -165,40 +164,166 @@ function PermissionsPage() {
 
 function RafiqPage() {
   const { user, loading } = useAuth();
+  const topic = new URLSearchParams(useSearch()).get("seerah")?.trim().slice(0, 110);
+  const starter = topic ? `أريد أن أفهم هذا الموضوع من السيرة النبوية: ${topic}` : undefined;
   const chat = trpc.rafiq.chat.useMutation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const history = useRef<ChatMessage[]>([]);
+  const lastQuestion = useRef<ChatMessage | null>(null);
+  const requestInProgress = useRef(false);
   const [aiConfigured, setAiConfigured] = useState<boolean | null>(null);
+
   useEffect(() => {
-    fetch("/api/rafiq/status", { cache: "no-store" })
+    const controller = new AbortController();
+    fetch("/api/rafiq/status", { cache: "no-store", signal: controller.signal })
       .then(response => response.ok ? response.json() as Promise<{ enabled?: boolean }> : null)
-      .then(status => setAiConfigured(status?.enabled === true))
-      .catch(() => setAiConfigured(false));
+      .then(status => { if (!controller.signal.aborted) setAiConfigured(status?.enabled === true); })
+      .catch(() => { if (!controller.signal.aborted) setAiConfigured(false); });
+    return () => controller.abort();
   }, []);
-  const send = (content: string) => {
-    const next = [...messages, { role: "user" as const, content }];
-    setMessages(next);
-    const apiMessages = next.filter(message => message.role === "user" || message.role === "assistant").map(message => ({ role: message.role === "user" ? "user" as const : "assistant" as const, content: message.content }));
-    chat.mutate({ messages: apiMessages }, { onSuccess: result => setMessages(current => [...current, { role: "assistant", content: `${result.answer}\n\n— ${result.notice}` }]), onError: error => setMessages(current => [...current, { role: "assistant", content: error.message.includes("إعداد رفيق ناقص") || error.message.includes("OPENAI_API_KEY") || error.message.includes("OPENAI_MODEL") ? "رفيق غير مفعّل بعد. أضف مفتاح مزود الذكاء الاصطناعي واسم النموذج إلى ملف .env على جهازك، ثم أعد تشغيل الموقع. لا ترسل المفتاح هنا." : "تعذر الاتصال برفيق الآن. لا تعتمد على إجابة دينية قبل مراجعتها مع أهل العلم، وحاول مرة أخرى لاحقًا." }]) });
+
+  const ask = (question: ChatMessage) => {
+    if (requestInProgress.current) return;
+    requestInProgress.current = true;
+    const previous = history.current.slice(1 - RAFIQ_MESSAGE_LIMIT);
+    if (previous[0]?.role === "assistant") previous.shift();
+    const next = [...previous, question];
+    chat.mutate({ messages: next.map(({ role, content }) => ({ role, content })) }, {
+      onSuccess: result => {
+        history.current = [...next, { role: "assistant", content: result.answer.slice(0, RAFIQ_MESSAGE_LENGTH) }];
+        setMessages(current => [...current, { role: "assistant", content: result.answer, sources: result.sources }]);
+      },
+      onSettled: () => { requestInProgress.current = false; },
+    });
   };
+  const send = (content: string) => {
+    if (requestInProgress.current) return;
+    const question = { role: "user" as const, content };
+    lastQuestion.current = question;
+    setMessages(current => [...current, question]);
+    ask(question);
+  };
+  // These two codes carry a clear Arabic message from the server (provider down, or the daily quota is used up).
+  const error = chat.error
+    ? chat.error.data?.code === "SERVICE_UNAVAILABLE" || chat.error.data?.code === "TOO_MANY_REQUESTS" ? chat.error.message : "تعذّر إكمال السؤال. حاول مرة أخرى."
+    : null;
+
   if (loading) return <main className="section-wrap rafiq-page"><div className="admin-loading">جارٍ التحقق من الحساب…</div></main>;
-  if (!user) return <main className="section-wrap rafiq-page"><div className="access-card"><Sparkles size={34} /><span className="kicker">للمسجلين فقط</span><h1>رفيق AI</h1><p>رفيق متاح للأعضاء المسجلين فقط. أنشئ حسابك مجانًا أو سجّل الدخول لتبدأ.</p><Link href="/login" className="primary-cta">تسجيل الدخول <ArrowLeft size={17} /></Link></div></main>;
-  return <main className="section-wrap rafiq-page"><div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />رفيق AI</div><div className="rafiq-layout"><aside className="rafiq-aside"><div className="rafiq-orb"><Sparkles size={27} /></div><span className="kicker">رفيق AI</span><h1>اسأل طلبًا للفهم، واتبع أهل العلم فيما أشكل.</h1><p>مساعد للفهم وصياغة أسئلة البحث داخل مِيثَاق. لا يبحث حاليًا في مواد الموقع، ولا يصدر فتاوى.</p><div className="rafiq-rules"><div><ShieldCheck size={16} /><span><b>راجع المسائل الشرعية</b><small>لا يدّعي بحثًا لم يحدث.</small></span></div><div><CircleHelp size={16} /><span><b>ليس مفتيًا</b><small>المسائل الخاصة لأهل الاختصاص.</small></span></div><div><Check size={16} /><span><b>لغة واضحة</b><small>يفصل النص عن الشرح.</small></span></div></div></aside><section className="rafiq-chat"><div className="chat-heading"><div><span className="kicker">مساحة السؤال</span><h2>ماذا تريد أن تفهم؟</h2></div><span className={`verified-pill ${aiConfigured === false ? "is-unavailable" : ""}`}><ShieldCheck size={14} />{aiConfigured === null ? "جارٍ التحقق من الإعداد" : aiConfigured ? "رفيق متصل" : "رفيق غير مفعّل"}</span></div>{aiConfigured === false ? <div className="rafiq-unavailable"><Sparkles size={28} /><h3>رفيق ينتظر ربط مزوّد الذكاء الاصطناعي</h3><p>أضف <code>OPENAI_API_KEY</code> و<code>OPENAI_MODEL</code> في ملف <code>.env</code> على جهازك، ثم أعد تشغيل الموقع. لا تضع المفتاح في الواجهة أو المحادثة.</p></div> : aiConfigured === null ? <div className="admin-loading" role="status">جارٍ التحقق من إعداد رفيق…</div> : <Suspense fallback={<div className="admin-loading" role="status">جارٍ تجهيز مساحة المحادثة…</div>}><AIChatBox messages={messages} onSendMessage={send} isLoading={chat.isPending} height="510px" emptyStateMessage="ابدأ بسؤال، وسأوضح حدود الإجابة وما يحتاج إلى مراجعة." placeholder="اسأل عن مفهوم، أو طريقة بحث…" suggestedPrompts={["كيف أبدأ تدبر القرآن؟", "ما الفرق بين النص والشرح؟", "كيف أتحقق من حديث منسوب؟"]} /></Suspense>}</section></div></main>;
+  if (!user) return <main className="section-wrap rafiq-page">
+    <div className="access-card"><Sparkles size={34} /><h1>رفيق</h1><p>سجّل الدخول لتبدأ المحادثة.</p>
+      <Link href="/login" className="primary-cta">تسجيل الدخول <ArrowLeft size={17} /></Link>
+    </div>
+  </main>;
+
+  return <main className="section-wrap rafiq-page rafiq-shell" dir="rtl">
+    <div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />رفيق</div>
+    <section className="rafiq-panel" aria-label="محادثة رفيق">
+      <header className="rafiq-panel-header">
+        <div className="rafiq-brand-icon"><Sparkles size={22} aria-hidden="true" /></div>
+        <div><h1>رفيق</h1><p>مساعد للأسئلة والتعلّم. قد يخطئ، والمسائل الخاصة تُراجع مع أهل الاختصاص.</p></div>
+      </header>
+      {aiConfigured === false
+        ? <p className="rafiq-panel-state" role="status">رفيق غير متاح حاليًا. حاول مرة أخرى لاحقًا.</p>
+        : aiConfigured === null
+          ? <p className="rafiq-panel-state" role="status">جارٍ التحقق من توفر رفيق…</p>
+          : <Suspense fallback={<p className="rafiq-panel-state" role="status">جارٍ تجهيز المحادثة…</p>}>
+            <AIChatBox key={topic} initialQuestion={starter} messages={messages} onSendMessage={send}
+              onRetry={() => { if (lastQuestion.current) ask(lastQuestion.current); }}
+              isLoading={chat.isPending} error={error} />
+          </Suspense>}
+    </section>
+  </main>;
 }
 
-function TasbihPage() {
-  const [count, setCount] = useState(() => { try { return Number(localStorage.getItem("tasbih") || 0); } catch { return 0; } });
-  const [goal, setGoal] = useState(33);
-  const bump = (n: number) => { const v = Math.max(0, n); setCount(v); try { localStorage.setItem("tasbih", String(v)); } catch {} if (v > 0 && v % goal === 0) navigator.vibrate?.(60); };
-  return <main className="section-wrap section-page"><div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />السبحة</div><Hero icon={RotateCcw} k="ذكرٌ يومي" t="اذكر الله بقلب حاضر." p="عداد بسيط يعينك على متابعة وردك، والذكر عبادةٌ باللسان والقلب لا بالأرقام وحدها." /><QuranQuote surah={33} ayah={41} /><div className="tasbih-card"><span className="kicker">وردك على هذا الجهاز</span><h1>سبّح بقلبك، وعُدّ بيدك.</h1><button className="tasbih-btn" onClick={() => bump(count + 1)} aria-label="زيادة العدّاد"><b>{count}</b><small>اضغط للعدّ</small></button><div className="progress-line"><i style={{ width: `${((count % goal) / goal) * 100}%` }} /></div><div className="tasbih-tools">{[33, 100, 1000].map(g => <button key={g} className={goal === g ? "active" : ""} onClick={() => setGoal(g)}>الهدف {g}</button>)}<button onClick={() => bump(0)}><RotateCcw size={14} /> تصفير</button></div><small className="tasbih-note">العداد تذكيرٌ لك، ولا يحدد العدد المشروع في الذكر.</small></div></main>;
+function PrivacyPage() {
+  const topics = [
+    ["المحتوى", "لا تظهر المواد غير المعتمدة في نتائج الجمهور."],
+    ["الحساب", "نحفظ البريد والصلاحية في قاعدة الموقع. إذا سجّلت بكلمة مرور، نحتفظ ببصمتها ولا نخزّن الكلمة نفسها."],
+    ["التقدم والمزامنة", "يظل التقدم محفوظًا محليًا، وتُزامن عناصر محددة للحساب عند تسجيل الدخول والاتصال: موضع القراءة والمفضلة والختمة وسجل الصلاة وجلسات الأذكار والسبحة. عند أول تسجيل دخول تُضم بيانات التقدم الموجودة على الجهاز إلى الحساب؛ وعند تبديل الحساب تُعزل بيانات كل حساب. لا تُزامن المدينة أو إعدادات الجهاز أو رموز وإعدادات Web Push. عند تعارض قيمة واحدة يفوز آخر تحديث زمني."],
+    ["التنبيهات والموقع", "عند التفعيل، نحفظ اشتراك الجهاز وجدوله. تُرسل إحداثيات المدينة أو موقع تقريبي للتنبيهات المرتبطة بالموقع. يمكنك إيقاف التنبيهات من الإعدادات لحذف الاشتراك من الخادم."],
+    ["رفيق", "تُرسل الأسئلة إلى مزوّد الذكاء الاصطناعي عند استخدام رفيق، وقد تُرسل صيغة البحث إلى مزوّد البحث الخارجي إن كان مفعّلًا."],
+    ["قراءة المصحف", "خطوط الواجهة محفوظة داخل مِيثَاق. يستعلم قارئ المصحف من خدمة Al Quran Cloud عن القرّاء والتفسير والتلاوة. تتصل التلاوة بخادم الصوت عند تشغيلها."],
+    ["الفيديو والدورات الخارجية", "يتّصل مشغّل يوتيوب بخدمة يوتيوب عند الضغط على زر مشاهدة الحلقة. تفتح روابط الدورات منصّات الناشرين وتخضع لاشتراطات تلك المنصّات."],
+    ["تصحيح المحتوى", "تُراجع النصوص المنشورة، ويمكن للمالك تعديلها أو إيقاف نشرها عند الحاجة."],
+  ];
+  return <main className="section-wrap section-page glass-privacy">
+    <GlassHeading icon={ShieldCheck} label="مِيثَاق" title="الأمانة والخصوصية"
+      description="ما يُحفظ على جهازك، وما يرسله مِيثَاق عند استخدام الحساب أو التنبيهات أو رفيق."
+      action={<Link href="/settings" className="detail-btn">إعدادات التنبيهات <ArrowLeft size={16} /></Link>} />
+    <dl className="glass-privacy-grid">{topics.map(([title, body]) => <div key={title}><dt>{title}</dt><dd>{body}</dd></div>)}</dl>
+  </main>;
 }
 
-function PrivacyPage() { return <main className="section-wrap section-page"><div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />الأمانة والخصوصية</div><div className="page-hero"><div className="page-icon"><ShieldCheck size={28} /></div><span className="kicker">ميثاقنا معك</span><h1>الأمانة قبل كل شيء</h1><p>نوضح ما تجمعه المنصة، وما تنشره، وما لا نعرفه. نراجع المحتوى الشرعي قبل نشره، وبياناتك الخاصة لا تُعرض للعامة.</p></div><div className="coming-panel privacy-panel"><h2>مبادئ واضحة</h2><div className="privacy-list"><div><b>المحتوى</b><span>لا تظهر المواد غير المعتمدة في نتائج الجمهور.</span></div><div><b>بيانات الحساب</b><span>نحفظ البريد والصلاحية في قاعدة الموقع، وكلمة المرور محفوظة كبصمة لا يمكن استرجاعها مباشرة. المفضلة وموضع القراءة محفوظان محليًا على الجهاز حاليًا.</span></div><div><b>الذكاء الاصطناعي</b><span>لا يصدر رفيق فتاوى ولا ينسب قولًا شرعيًا دون تثبّت. عند تشغيله، تُرسل الأسئلة إلى مزود الذكاء الاصطناعي الذي تضبطه.</span></div><div><b>التصحيح</b><span>تُراجع النصوص المنشورة، ويمكن للمالك تعديلها أو إيقافها عند الحاجة.</span></div></div></div></main>; }
+const routePages = {
+  "/": DailyHome,
+  "/my-day": PersonalDashboard,
+  "/settings": ReminderSettings,
+  "/about": AboutPage,
+  "/owner": OwnerHome,
+  "/dashboard": Dashboard,
+  "/permissions": PermissionsPage,
+  "/rafiq": RafiqPage,
+  "/privacy": PrivacyPage,
+  "/tasbih": TasbihPage,
+  "/tools": ToolsHub,
+  "/prayer": PrayerPage,
+  "/khatma": KhatmaPage,
+  "/zakat": ZakatPage,
+  "/login": Login,
+} as const;
+
+export function isSitePath(path: string) {
+  return Object.hasOwn(routePages, path) || Object.hasOwn(KIND_BY_PATH, path) || isExplore(path);
+}
 
 export default function Home() {
-  const [location] = useLocation(); useFx();
+  const shell = useRef<HTMLDivElement>(null);
+  useGlassLight(shell);
+  const [location] = useLocation();
+  const { user } = useAuth();
   const [menu, setMenu] = useState(false); const [searching, setSearching] = useState(false);
   useEffect(() => { const k = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setSearching(true); } }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
-  useEffect(() => { window.scrollTo({ top: 0 }); }, [location]);
-  const page = <>{location === "/" ? <HomePage /> : location === "/about" ? <AboutPage /> : location === "/owner" ? <OwnerHome /> : location === "/dashboard" ? <Dashboard /> : location === "/permissions" ? <PermissionsPage /> : location === "/rafiq" ? <RafiqPage /> : location === "/privacy" ? <PrivacyPage /> : location === "/tasbih" ? <TasbihPage /> : location === "/tools" ? <ToolsHub /> : location === "/prayer" ? <PrayerPage /> : location === "/khatma" ? <KhatmaPage /> : location === "/zakat" ? <ZakatPage /> : isExplore(location) ? <ExplorePage path={location} /> : KIND_BY_PATH[location] ? <ContentPage kind={KIND_BY_PATH[location]} /> : <HomePage />}</>;
-  return <div dir="rtl" className="meethaq-app"><Header onMenu={() => setMenu(true)} onSearch={() => setSearching(true)} /><SearchPalette open={searching} close={() => setSearching(false)} /><MobileMenu open={menu} close={() => setMenu(false)} />{page}<BottomNav /><footer className="site-footer"><div className="section-wrap footer-inner"><Brand /><p>تلاوةٌ، وذكرٌ، وعلمٌ يُطلب بأمانة.<br />نحرص على صحة النص ونميّز الوحي من الشرح.</p><div className="footer-links"><Link href="/privacy">الأمانة والخصوصية</Link><Link href="/owner">لوحة المالك</Link><Link href="/about">عن ميثاق</Link><Link href="/login">تسجيل الدخول</Link></div><span className="copyright">© ٢٠٢٦ مِيثَاق</span></div></footer></div>;
+  const search = useSearch();
+  useEffect(() => {
+    const anchor = window.location.hash.slice(1);
+    if (anchor === "qibla" || anchor === "adhan" || anchor === "salah-log" || anchor === "my-journey") {
+      const frame = requestAnimationFrame(() => document.getElementById(anchor)?.scrollIntoView({ block: "start" }));
+      return () => cancelAnimationFrame(frame);
+    }
+    window.scrollTo({ top: 0 });
+  }, [location, search]);
+  const Page = routePages[location as keyof typeof routePages];
+  const readerActive = location === "/quran";
+  const [readerVisited, setReaderVisited] = useState(readerActive);
+  useEffect(() => { if (readerActive) setReaderVisited(true); setMenu(false); }, [location, readerActive]);
+  const page = Page ? <Page /> : isExplore(location) ? <ExplorePage path={location} /> : <ContentPage kind={KIND_BY_PATH[location]} />;
+  return <div ref={shell} dir="rtl" className={`meethaq-app launch-shell launch-clean atmosphere-shell reference-shell${location === "/" ? "" : " mithaq-inner-shell"}`}>
+    <Header menuOpen={menu} searchOpen={searching} onMenu={() => setMenu(open => !open)} onSearch={() => { setMenu(false); setSearching(true); }} />
+    <SearchPalette open={searching} close={() => setSearching(false)} />
+    <MobileMenu open={menu} close={() => setMenu(false)} />
+  <div className="launch-route">
+      <div className="reference-home mithaq-inner-frame" hidden={location === "/"}>
+        <div className="mithaq-inner-content">
+          {(readerVisited || readerActive) && <main className="section-wrap section-page quran-mushaf-page" hidden={!readerActive}>
+            <Suspense fallback={<p className="quran-reader-message" role="status">جارٍ تجهيز المصحف…</p>}><QuranReader active={readerActive} /></Suspense>
+          </main>}
+          {location !== "/" && <div key={location}>{page}</div>}
+        </div>
+        <MithaqSidebar />
+      </div>
+      {location === "/" && page}
+    </div>
+    <BottomNav />
+    <footer className="site-footer">
+      <div className="section-wrap footer-inner">
+        <Link href="/" className="footer-name">مِيثَاق</Link>
+        <nav className="footer-links" aria-label="روابط التذييل">
+          <Link href="/about">عن مِيثَاق</Link><Link href="/privacy">الخصوصية</Link><Link href="/settings">الإعدادات</Link>
+          {user?.role === "owner" && <Link href="/owner">لوحة المالك</Link>}
+          {!user && <Link href="/login">تسجيل الدخول</Link>}
+        </nav>
+        <span className="copyright">© {new Date().getFullYear().toLocaleString("ar-EG", { useGrouping: false })} مِيثَاق</span>
+      </div>
+    </footer>
+  </div>;
 }

@@ -22,6 +22,13 @@
       "when": 1794053064436,
       "tag": "0002_furry_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795288325111,
+      "tag": "0003_meethaq_account_content_push",
+      "breakpoints": true
     }
   ]
 }

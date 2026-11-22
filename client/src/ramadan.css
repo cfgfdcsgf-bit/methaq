@@ -1,0 +1,21 @@
+.ramadan-dashboard.ramadan-hub { background: var(--mithaq-surface); border-color: var(--mithaq-rim); }
+.ramadan-hub .daily-section-head { margin-block-end: 12px; }
+.ramadan-resources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.ramadan-resources a {
+  display: flex; gap: 9px; align-items: center; min-width: 0; padding: 10px;
+  border: 1px solid var(--mithaq-rim); border-radius: 13px;
+  background: var(--mithaq-field); color: var(--launch-text);
+}
+.ramadan-resources a:hover { border-color: var(--launch-accent); }
+.ramadan-resources a > svg { flex: none; color: var(--launch-accent); }
+.ramadan-resources a > svg:last-child { margin-inline-start: auto; }
+.ramadan-resources a :is(b, small) { display: block; }
+.ramadan-resources small { color: var(--launch-soft); font-size: .76rem; }
+.ramadan-calendar { margin-block-start: 13px; padding: 10px 12px; border: 1px solid var(--mithaq-rim); border-radius: 12px; }
+.ramadan-calendar summary { cursor: pointer; color: var(--launch-accent); font-weight: 700; }
+.ramadan-city-link { display: inline-flex; align-items: center; gap: 5px; color: var(--launch-accent); }
+.ramadan-calendar .ramadan-times { max-height: min(47vh, 420px); overflow: auto; }
+.ramadan-calendar .ramadan-times table { color: var(--launch-text); }
+.ramadan-calendar .ramadan-times thead { position: sticky; top: 0; background: var(--launch-surface); }
+.ramadan-calendar .ramadan-times tbody tr[aria-current="date"] { background: var(--launch-raised); color: var(--launch-accent); }
+@media (max-width: 560px) { .ramadan-resources { grid-template-columns: minmax(0, 1fr); } }

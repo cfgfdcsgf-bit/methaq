@@ -16,21 +16,22 @@ if not exist .env (
 )
 
 if not exist node_modules (
-  pnpm install
+  call pnpm install
   if errorlevel 1 goto :failed
 )
 
-pnpm db:push
+call pnpm db:migrate
 if errorlevel 1 (
   echo Database setup failed. Check DATABASE_URL in .env and try again.
   pause
   exit /b 1
 )
 
-echo Opening Meethaq at http://localhost:5000
-pnpm dev
+echo Starting Meethaq. Use the port shown in the server log.
+call pnpm dev
+set "MEETHAQ_EXIT=%ERRORLEVEL%"
 pause
-exit /b 0
+exit /b %MEETHAQ_EXIT%
 
 :failed
 echo Dependency installation failed. Check your internet connection and try again.

@@ -1,0 +1,137 @@
+/* Quran Complex page glyphs: line positions follow the Madinah Mushaf page data. */
+.mushaf-scan-page.qcf-scan-page {
+  display: block;
+  align-self: stretch;
+  overflow: visible;
+  padding: 0 !important;
+  background: #f1ead9 !important;
+}
+.qcf-page {
+  --qcf-font-size: 30px;
+  --qcf-row-height: 54px;
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1.41421356;
+  padding: 2.8% 5.2%;
+  border: 26px solid transparent;
+  border-image: url("/images/mushaf-page-border.svg") 30 / 26px round;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(15, minmax(0, 1fr));
+  direction: rtl;
+  overflow: hidden;
+  background: #fffdf6;
+  background-clip: padding-box;
+  color: #1c2924;
+  box-shadow: 0 7px 18px rgba(7, 39, 31, .23);
+  opacity: 0;
+  transition: opacity .24s ease;
+}
+.qcf-page::before {
+  position: absolute;
+  inset: 10px;
+  content: "";
+  border: 1px solid rgba(23, 131, 137, .45);
+  box-shadow: inset 0 0 0 3px rgba(23, 131, 137, .07), inset 0 0 0 5px rgba(215, 77, 145, .13);
+  pointer-events: none;
+}
+.qcf-page.is-ready { opacity: 1; }
+.qcf-line { z-index: 1; display: flex; min-width: 0; min-height: 0; align-items: center; justify-content: center; color: #1d2924; }
+.qcf-line-inner {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  font-size: var(--qcf-font-size);
+  line-height: 1;
+  text-rendering: geometricPrecision;
+  font-kerning: none;
+}
+.qcf-line.is-short .qcf-line-inner { width: auto; justify-content: center; gap: .2em; }
+.qcf-line.is-fit .qcf-line-inner { width: auto; justify-content: center; }
+.qcf-line.is-fit { padding-block: 2px; }
+.qcf-line-surah_header { position: relative; color: #154e49; }
+.qcf-line-surah_header::before {
+  position: absolute;
+  inset: 0 10%;
+  content: "";
+  background: #147d82;
+  /* Keep the downloaded calligraphic cartouche at its original wide ratio. */
+  -webkit-mask: url("/images/mushaf-qcf-banner.png") center / 100% auto no-repeat;
+  mask: url("/images/mushaf-qcf-banner.png") center / 100% auto no-repeat;
+  pointer-events: none;
+}
+.qcf-line-surah_header .qcf-line-inner { position: relative; color: #154e49; }
+.qcf-line-bismillah { color: #1c2924; }
+.qcf-line-bismillah .qcf-line-inner {
+  font-family: "KFGQPC Hafs", "Amiri", serif !important;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: 0;
+}
+.qcf-page.is-measuring .qcf-line.is-text .qcf-line-inner { width: max-content; justify-content: flex-start; gap: 0; }
+.qcf-word { border-radius: 4px; cursor: pointer; transition: background-color .16s ease, box-shadow .16s ease; }
+.qcf-word:hover { background: rgba(176, 138, 62, .13); }
+.qcf-word.is-selected { background: rgba(16, 103, 86, .15); }
+.qcf-word.is-playing { background: rgba(207, 169, 91, .36); box-shadow: 0 0 0 2px rgba(207, 169, 91, .28); }
+.qcf-word.is-end { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; }
+.qcf-word.is-end:focus-visible { outline: 2px solid #137f78; outline-offset: 2px; }
+.qcf-page .qcf-word { font-size: inherit !important; }
+.qcf-page .qcf-line.is-text .qcf-line-inner { font-size: var(--qcf-font-size) !important; }
+.qcf-page-zoom { min-width: 0; flex: 0 0 auto; transition: width .2s ease; }
+.qcf-page-message, .qcf-page-error {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: rgba(251,248,239,.96);
+  color: #155e52;
+  text-align: center;
+  font: 600 15px/1.8 var(--kufi);
+}
+.qcf-page-error p { margin: 0; }
+.qcf-scan-page.is-fallback .qcf-page-zoom { display: none; }
+.qcf-scan-page.is-fallback .qcf-page-error { position: static; }
+.qcf-local-text { padding: 16px; background: #fffdf6; color: #1c2924; }
+.qcf-local-text h3 { margin: 0 0 8px; font: 700 15px/1.6 var(--kufi); }
+.qcf-local-text button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: start;
+  font: 24px/1.9 "KFGQPC Hafs", "Amiri", serif;
+}
+.qcf-local-text button:hover, .qcf-local-text button[aria-pressed="true"] { background: rgba(16,103,86,.12); }
+.qcf-local-text button span { font: 700 13px/1 var(--kufi); }
+.qcf-page-error button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid rgba(21,94,82,.35);
+  border-radius: 10px;
+  background: #fffdf7;
+  color: #155e52;
+  font: 700 14px var(--kufi);
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .qcf-page { border-width: 21px; border-image-width: 21px; padding-inline: 5%; }
+  .qcf-page::before { inset: 8px; }
+}
+@media (max-width: 480px) {
+  .qcf-page { border-width: 17px; border-image-width: 17px; padding: 3% 4%; }
+  .qcf-page::before { inset: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .qcf-page, .qcf-word { transition: none; } }
+
+@media (max-width: 480px) {
+  .qcf-page-message, .qcf-page-error { padding: 12px; font-size: 13px; }
+}

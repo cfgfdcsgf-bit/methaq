@@ -3,7 +3,6 @@ import { publicPlatformConfig, publicPlatformScript } from "./_core/publicConfig
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
 import { listLLMModels } from "./_core/llm";
-import { generateImage } from "./_core/imageGeneration";
 import { COOKIE_NAME } from "../shared/const";
 
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
@@ -25,19 +24,6 @@ describe("current platform integration", () => {
     const request = vi.fn(); vi.stubGlobal("fetch", request);
     await expect(listLLMModels()).rejects.toThrow("OPENAI_API_KEY");
     expect(request).not.toHaveBeenCalled();
-  });
-  it("persists URL-only image results through current managed storage", async () => {
-    vi.stubEnv("MANUS_API_URL", "https://api.example"); vi.stubEnv("MANUS_API_KEY", "test-only");
-    const request = vi.fn()
-      .mockResolvedValueOnce(new Response(JSON.stringify({ image: { url: "https://image.example/result.png", mimeType: "image/png" } })))
-      .mockResolvedValueOnce(new Response(new Uint8Array([1, 2, 3])))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ url: "https://upload.example/object" })))
-      .mockResolvedValueOnce(new Response(""));
-    vi.stubGlobal("fetch", request);
-    const image = await generateImage({ prompt: "test", originalImages: [] });
-    expect(image.url).toMatch(/^\/manus-storage\/generated\//);
-    expect(request).toHaveBeenCalledTimes(4);
-    expect(JSON.parse(request.mock.calls[0][1].body)).toHaveProperty("originalImages");
   });
   it("marks the session cookie Secure only when the request is HTTPS (direct or via proxy)", () => {
     expect(COOKIE_NAME).not.toBe("app_session_id");

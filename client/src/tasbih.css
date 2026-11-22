@@ -1,0 +1,68 @@
+@property --tasbih-progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+.tasbih-page { --counter-surface: var(--mithaq-field, #102d26); }
+.tasbih-heading {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: 860px; margin: 0 auto 12px; gap: 8px;
+}
+.tasbih-heading h1 { margin: 0; font: 700 clamp(1.9rem, 4vw, 3rem)/1.15 var(--launch-serif); }
+.tasbih-heading a { display: inline-flex; gap: 6px; align-items: center; color: var(--launch-accent); }
+.tasbih-workspace {
+  display: grid; grid-template-columns: minmax(260px, 1.15fr) minmax(230px, 1fr); gap: clamp(14px, 3vw, 28px);
+  max-width: 860px; margin-inline: auto; padding: clamp(14px, 3vw, 29px);
+  border: 1px solid var(--mithaq-rim);
+  border-radius: 23px; background: var(--mithaq-surface); box-shadow: var(--mithaq-shadow);
+}
+.tasbih-counter { display: grid; justify-items: center; align-content: center; gap: 9px; }
+.tasbih-ring {
+  width: clamp(140px, 28vh, 244px); max-width: 100%; aspect-ratio: 1; padding: 6px;
+  display: grid; isolation: isolate; border-radius: 50%;
+  background: conic-gradient(#e9c775 0 var(--tasbih-progress), #7ac6ac3d var(--tasbih-progress));
+  transition: --tasbih-progress .23s ease-out;
+}
+.tasbih-count-button {
+  display: grid; align-content: center; justify-items: center; gap: 2px; min-width: 0; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 20%, #214e3d, #0d2620 80%); color: #fff2cf;
+  box-shadow: inset 0 0 0 3px #0d271f, 0 8px 20px #031e16a1; touch-action: manipulation;
+  transition: transform .14s ease; cursor: pointer;
+}
+.tasbih-count-button strong { font: 800 clamp(1.6rem, 6vw, 3.4rem)/1.2 var(--launch-kufi); font-variant-numeric: tabular-nums; }
+.tasbih-count-button span { font-size: .81rem; }
+.tasbih-count-button:active:not(:disabled) { transform: scale(.964); }
+.tasbih-feedback { display: flex; gap: 5px; align-items: center; margin: 0; font-size: .82rem; text-align: center; }
+.tasbih-feedback svg { color: var(--launch-accent); flex: none; }
+.tasbih-actions, .tasbih-presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.tasbih-workspace :is(.tasbih-actions, .tasbih-presets, .tasbih-custom-goal) button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 42px; padding: 5px 10px;
+  border: 1px solid var(--mithaq-rim); border-radius: 9px; background: var(--counter-surface); color: var(--launch-text);
+  font-size: .8rem;
+}
+.tasbih-workspace button[aria-pressed="true"] { background: #e7ce89; color: #183528; }
+.tasbih-workspace button:disabled { opacity: .52; }
+.tasbih-workspace :is(button, input):focus-visible { outline: 2px solid var(--launch-accent); outline-offset: 3px; }
+.tasbih-goals { display: grid; align-content: center; gap: 10px; }
+.tasbih-goals h2 { margin: 0; font-size: 1.05rem; }
+.tasbih-presets button { flex: 1; min-width: 52px; }
+.tasbih-custom-goal { display: flex; gap: 6px; }
+.tasbih-custom-goal input {
+  flex: 1; min-width: 0; padding: 5px 10px; border: 1px solid var(--mithaq-rim); border-radius: 9px;
+  background: var(--counter-surface); color: var(--launch-text); font-size: max(16px, .85rem);
+}
+.tasbih-custom-goal input::placeholder { color: var(--launch-soft); }
+.tasbih-goals p { margin: 0; color: var(--launch-soft); font-size: .74rem; }
+@media (max-width: 660px) {
+  .tasbih-workspace { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+  .tasbih-goals { gap: 6px; }
+  .tasbih-ring { width: clamp(130px, 27dvh, 190px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tasbih-ring, .tasbih-count-button { transition: none; }
+}
+.tasbih-phrase { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.tasbih-phrase select { min-width:10rem; max-width:100%; }
+.tasbih-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem; margin:0; }
+.tasbih-summary div { padding:.7rem; border:1px solid var(--line); border-radius:12px; }
+.tasbih-summary dd { margin:0; font-size:1.25rem; font-weight:700; }

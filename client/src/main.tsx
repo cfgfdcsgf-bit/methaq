@@ -1,16 +1,18 @@
 import { trpc } from "@/lib/trpc";
-import { COOKIE_NAME, UNAUTHED_ERR_MSG } from '@shared/const';
+import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
+import { installProgressStorageObserver } from "@/lib/progressSync";
 import "./index.css";
-import "./identity.css";
-import "./quran-reader.css";
+import "./rafiq.css";
+import "./mithaq-shell.css";
 
 const queryClient = new QueryClient();
+installProgressStorageObserver();
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
@@ -44,26 +46,6 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: "/api/trpc",
       transformer: superjson,
-      headers() {
-        // Preview auto-login fallback: when the browser blocks iframe cookies
-        // (Safari ITP / private browsing / WebView), the runtime mirrors the
-        // session into sessionStorage so we can forward it as a Bearer token.
-        // The regular OAuth cookie flow keeps working and takes priority server-side.
-        try {
-          const raw = sessionStorage.getItem("manus-cookie");
-          if (raw) {
-            const prefix = `${COOKIE_NAME}=`;
-            const pair = raw.split(";").find(s => s.trim().startsWith(prefix));
-            const token = pair?.trim().slice(prefix.length);
-            if (token) {
-              return { Authorization: `Bearer ${token}` };
-            }
-          }
-        } catch {
-          // sessionStorage unavailable
-        }
-        return {};
-      },
       fetch(input, init) {
         return globalThis.fetch(input, {
           ...(init ?? {}),
@@ -82,10 +64,12 @@ createRoot(document.getElementById("root")!).render(
   </trpc.Provider>
 );
 
-if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+if (window.isSecureContext && "serviceWorker" in navigator) {
+  const registerOfflineShell = () => {
     navigator.serviceWorker.register("/service-worker.js").catch(error => {
       console.warn("Could not register the offline shell:", error);
     });
-  });
+  };
+  if (document.readyState === "complete") registerOfflineShell();
+  else window.addEventListener("load", registerOfflineShell, { once: true });
 }

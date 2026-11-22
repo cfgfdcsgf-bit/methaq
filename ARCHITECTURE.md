@@ -1,48 +1,51 @@
 # ARCHITECTURE.md — البنية الفعلية (اقرأ القسم المعني بمهمتك فقط)
 
 ## §المسارات (Routing)
-- `client/src/App.tsx`: `ThemeProvider(defaultTheme="dark", switchable)` ← `Router`. كل المسارات تشير إلى `Home` عدا `/login` ← `Login` و`/404`/الافتراضي ← `NotFound`.
-  المسارات المعرّفة تشمل `/permissions` لإدارة حسابات الموقع، إضافة إلى صفحات القراءة والأقسام والأدوات.
-- `client/src/pages/Home.tsx` → الدالة `Home()` هي الموجّه الفعلي: سلسلة شروط على `location` تختار الصفحة:
-  `/ و/about`→`HomePage`، `/dashboard`→`Dashboard`، `/permissions`→`PermissionsPage`، `/rafiq`→`RafiqPage`، `/privacy`→`PrivacyPage`، الأدوات ومسارات `KINDS`، `isExplore()`→`ExplorePage`، وإلا `HomePage`.
-- `Home()` يحيط الصفحة بـ: `Header` + `SearchPalette` (Ctrl/Cmd+K) + `MobileMenu` + `BottomNav` + `footer`، ويستدعي `useFx()` (تأثيرات).
-- **إضافة مسار جديد = ثلاث نقاط:** `App.tsx` (Route) + شرط في `Home()` + (اختياري) `client/public/manus-routes.json`.
+- يتولى `App.tsx` الصفحة الطارئة ومساري تأكيد البريد والاستعادة. يستخدم باقي الموقع سجل الصفحات في `Home.tsx` ومسارات `KINDS` و`SECS`.
+- يجمع `Home.tsx` التنقّل والبحث والهيدر والتذييل. يحتفظ بمشغّل المصحف بعد فتح القارئ حتى تظل التلاوة مستمرة عند التنقل داخل الإطار.
+- يطابق فحص البناء سجل المسارات مع `client/public/manus-routes.json`.
 
 ## §الواجهة (Frontend)
 | الملف | المسؤولية |
 |---|---|
-| `pages/Home.tsx` | الهيدر، القائمة المتنقلة، التنقل السفلي، شريط الثقة، `HomePage`، `Dashboard` (بوابة صلاحيات)، `RafiqPage`، `TasbihPage`، `PrivacyPage`، تذييل. ملاحظة: `SectionPage` و`sections` معرّفتان لكن **غير مستخدمتين**. |
+| `pages/Home.tsx` | الهيدر، القائمة المتنقلة، التنقل السفلي، بوابات المصادقة والإدارة، رفيق والسبحة والخصوصية. يتشارك الهيدر والتنقل ودليل الاستكشاف فهرس `lib/sections.ts`. |
 | `pages/Login.tsx` | دخول وإنشاء حساب محلي بالبريد وكلمة المرور، مع تحويل المالك إلى إدارة الصلاحيات. |
 | `components/ContentPage.tsx` | يصدّر `KINDS` و`Kind`. صفحة محتوى عامة: بحث، تصنيفات، بطاقات، قارئ (Modal) بتحكم بحجم الخط، مفضلة، نسخ. |
-| `components/AdminContent.tsx` | CRUD المواد، تغيير الحالة، استيراد JSON، إحصاءات. |
-| `components/Explore.tsx` | `SECS`/`EXISTING`/`ALL`، `Atlas`، `Marquee`، `Stats`، `ExplorePage` (أنواع: grid/steps/names/events/achv)، `CountUp`، أسماء الله، المناسبات، الإنجازات. «كل الأقسام» رابط مباشر. |
-| `components/Tools.tsx` | حساب مواقيت الصلاة فلكيًا، القبلة، التاريخ الهجري، `TodayStrip`، `ToolsHub`، `PrayerPage`، `KhatmaPage`، `ZakatPage`. |
-| `components/SearchPalette.tsx` | بحث شامل عبر `trpc.content.list({q})` (يبدأ من حرفين). |
-| `components/MushafPreview.tsx` | نموذج مصحف تفاعلي ثلاثي الأبعاد مضمّن من Sketchfab، مع نسبة العمل إلى صاحبه. |
+| `components/AdminContent.tsx` | بحث وترقيم، مراجعة وتحديث جماعي، أرشفة واسترجاع للمالك، سجل تعديلات، بلاغات، واستيراد JSON. |
+| `components/Explore.tsx` | مسارات `SECS`، صفحات الاستكشاف، أسماء الله، المناسبات والإنجازات. |
+| `components/Tools.tsx` | مواقيت الصلاة، القبلة، ضبط الهجري والإقامة، الجدول الشهري والطباعة، والختمة والزكاة. |
+| `components/SearchPalette.tsx` | بحث في وجهات مِيثَاق عبر `lib/sections.ts`، وفي المواد المنشورة عبر `trpc.content.list({q})` (يبدأ من حرفين). |
+| `components/LearningPage.tsx` و`components/LearningMedia.tsx` | تعرض `/learning` البودكاست و`?view=courses` الدورات. يدعم الفهرس البحث والناشر والموضوع، ويُنشأ مشغّل يوتيوب بعد اختيار الحلقة. توجد بيانات الناشرين في `data/learning-media.ts`. |
+| `components/TasbihPage.tsx` و`components/RamadanDashboard.tsx` | تستخدم السبحة مفتاح العدد السابق وتضيف حفظ الهدف محليًا. يرتبط رمضان بمصادر موسمية ويحسب جدول الفجر والمغرب لرمضان الحالي أو التالي حسب المدينة. |
+| `components/QuranReader.tsx` و`components/PrintedMushafPage.tsx` | يعرضان صور الطبعة الأصلية ويربطان مناطق الآيات فيها ببيانات حفص المحلية. يظلّل الضغط سطور الآية ويفتح التفسير والتلاوة في لوحة واحدة. |
 | `components/AIChatBox.tsx` | واجهة محادثة عامة تستخدمها `RafiqPage`. |
-| `lib/fx.ts` | `useFx()`: ميل ثلاثي الأبعاد للبطاقات، ظهور عند التمرير، شريط تقدم التمرير. |
-| `lib/trpc.ts`, `main.tsx` | عميل tRPC (`/api/trpc`, superjson, `credentials: include`, بديل Bearer من sessionStorage)، وتحويل لتسجيل الدخول عند UNAUTHED. |
+| `lib/trpc.ts`, `main.tsx` | عميل tRPC عبر `/api/trpc` وsuperjson. يرسل المتصفح كوكي الجلسة عبر `credentials: include`. |
+| `MithaqBrand.tsx` و`mithaq-shell.css` | شعار مِيثَاق وإطار العرض المشترك للصفحات الداخلية والرئيسية، مع شريط تنقّل RTL وقائمة حساب HTML Popover تتجاوز طبقات واجهة الصفحة. |
+| `ReferenceHome.tsx` و`mithaq-shell.css` | المشهد الافتتاحي والبطاقات والتنقّل ومشاهد الخلفية. يشارك قسم الإنجازات الرئيسية سجل الزيارات من `lib/visitHistory.ts`. |
+| `hooks/useGlassLight.ts` | انعكاس المؤشر بتحديث واحد في إطار الرسم، مع احترام تفضيل تقليل الحركة. |
+| `components/GlassHeading.tsx` | عنوان الأقسام بالهوية الزجاجية المشتركة في `mithaq-shell.css`. ملفات خط عارف رقعة محلية وتُخزّن مع أصول الواجهة للعمل دون اتصال. |
 | `contexts/ThemeContext.tsx` | الوضع الداكن/الفاتح. |
-| `index.css` | كل التنسيقات المخصصة (64KB، 322 سطر) — لا تقرأه كاملًا. |
+| `index.css` | الأساس المشترَك والخطوط المحلية. تضبط `mithaq-shell.css` تنسيق الإطار ومظهره الفاتح ووضع تقليل التأثيرات. |
 | `components/ui/*` | shadcn/Radix جاهزة. |
-- **غير مستخدمة حاليًا (لا تُحذف):** `DashboardLayout(+Skeleton)`, `ManusDialog`, `Map`, `pages/ComponentShowcase`, `pages/NotFound` (مستخدمة لـ 404 فقط).
+- `pages/NotFound` مستخدمة لـ 404 فقط. نُقل `MushafQcf.tsx` و`mushaf-qcf.css` وملفات Manus غير المستخدمة إلى `_to_delete/` (٢٢ نوفمبر ٢٠٢٦) تمهيدًا لحذفها بعد نجاح `pnpm check` و`pnpm build`.
 
 ## §البيانات (Database + Content API)
 - `drizzle/schema.ts` (PostgreSQL):
   - `users`: id, openId(unique), name, email, loginMethod, passwordHash، role(`user|admin|owner`), createdAt, updatedAt, lastSignedIn.
   - `materials`: id, kind(`quran|sunnah|library|learning|adhkar`), title(255), category(120), body(text), source(255), grade(120), status(`draft|review|published`, default draft), createdAt, updatedAt.
-- `server/db.ts`: `getDb()` (كسول، يعمل بدون DB فيُرجع فارغًا)، `upsertUser`, `getUserByOpenId`, `listMaterials` (فلاتر kind/status/publishedOnly/q بـ LIKE)، `getMaterial`, `createMaterials`, `updateMaterial`, `deleteMaterial`, `materialStats`.
+- `server/db.ts`: يفتح مجمّع اتصال كسولًا. تتطلب استعلامات المحتوى قاعدة سليمة، وتستفيد من فهارس trigrams في البحث النصي. يتحقق `/api/health` من الاتصال والجداول اللازمة للبناء الحالي.
 - `server/routers.ts` → `appRouter`:
   - `system` (health، notifyOwner[admin]).
-  - `auth.me`, `auth.localLogin`, `auth.localRegister`, `auth.logout`؛ `permissions.list/updateRole` للمالك فقط.
-  - `content.list` (عام، منشورة فقط، يقتطع body إلى 220 حرفًا)، `content.get` (عام، منشورة فقط)، `adminList`, `adminGet`, `stats`, `create`, `importMany` (حتى 500), `update`, `remove` — كلها `adminProcedure`.
+  - `auth.me` يرجع المعرّف والاسم والدور وطريقة الدخول أو `null`. صلاحيات الأدوار للمالك فقط، وتحتاج التأكيد عند تهيئة البريد.
+  - `content.list` و`content.get` تعرضان المواد المنشورة غير المؤرشفة. تعرض السنة بيانات التخريج والدرجة. أرشفة المواد واسترجاعها للمالك مع سجل مراجعة، ويأتي النشر بعد الاعتماد.
   - `rafiq.chat` (`protectedProcedure`).
-- **تنبيه هجرة:** `materials` موجود في `schema.ts` لكن **غير موجود** في `drizzle/0000_initial_users.sql` ولا `meta/_journal.json` ولا الـ snapshot. يجب تشغيل `pnpm db:push` لتوليد migration قبل النشر/الاستخدام على قاعدة جديدة.
-- بيانات المستخدم المحلية (غير مرتبطة بحساب): `localStorage` مفاتيح: `lastRead, favs, readerSize, tasbih, city, pr-YYYY-MM-DD, kh-days, kh-read, visitDays`.
+- `drizzle/0000_legal_warbird.sql` تنشئ جدول `materials`، وتُطبّق الهجرات المسجّلة على قاعدة جديدة بواسطة `pnpm db:migrate`.
+- ترحيل `0003` يضيف معرّف المصدر والأرشفة وجداول المزامنة والبلاغات والتحقق وحدود رفيق واشتراكات التنبيهات. يشغّل التطبيق هذه الجداول من خادم Express.
+- يزامن `ProgressSync` المفاتيح المعتمدة في `shared/progress.ts`، ويعزل الحسابات والضيف على الجهاز. إعدادات المدينة والمظهر والتنبيهات خاصة بالجهاز.
 
 ## §المصادقة (Auth)
 - الدخول الافتراضي: بريد وكلمة مرور محليان؛ كلمات المرور مخزّنة باستخدام scrypt، والجلسات JWT في كوكي `webdev_app_session`.
-- الدخول القديم عبر Manus OAuth ما زال في الخادم للتوافق، لكنه ليس واجهة تسجيل الدخول للموقع.
+- يوقّع الخادم جلسات البريد وGoogle باستخدام إصدار جلسة الحساب الحالي. يؤدي تغيير كلمة المرور من رابط الاستعادة إلى إبطال الجلسات الأقدم.
 - `server/_core/context.ts` يضع `ctx.user` (اختياري). `trpc.ts`: `publicProcedure`, `protectedProcedure`, `adminProcedure`.
 - `OWNER_EMAIL` (بلا قيمة افتراضية؛ يجب تحديده في `.env`) يصبح `owner` عند أول تسجيل محلي في التطوير؛ لا يمكن تغيير دور المالك من لوحة الصلاحيات.
 - الواجهة: `_core/hooks/useAuth.ts`؛ `Dashboard` متاح للمشرف والمالك، وإدارة الحسابات للمالك فقط.
@@ -51,14 +54,28 @@
 - المسار `/dashboard`: مديرو المحتوى والمالك يديرون المواد. المسار `/permissions` يسمح للمالك فقط بتبديل دور الحسابات بين عضو ومشرف.
 
 ## §رفيق (Rafiq AI)
-- `server/routers.ts`: `RAFIQ_SYSTEM_PROMPT` (قواعد: لا اختلاق نص، لا فتوى، تمييز النص/الشرح، ذكر الخلاف، التحذير الختامي)، مدخلات: 1–12 رسالة، كل رسالة ≤ 4000 حرف، `maxTokens: 700`.
+- `server/routers.ts`: تعليمات الشرح المنظّم للأسئلة العامة والإسلامية والإرشاد إلى مِيثَاق، مع ضوابط الفتاوى ونسبة النصوص. المدخلات 1–12 رسالة، كل رسالة ≤ 4000 حرف. تمر إلى النموذج آخر ست رسائل والسؤال الحالي، وسقف الرد 1150 رمزًا.
 - يستعمل إعداد Manus عند وجوده، أو مزودًا متوافقًا مع OpenAI عند ضبط `OPENAI_API_KEY` و`OPENAI_MODEL` في `.env`.
-- الإخراج: `{ answer, sources: [] (فارغة دائمًا), notice }`. لا يوجد استرجاع من جدول `materials` ولا إحالات فعلية.
-- الواجهة: `RafiqPage` (للمسجلين فقط).
+- تُستهلك حصة يومية من جدول `rafiq_usage` (مفتاح اليوم بتوقيت القاهرة) قبل استدعاء المزود: افتراضيًا ٢٠ لكل حساب و٦٠٠ للموقع، وتُضبط بـ`RAFIQ_DAILY_LIMIT_PER_USER` و`RAFIQ_DAILY_LIMIT_GLOBAL`. عند نفادها يرجع `TOO_MANY_REQUESTS` برسالة عربية تعرضها `RafiqPage`.
+- الإخراج `{ answer, sources }`. يبحث الخادم في صفحات خارجية مرتبطة بالسؤال ويمرر مقتطفاتها إلى النموذج، ثم يعيد الروابط المشار إليها في الرد.
+- الواجهة: `RafiqPage` (للمسجلين فقط)، وتعرض `AIChatBox` عناوين الرد وقوائمه والتنبيه ثابت في رأس الصفحة.
 
 ## §الاستكشاف (Explore)
-- `EXISTING` (10 أقسام مرتبطة بصفحات حقيقية) + `SECS` (12 قسمًا) = 22 قسمًا في `Atlas`.
-- أنواع `SECS`: `names` (100 بطاقة)، `events` (عدّ تنازلي بتقويم أم القرى)، `achv` (سلسلة زيارات)، `grid`/`steps` (عناوين ثابتة بنص بديل «يُضاف المحتوى من لوحة الإدارة» — **غير مربوطة بقاعدة البيانات**).
+- تعرض صفحات الاستكشاف التعليمية قائمة `ContentPage` حسب التصنيف المطابق، وتقرأ الأدعية المأثورة من تصنيفها في الأذكار. تبقى الآيات المساندة من المصحف المحلي، وعدّاد المناسبات والإنجازات أدوات تفاعلية.
+- مسار `/names` يعرض `DivineNamesPage` من فهرس محلي مستقل ويحمل الأدلة القرآنية من المصحف المضمّن.
+- يعرض مسار `/learning` البودكاست والدورات الخارجية من الفهرس المحلي، وتظل روابط المواد بمعامل `open` صالحة.
+- يعرض `/seerah` فهرسًا قابلًا للبحث من بيانات `seerah.ts`، ويفتح الفصول بمعامل `chapter` في `SeerahPage`. تُقرأ الآيات من المصدر المحلي، وتبقى روابط المواد الأقدم بمعامل `open` صالحة.
 
-## §المنصة (server/_core — Manus)
-`index.ts` (Express: `/api/health`, `/api/platform/config.js`, OAuth, tRPC، ثم Vite/ static)، `env.ts`, `publicConfig.ts`, `sdk.ts`, `cookies.ts`, `llm.ts`, `storageProxy.ts`/`../storage.ts`, `imageGeneration.ts`, `voiceTranscription.ts`, `map.ts`, `dataApi.ts`, `notification.ts`, `heartbeat.ts`, `vite.ts`. المستخدم فعليًا من التطبيق: `index, env, publicConfig, sdk, cookies, context, trpc, oauth, systemRouter, notification, llm, vite`. الباقي جاهز لكن غير مستخدم (imageGeneration يستخدم `storage.ts`).
+## §المنصة (server/_core)
+يخدم `index.ts` API وترويسات الأمان والضغط. سياسة CSP تحصر الخطوط في `'self' data:` لأن الخطوط محلية. أُزيلت وحدات Manus غير المستخدمة (`dataApi`, `imageGeneration`, `map`, `voiceTranscription`, `storageProxy`, `storage.ts`)، وما زالت `notification.ts` و`systemRouter.ts` وأسماء `MANUS_*` في `env.ts` و`publicConfig.ts` و`llm.ts` قائمة. يخدم `static.ts` نسخة الإنتاج، ويُحمّل Vite في التطوير فقط. يرسل `googleAuth.ts` المستخدم إلى Google، ويتحقق `sdk.ts` من كوكي الجلسة. يستورد رفيق طبقة المزوّد من `llm.ts`.
+
+## §التجربة اليومية والتنبيهات
+
+- الصفحة الرئيسية تنظّم الوصول إلى اليوم والمصحف والأذكار والتعلّم. جلسات الأذكار وخطة الختمة وموضع الورد تحفظ تقدمها في هذا الجهاز. يقرأ مخطط الختمة قيم `kh-days` و`kh-read` القديمة عند غياب الخطة الجديدة.
+- يحسب `shared/prayer.ts` و`shared/reminders.ts` أوقات المدينة، مع إمكانية تقديم التاريخ الهجري يومًا أو تأخيره. يحتفظ `server/_core/webPush.ts` بمفاتيح VAPID في المجلد المهيأ ويحفظ الاشتراكات في PostgreSQL. يتلقى Service Worker الإشعار ويفتح المسار المرتبط به، ويخدم صفحات المصحف التي نزّلها المستخدم.
+
+- `SectionDirectory` يعرض الوجهات الأساسية من مجموعة يحددها `?section=`. يستخدم بحث الدليل والبحث العام الفهرس الكامل، وتحتفظ كل صفحة متخصصة بمسارها.
+
+- `/my-day` يعرض المتابعة الشخصية. يستخدم `PrayerLogCard` في المتابعة والمواقيت مفاتيح `pr-YYYY-MM-DD` الموجودة أصلًا ويحدّث السجل بين الشاشات من تخزين المتصفح. يحافظ التطبيق على لوحة إدارة المحتوى في `/dashboard`.
+
+- `MotionLink` يستخدم View Transitions عند توفرها. تظل عناصر التنقل ثابتة، ويمكن لبطاقة الصلاة الانتقال بصريًا إلى صفحة المواقيت. التنقل القياسي متاح للأجهزة الأخرى ومع تقليل الحركة.

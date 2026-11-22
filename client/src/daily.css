@@ -1,0 +1,153 @@
+.daily-home, .reminder-page { --daily-border: color-mix(in srgb, var(--gold) 22%, transparent); --daily-surface: color-mix(in srgb, var(--ivory) 92%, var(--green)); }
+.daily-home { max-width: 1090px; padding-block: clamp(28px, 5vw, 66px) 54px; }
+.daily-home a, .reminder-page a { touch-action: manipulation; }
+.daily-heading, .daily-section-head, .daily-prayer-label, .daily-prayer-actions, .routine-flow-head, .routine-entry-head, .daily-inline, .daily-date, .daily-hero .daily-kicker { display: flex; align-items: center; gap: 10px; }
+.daily-heading, .daily-section-head, .daily-prayer-actions, .routine-flow-head, .routine-entry-head { justify-content: space-between; }
+.daily-heading { margin-bottom: 24px; }
+.daily-heading h1 { margin: 4px 0 0; font: 700 clamp(2.15rem, 5vw, 3.6rem)/1.25 var(--display, "Amiri", serif); }
+.daily-date { font: 500 .78rem/1.6 var(--kufi); flex-wrap: wrap; color: var(--muted); }
+.daily-date svg, .daily-section-head > a, .daily-extra a, .daily-bell { color: var(--green); }
+.daily-bell, .daily-icon { display: inline-grid; place-items: center; flex: none; inline-size: 44px; block-size: 44px; border-radius: 16px; }
+.daily-bell, .daily-icon, .daily-pill { background: color-mix(in srgb, var(--green) 9%, var(--ivory)); border: 1px solid color-mix(in srgb, var(--green) 20%, transparent); }
+.daily-feature, .daily-middle { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 16px; }
+.daily-middle { margin-block: 16px 28px; }
+.daily-hero { position: relative; display: grid; align-items: center; min-height: 272px; overflow: hidden; isolation: isolate; border-radius: 26px; padding: clamp(20px,4vw,37px); background: linear-gradient(135deg,#0a332b,#135b4c); color: #f8f4e8; border: 1px solid #2a6a59; }
+.daily-hero-copy { z-index: 1; width: max-content; max-width: 100%; animation: daily-in .35s ease-out both; }
+.daily-hero .daily-kicker { font: 600 .8rem/1.5 var(--kufi); color: #e1c789; }
+.daily-hero h2 { margin: 9px 0 0; font: 700 clamp(2rem, 4vw, 3.15rem)/1.3 "Amiri", serif; color: inherit; }
+.daily-hero p { margin: 3px 0 19px; color: #d5e1d8; }
+.daily-start, .daily-pill { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; border-radius: 12px; padding: 8px 14px; font: 700 .82rem/1.5 var(--kufi); width: fit-content; }
+.daily-start { background: #ecd8a2; color: #183a30; }
+.daily-sky { position: absolute; inset-inline-end: -54px; inset-block-start: 50%; translate: 0 -50%; width: min(51%, 315px); min-width: 194px; aspect-ratio: 1; display: grid; place-items: center; z-index: -1; }
+.daily-orbit { position: absolute; inset: 6%; border-radius: 50%; border: 1px solid #dbc88840; }
+.daily-orbit-inner { inset: 18%; border: 1px dashed #dbc88858; }
+.daily-sky::before { content: ""; position: absolute; inset: -6%; background: radial-gradient(circle, #d3a95f22, #73bbb018 40%, transparent 64%); }
+.daily-sky::after { content: ""; position: absolute; inset: 30%; border: 1px solid #dbc88838; border-radius: 50%; }
+.daily-sky-icon { color: #ead18b; display: grid; place-items: center; animation: daily-sky-in .55s ease-out both; }
+.daily-sky-icon svg { width: clamp(42px, 7vw, 81px); height: auto; stroke-width: 1; }
+.daily-sky i { position: absolute; inline-size: 6px; block-size: 6px; border-radius: 50%; background: #e0c578; box-shadow: 0 0 12px #e0c57886; }
+.daily-sky i:nth-of-type(1) { inset: 22% auto auto 22%; }
+.daily-sky i:nth-of-type(2) { inset: auto 22% 24% auto; }
+.daily-sky i:nth-of-type(3) { inset: auto auto 19% 36%; inline-size: 4px; block-size: 4px; }
+.daily-prayer, .daily-ward, .daily-action, .daily-season, .routine-flow, .routine-saved, .reminder-panel, .ward-reader { background: var(--daily-surface, var(--ivory)); border: 1px solid var(--daily-border, var(--line)); border-radius: 20px; }
+.daily-prayer { display: flex; justify-content: space-between; flex-direction: column; padding: clamp(17px,3vw,27px); }
+.daily-prayer-label { font: 600 .78rem/1.5 var(--kufi); flex-wrap: wrap; color: var(--muted); }
+.daily-icon, .daily-pill { color: var(--green); }
+.daily-prayer-label a { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 4px; color: var(--green); }
+.daily-prayer h2 { font: 700 clamp(1.7rem,3.2vw,2.6rem)/1.15 "Amiri",serif; margin: 12px 0 0; }
+.daily-clock { width: fit-content; margin: 0 0 12px; font: 600 clamp(1.5rem,3.5vw,2.4rem)/1.2 var(--kufi); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.daily-prayer-actions { justify-content: flex-start; gap: 9px; }
+.daily-prayer-actions a, .daily-season > a { display: inline-flex; min-height: 40px; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 9px; border: 1px solid var(--daily-border); color: var(--green); font: 600 .76rem/1.5 var(--kufi); }
+.daily-ward { display: flex; align-items: center; gap: 12px; padding: 16px; }
+.daily-ward-copy { flex: 1; min-width: 0; }
+.daily-ward h2, .daily-season h2, .daily-section-head h2 { font: 700 1.55rem/1.4 "Amiri", serif; margin: 0; }
+.daily-ward p, .daily-season p { margin: 0; font-size: .91rem; color: var(--muted); }
+.daily-progress { display: block; width: 100%; height: 7px; border: 0; border-radius: 8px; overflow: hidden; margin-top: 8px; background: color-mix(in srgb, var(--green) 17%, transparent); }
+.daily-progress::-webkit-progress-bar { background: transparent; }
+.daily-progress::-webkit-progress-value { background: var(--green); transition: width .24s ease-out; }
+.daily-progress::-moz-progress-bar { background: var(--green); }
+.daily-pill { flex: none; }
+.daily-action { min-height: 68px; display: flex; align-items: center; gap: 11px; padding: 11px 14px; }
+.daily-action span:not(.daily-icon) { display: grid; gap: 2px; }
+.daily-action strong { font: 700 .9rem/1.5 var(--kufi); }
+.daily-action small { color: var(--muted); }
+.daily-action > svg:last-child { margin-inline-start: auto; flex-shrink: 0; color: var(--green); }
+.daily-lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 12px; }
+.daily-section-head { align-items: baseline; }
+.daily-section-head a, .daily-extra a { display: inline-flex; align-items: center; gap: 6px; font: 600 .78rem/1.6 var(--kufi); }
+.daily-extra { display: flex; flex-wrap: wrap; gap: 14px 23px; margin-top: 25px; }
+.daily-extra a { min-height: 37px; }
+.daily-season { padding: 14px 17px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.daily-season-times { display: flex; gap: 14px; margin-inline-start: auto; font-size: .92rem; }
+.daily-season-times span { display: flex; gap: 6px; align-items: center; }
+.daily-season-times b { font-variant-numeric: tabular-nums; }
+.daily-bell, .daily-start, .daily-action, .daily-pill, .daily-prayer-actions a, .routine-count, .bottom-nav a { transition: background-color .18s ease, transform .18s ease, border-color .18s ease; }
+.daily-bell:active, .daily-start:active, .daily-action:active, .daily-pill:active, .routine-count:active, .bottom-nav a:active { transform: scale(.97); }
+.daily-bell:hover, .daily-action:hover, .daily-pill:hover, .daily-prayer-actions a:hover { border-color: var(--green); }
+.bottom-nav a.active { background: color-mix(in srgb, var(--green) 11%, transparent); }
+.routine-options { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 0 auto 24px; }
+.routine-flow, .routine-saved { padding: clamp(17px,4vw,31px); max-width: 760px; margin: 0 auto 22px; }
+.routine-flow { animation: daily-in .28s ease-out both; }
+.routine-flow-head { justify-content: start; flex-wrap: wrap; }
+.routine-flow-head h2, .routine-entry-head h3, .routine-finish h3, .ward-reader h2 { margin: 0; font: 700 1.65rem/1.35 "Amiri",serif; }
+.routine-flow-head > a { margin-inline-start: auto; color: var(--green); }
+.routine-entry { margin-top: 17px; animation: daily-in .24s ease-out both; }
+.routine-entry p, .routine-saved article p { margin: 16px 0 10px; font: 400 clamp(1.5rem, 3vw, 2rem)/1.9 "Amiri",serif; }
+.routine-entry small, .routine-saved article small { display: block; color: var(--muted); }
+.routine-saved article { padding-block: 12px; border-bottom: 1px solid var(--line); }
+.routine-count { margin-top: 16px; width: 100%; touch-action: manipulation; }
+.routine-finish { display: grid; justify-items: center; gap: 13px; padding: 24px 0 5px; text-align: center; animation: daily-in .32s ease-out both; }
+.routine-finish .daily-icon { animation: daily-sky-in .36s ease-out both; }
+.daily-inline { flex-wrap: wrap; }
+.ward-reader { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 12px 17px; margin: 0 0 15px; scroll-margin-top: 80px; }
+.ward-reader p { margin: 0; color: var(--muted); }
+.ward-reader .detail-btn { margin-inline-start: auto; }
+.reminder-page { max-width: 820px; }
+.reminder-panel { padding: clamp(17px,4vw,29px); margin-bottom: 16px; }
+.reminder-panel h2 { display: flex; align-items: center; gap: 9px; margin-top: 0; font-family: "Amiri",serif; }
+.reminder-panel fieldset { padding: 0; margin: 19px 0; border: 0; }
+.reminder-panel legend { font: 700 .9rem/1.6 var(--kufi); color: var(--green); }
+.reminder-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; border-bottom: 1px solid var(--line); padding-block: 5px; }
+.reminder-row label { display: flex; align-items: center; gap: 9px; }
+.reminder-row :is(input[type="checkbox"], select, input[type="time"]) { accent-color: var(--green); }
+.reminder-row :is(select, input[type="time"]), .prayer-adjustments input { color: inherit; border: 1px solid var(--line); background: var(--ivory); border-radius: 8px; min-height: 38px; padding: 4px 9px; }
+.reminder-row input[type="checkbox"] { width: 19px; height: 19px; }
+.reminder-note { display: flex; align-items: center; gap: 8px; margin-block: 12px; color: var(--muted); }
+.reminder-note svg { flex: none; }
+.reminder-actions button:disabled, .reader-actions button:disabled { opacity: .55; cursor: not-allowed; }
+.adhan-player audio { display: block; margin: 9px 0; max-width: 100%; }
+.adhan-player, .qibla-card { scroll-margin-top: 84px; }
+.qibla-card { text-align: center; }
+.qibla-dial { position: relative; margin: 16px auto; border-radius: 50%; width: min(160px,100%); aspect-ratio: 1; display: grid; place-items: center; border: 2px solid var(--line); color: var(--green); background: radial-gradient(circle, transparent 55%, color-mix(in srgb,var(--green) 12%,transparent) 56%, transparent 58%); transition: border-color .25s ease; }
+.qibla-dial.is-aligned { border-color: var(--green); }
+.qibla-dial > svg { transition: transform .22s ease-out; }
+.qibla-dial-point { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: .85rem; color: var(--green); }
+.prayer-config label, .prayer-adjustments label { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.prayer-adjustments input { max-width: 84px; }
+@keyframes daily-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes daily-sky-in { from { opacity: .35; scale: .88; } to { opacity: 1; scale: 1; } }
+@media (max-width: 670px) {
+  .daily-home { padding-top: 26px; }
+  .daily-heading { margin-bottom: 16px; }
+  .daily-feature, .daily-middle, .daily-lesson-grid, .routine-options { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .daily-hero { min-height: 210px; border-radius: 22px; }
+  .daily-prayer { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 10px; }
+  .daily-prayer-label { grid-column: 1 / -1; }
+  .daily-prayer h2, .daily-clock { margin: 6px 0; }
+  .daily-prayer-actions { grid-column: 1 / -1; }
+  .daily-prayer-label .daily-icon { width: 34px; height: 34px; border-radius: 11px; }
+  .daily-ward { padding: 13px 11px; gap: 8px; }
+  .daily-ward > .daily-icon { display: none; }
+  .daily-season-times { margin-inline-start: 0; }
+}
+@media (max-width: 365px) {
+  .daily-sky { opacity: .6; inset-inline-end: -79px; }
+  .daily-pill, .daily-start { padding-inline: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .daily-home *, .routine-flow *, .routine-flow, .qibla-dial, .qibla-dial svg, .daily-progress::-webkit-progress-value { animation: none !important; transition: none !important; }
+}
+
+.meethaq-app:has(.daily-home) {
+  background-image: radial-gradient(ellipse at 92% 0%, color-mix(in srgb, var(--green) 10%, transparent), transparent 56%);
+}
+.meethaq-app:has(.daily-home)::after { display: none; }
+.ramadan-dashboard { margin-block: 16px 26px; padding: clamp(16px,3vw,28px); background: var(--ivory); border: 1px solid var(--line); border-radius: 20px; }
+.ramadan-dashboard h2 { display: flex; align-items: center; gap: 8px; }
+.ramadan-times { overflow-x: auto; }
+.ramadan-times table { width: 100%; border-collapse: collapse; margin-top: 13px; }
+.ramadan-times :is(th, td) { padding: 8px; text-align: center; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.ramadan-times tbody tr:first-child { background: color-mix(in srgb,var(--green) 9%, transparent); }
+
+.adhan-toast { direction: rtl; position: fixed; inset-inline-end: 16px; inset-block-end: max(20px, env(safe-area-inset-bottom)); z-index: 300; display: flex; align-items: center; gap: 10px; padding: 9px 13px; border: 1px solid #5b8273; border-radius: 13px; max-width: min(360px, calc(100vw - 32px)); color: #fff8e8; background: #123f34; box-shadow: 0 8px 20px #0005; }
+.adhan-toast svg { flex: none; }
+@media (max-width: 780px) { .adhan-toast { inset-block-end: calc(80px + env(safe-area-inset-bottom)); } }
+.home-learning { margin-block-start: 22px; }
+.home-learning h2 { margin: 0 0 9px; font: 700 clamp(1.5rem, 3.4vw, 2.3rem)/1.25 var(--launch-serif); }
+.home-learning > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.atmosphere-shell .home-learning .study-scene { min-height: 78px; }
+.home-learning .study-scene strong { min-width: 0; font-size: clamp(.83rem, 1.45vw, 1.08rem); }
+@media (max-width: 480px) {
+  .home-learning > div { grid-template-columns: minmax(0, 1fr); }
+}
+.today-panel > .release-dhikr { grid-column:1 / -1; }

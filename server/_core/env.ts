@@ -25,7 +25,6 @@ export const ENV = {
     return process.env.NODE_ENV === "production" ? "" : localSessionSecret();
   },
   get databaseUrl() { return process.env.DATABASE_URL ?? ""; },
-  get oAuthServerUrl() { return process.env.MANUS_OAUTH_API_URL ?? ""; },
   // Preserve the legacy hint when supplied; otherwise roles remain application data.
   get ownerOpenId() { return process.env.OWNER_OPEN_ID ?? ""; },
   get ownerEmail() { return (process.env.OWNER_EMAIL?.trim() ?? "").toLowerCase(); },
@@ -38,4 +37,18 @@ export const ENV = {
   get openaiApiKey() { return process.env.OPENAI_API_KEY ?? ""; },
   get openaiApiBaseUrl() { return (process.env.OPENAI_API_BASE_URL ?? "https://api.openai.com/v1").replace(/\/$/, ""); },
   get openaiModel() { return process.env.OPENAI_MODEL ?? ""; },
+  /** Public https address of the site; used to build links in emails. */
+  get appUrl() { return (process.env.APP_URL ?? "").trim().replace(/\/$/, ""); },
+  /** Transactional email through the Resend HTTP API. Leave empty to disable verification and reset emails. */
+  get mailApiKey() { return process.env.RESEND_API_KEY?.trim() ?? ""; },
+  get mailFrom() { return process.env.MAIL_FROM?.trim() ?? ""; },
+  get mailConfigured() { return Boolean(this.mailApiKey && this.mailFrom && this.appUrl); },
+  /** Questions each signed-in account may ask Rafiq per day, and the site-wide daily ceiling. */
+  get rafiqDailyPerUser() { return positiveInt(process.env.RAFIQ_DAILY_LIMIT_PER_USER, 20); },
+  get rafiqDailyGlobal() { return positiveInt(process.env.RAFIQ_DAILY_LIMIT_GLOBAL, 600); },
 };
+
+function positiveInt(value: string | undefined, fallback: number) {
+  const parsed = Number.parseInt(value ?? "", 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+}
