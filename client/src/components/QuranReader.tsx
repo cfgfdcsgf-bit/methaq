@@ -7,6 +7,7 @@ import PrintedMushafPage, { PRINT_PAGE_ROOT, type PrintVerseRegion } from "./Pri
 
 import WardReader from "@/components/WardReader";
 import { saveWardCursor } from "@/lib/khatma";
+import "@/quran-reader.css";
 
 type Surah = { number: number; name: string; ayahCount: number };
 type Ayah = { surah: number; number: number; text: string; plainText: string; normalizedText: string; page: number; juz: number; lineStart: number; lineEnd: number; globalNumber: number };
@@ -276,6 +277,10 @@ function QuranReaderView({ active }: { active: boolean }) {
     printRegions[page - 1]?.some(([id]) => id === activeAyah.globalNumber)) ? activeAyah : null;
   const selectedReciter = reciters.find(item => item.id === reciter) ?? reciters[0];
   const surahNames = useMemo(() => Object.fromEntries(surahs.map(surah => [surah.number, surah.name])) as Record<number, string>, [surahs]);
+  const verseLabel = (id: number) => {
+    const verse = ayat[id - 1];
+    return verse && `سورة ${surahNames[verse.surah]} · الآية ${verse.number.toLocaleString("ar-EG")}`;
+  };
   const currentAudioTrack = audioSession?.tracks[audioSession.index];
   const playingAyah = currentAudioTrack ? ayat.find(verse => verse.globalNumber === currentAudioTrack.globalNumber) ?? null : null;
   const audioSource = currentAudioTrack?.urls[audioSession?.urlIndex ?? 0] ?? "";
@@ -530,7 +535,7 @@ function QuranReaderView({ active }: { active: boolean }) {
           event.currentTarget.querySelector("summary")?.focus();
         }
       }}>
-        <summary aria-label="إعدادات عرض المصحف"><SlidersHorizontal size={17} aria-hidden="true" /><span>العرض</span></summary>
+        <summary><SlidersHorizontal size={17} aria-hidden="true" /><span>العرض</span></summary>
         <div className="quran-reader-toolbar">
           <div className="quran-toolbar-section">
             <span className="quran-toolbar-label">عرض الصفحة</span>
@@ -602,14 +607,21 @@ function QuranReaderView({ active }: { active: boolean }) {
           </span>
           <button type="button" onClick={() => navigatePage("next")} disabled={visiblePages.at(-1) === TOTAL_PAGES}>التالي <ChevronLeft size={19} /></button>
         </nav>
+        <label className="quran-surah-picker mushaf-ayah-picker">
+          <span>اختر آية للتفسير والتلاوة</span>
+          <select value="" onChange={event => {
+            const verse = ayat[Number(event.target.value) - 1];
+            if (verse) openAyah(verse, event.currentTarget);
+          }}>
+            <option value="">آيات الصفحات المعروضة</option>
+            {visiblePages.flatMap(page => (printRegions[page - 1] ?? []).map(([id]) => <option key={id} value={id}>{verseLabel(id)}</option>))}
+          </select>
+        </label>
         <div data-paper={paper} className={"mushaf-page-frame mushaf-facsimile-frame" + (effectiveSinglePage ? " is-single-page" : "")} style={effectiveSinglePage ? { maxWidth: `${500 * zoom}px`, touchAction: zoom > 1 ? "auto" : undefined } : undefined} onTouchStart={zoom > 1 ? undefined : handleTouchStart} onTouchEnd={zoom > 1 ? undefined : handleTouchEnd}>
           <div key={effectiveSinglePage ? selectedPage : spreadStart} className={"mushaf-open-book mushaf-scanned-book mushaf-facsimile-book" + (effectiveSinglePage ? " is-single-page" : "")} style={{ width: effectiveSinglePage ? `${Math.max(zoom, 1) * 100}%` : "100%", maxWidth: `${(effectiveSinglePage ? 460 : 920) * zoom}px` }} data-turn={pageTurnDirection} aria-label={effectiveSinglePage ? "صفحة المصحف" : "صفحتا المصحف"}>
             {visiblePages.map(pageNumber => <PrintedMushafPage key={pageNumber} page={pageNumber}
               regions={printRegions[pageNumber - 1] ?? []} selectedId={activeAyah?.globalNumber} playingId={audioStatus !== "اكتملت التلاوة." ? playingAyah?.globalNumber : undefined}
-              verseLabel={id => {
-                const verse = ayat[id - 1];
-                return verse && `سورة ${surahNames[verse.surah]} · الآية ${verse.number.toLocaleString("ar-EG")}`;
-              }} onSelect={(id, button, line) => {
+              verseLabel={verseLabel} onSelect={(id, button, line) => {
                 const verse = ayat[id - 1];
                 if (!verse) return;
                 openAyah(verse, button, pageNumber);

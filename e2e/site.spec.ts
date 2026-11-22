@@ -13,6 +13,29 @@ test("production routing sends JSON for unknown APIs and supplies site headers",
   expect(health.status()).toBe(process.env.MEETHAQ_E2E_DATABASE_URL ? 200 : 503);
 });
 
+test("the offline worker registers when the app entry loads after the page", async ({ page }) => {
+  let entryUrl = "";
+  await page.route("**/", async route => {
+    if (!route.request().isNavigationRequest()) return route.continue();
+    const response = await route.fetch();
+    const html = (await response.body()).toString("utf8");
+    const entry = html.match(/<script type="module"[^>]*src="(\/assets\/index-[^"]+\.js)"[^>]*><\/script>/);
+    if (!entry) throw new Error("Production app entry was not found");
+    entryUrl = entry[1];
+    await route.fulfill({ response, body: html.replace(entry[0], "") });
+  });
+  await page.goto("/", { waitUntil: "load" });
+  expect(entryUrl).toMatch(/^\/assets\/index-/);
+  await page.evaluate(src => {
+    const entry = document.createElement("script");
+    entry.type = "module";
+    entry.src = src;
+    document.head.append(entry);
+  }, entryUrl);
+  await expect(page.getByRole("main")).toBeVisible();
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller), null, { timeout: 12_000 });
+});
+
 test("stores an Edge-shaped push subscription and honors device removal", async ({ request }) => {
   test.skip(!process.env.MEETHAQ_E2E_DATABASE_URL, "Requires an isolated PostgreSQL database.");
   const token = randomUUID();
@@ -40,12 +63,12 @@ test("downloads a Quran part, saves a mark, and opens its printed verse offline"
   await page.goto("/quran");
   await expect(page.getByRole("heading", { name: "المصحف الشريف" })).toBeVisible();
   await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
-  await page.locator('summary[aria-label="إعدادات عرض المصحف"]').click();
+  await page.locator("summary", { hasText: /^العرض$/ }).click();
   await page.getByRole("button", { name: "تنزيل الجزء للقراءة بلا اتصال" }).click();
   await expect(page.getByText(/جاهز للقراءة بلا اتصال/)).toBeVisible({ timeout: 20_000 });
   await page.getByLabel("انتقل إلى صفحة من المصحف", { exact: true }).selectOption("3");
   if (!(await page.getByRole("button", { name: "إضافة علامة للصفحة" }).isVisible())) {
-    await page.locator('summary[aria-label="إعدادات عرض المصحف"]').click();
+    await page.locator("summary", { hasText: /^العرض$/ }).click();
   }
   await page.getByRole("button", { name: "إضافة علامة للصفحة" }).click();
   await expect(page.getByRole("button", { name: "إزالة علامة الصفحة" })).toBeVisible();
@@ -62,7 +85,7 @@ test("downloads the complete Mushaf and opens its last page offline", async ({ p
   test.setTimeout(100_000);
   await page.goto("/quran?page=1");
   await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
-  await page.locator('summary[aria-label="إعدادات عرض المصحف"]').click();
+  await page.locator("summary", { hasText: /^العرض$/ }).click();
   await page.getByRole("button", { name: /تنزيل المصحف كاملًا/ }).click();
   await expect(page.getByText(/المصحف كاملًا جاهز للقراءة بلا اتصال/)).toBeVisible({ timeout: 80_000 });
   await context.setOffline(true);
@@ -70,6 +93,9 @@ test("downloads the complete Mushaf and opens its last page offline", async ({ p
   const image = page.locator('img[src*="/604.webp"]');
   await expect(image).toBeVisible();
   await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(0);
+  const ayahPicker = page.getByRole("combobox", { name: "اختر آية للتفسير والتلاوة" });
+  await ayahPicker.selectOption({ index: 1 });
+  await expect(page.getByRole("complementary", { name: "التفسير والتلاوة" })).toBeVisible();
 });
 
 test("recitation stays mounted during navigation inside the site", async ({ page }) => {

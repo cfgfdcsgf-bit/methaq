@@ -27,6 +27,9 @@
   border: 1px solid rgba(212, 175, 99, .32); border-radius: 13px; background: rgba(0, 0, 0, .16); color: #e2d199; font-size: 14px;
 }
 .quran-surah-picker, .quran-page-picker { justify-content: space-between; }
+.mushaf-ayah-picker { min-width: 0; margin-block: 8px; flex-wrap: wrap; }
+.mushaf-ayah-picker select { min-height: 44px; max-width: 100%; }
+:root:not(.dark) .mushaf-ayah-picker select { color: #183c32; }
 .quran-surah-picker select, .quran-page-picker select, .quran-search input, .quran-listen-bar select {
   width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #f3efdf; font: 600 15px var(--kufi);
 }

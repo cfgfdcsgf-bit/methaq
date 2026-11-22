@@ -2,7 +2,6 @@ import { Fragment, lazy, Suspense, useEffect, useMemo, useRef, useState } from "
 import { Link, useSearch } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import QuranReader from "@/components/QuranReader";
 import AdhkarRoutine from "@/components/AdhkarRoutine";
 import QuranPassages, { type QuranPassageReference } from "@/components/QuranPassages";
 import { toast } from "sonner";
@@ -59,17 +58,17 @@ function materialPreview(body: string): string {
   return (sections.find(section => section.label === "المتن") ?? sections[0])?.text ?? "";
 }
 
-type ContentProps = { kind: Kind; omitReader?: boolean; topic?: { category: string; heading: string; hideEmpty?: boolean } };
+type ContentProps = { kind: Kind; topic?: { category: string; heading: string; hideEmpty?: boolean } };
 
-export default function ContentPage({ kind, topic, omitReader }: ContentProps) {
+export default function ContentPage({ kind, topic }: ContentProps) {
   const search = useSearch();
   if (kind === "learning" && !topic && !new URLSearchParams(search).has("open")) {
     return <Suspense fallback={<p className="section-wrap" role="status">جارٍ تحميل التعلّم…</p>}><LearningPage /></Suspense>;
   }
-  return <ContentSection key={topic ? kind + "/" + topic.category : kind} kind={kind} topic={topic} omitReader={omitReader} />;
+  return <ContentSection key={topic ? kind + "/" + topic.category : kind} kind={kind} topic={topic} />;
 }
 
-function ContentSection({ kind, topic, omitReader }: ContentProps) {
+function ContentSection({ kind, topic }: ContentProps) {
   const meta = KINDS[kind]; const Icon = meta.icon;
   const passages = KIND_PASSAGES[kind];
   const { user } = useAuth();
@@ -128,17 +127,16 @@ function ContentSection({ kind, topic, omitReader }: ContentProps) {
 
   const params = new URLSearchParams(search);
   const inDhikrSession = kind === "adhkar" && ["morning", "evening", "sleep"].includes(params.get("session") ?? "");
-  const Container = topic ? "section" : "main";
+  const Container = topic || kind === "quran" ? "section" : "main";
   const MaterialListing = kind === "quran" ? "details" : Fragment;
   if (topic?.hideEmpty && !showMaterials && open === null) return null;
-  if (kind === "quran" && omitReader && !showMaterials && open === null) return null;
+  if (kind === "quran" && !showMaterials && open === null) return null;
   return <Container className={topic ? "curated-section" : `section-wrap section-page${kind === "quran" ? " quran-mushaf-page" : ""}`}>
     {topic ? <div className="section-heading section-content-heading"><h2>{topic.heading}</h2></div> : <>
     {kind !== "quran" && <>
       <div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} />{meta.label}</div>
       <header data-section={kind} className={`launch-content-heading${inDhikrSession ? " reader-heading" : kind === "adhkar" ? " release-content-cover" : ""}`}><span className="launch-tile-icon"><Icon size={22} aria-hidden="true" /></span><div><h1>{meta.label}</h1>{!inDhikrSession && <p>{meta.copy}</p>}</div></header>
     </>}
-    {kind === "quran" && !omitReader && <QuranReader />}
     {kind === "adhkar" && <AdhkarRoutine />}
     {(kind === "library" || (kind === "adhkar" && !inDhikrSession)) && <CuratedContent lessons={CONTENT_LESSONS[kind] ?? []} title={kind === "adhkar" ? "آياتٌ وأذكار للتذكّر" : "مسار تعلّم مقترح"} />}
     {kind === "learning" && <Link className="detail-btn" href="/learning">العودة إلى التعلّم <ArrowLeft size={14} /></Link>}
@@ -146,6 +144,7 @@ function ContentSection({ kind, topic, omitReader }: ContentProps) {
     </>}
     {showMaterials && !inDhikrSession && <MaterialListing {...(kind === "quran" ? { className: "quran-published-materials" } : {})}>
     {kind === "quran" && <summary>الشروح والمواد المنشورة</summary>}
+    {!topic && <h2 className="sr-only">المواد المنشورة</h2>}
     <div className="content-tools">
       <div className="search-field"><Search size={17} /><input aria-label="بحث" placeholder={`ابحث في ${topic?.category ?? meta.label}…`} maxLength={100} value={q} onChange={e => { setQ(e.target.value); setCat(null); }} />{q && <button aria-label="مسح" onClick={() => { setQ(""); setCat(null); }}><X size={15} /></button>}</div>
       {!topic && <div className="chips" role="group" aria-label="التصنيفات"><button aria-pressed={cat === null} className={cat === null ? "active" : ""} onClick={() => setCat(null)}>الكل</button>{cats.map(entry => <button key={entry.category} aria-pressed={cat === entry.category} className={cat === entry.category ? "active" : ""} onClick={() => setCat(entry.category)}>{entry.category}</button>)}</div>}
@@ -154,11 +153,13 @@ function ContentSection({ kind, topic, omitReader }: ContentProps) {
       : shown.length === 0 ? !list.isError && <div className="empty-box"><Icon size={30} /><h3>{searchTerm || cat !== null ? "لا نتائج مطابقة" : "لا توجد مواد منشورة بعد"}</h3><p>{searchTerm || cat !== null ? "جرّب كلمة أخرى أو اختر تصنيفًا مختلفًا." : "ستظهر هنا المواد فور اعتمادها ونشرها."}</p>{(user?.role === "admin" || user?.role === "owner") && !searchTerm && materials.length === 0 && <Link href="/dashboard" className="primary-cta">أضف أول مادة <ArrowLeft size={16} /></Link>}</div>
       : <div className="card-grid">{shown.map(m => <article key={m.id} className="mat-card">
         <div className="mat-top"><span>{m.category || meta.label}</span><button type="button" aria-label={favs.includes(m.id) ? `إزالة ${m.title} من المفضلة` : `إضافة ${m.title} إلى المفضلة`} aria-pressed={favs.includes(m.id)} onClick={() => toggleFav(m.id)}><Bookmark size={17} fill={favs.includes(m.id) ? "currentColor" : "none"} /></button></div>
-        <button type="button" className="mat-card-open" aria-label={`اقرأ المادة: ${m.title}`} onClick={event => { opener.current = event.currentTarget; setOpen(m.id); }}>
+        <div className="mat-card-preview">
           <h3>{m.title}</h3><p>{materialPreview(m.body)}{materialPreview(m.body).length >= 220 ? "…" : ""}</p>
           {kind === "sunnah" && (m.grade || m.source) && <span className="hadith-citation">{m.grade && <b>{m.grade}</b>}{m.source && <small>{m.source}</small>}</span>}
-          <span className="mat-foot"><span>اقرأ <ArrowLeft size={14} /></span></span>
-        </button></article>)}</div>}
+          <button type="button" className="mat-card-open mat-foot" aria-label={`اقرأ المادة: ${m.title}`} onClick={event => { opener.current = event.currentTarget; setOpen(m.id); }}>
+            <span>اقرأ <ArrowLeft size={14} aria-hidden="true" /></span>
+          </button>
+        </div></article>)}</div>}
     {list.isError ? <div className="empty-box" role="status"><p>تعذّر تحميل المواد.</p><button className="load-more-btn" onClick={() => void (list.isFetchNextPageError ? list.fetchNextPage() : list.refetch())}>إعادة المحاولة</button></div>
       : list.hasNextPage && <button className="load-more-btn" onClick={() => void list.fetchNextPage()} disabled={list.isFetching}>{list.isFetchingNextPage ? "جارٍ التحميل…" : "تحميل المزيد"}</button>}
     </MaterialListing>}

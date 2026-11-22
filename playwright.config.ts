@@ -26,6 +26,7 @@ export default defineConfig({
       DATABASE_URL: database || "",
       MEETHAQ_SESSION_SECRET: "playwright-isolated-local-server-secret-only",
       MEETHAQ_PUSH_DATA: database ? ".work/e2e-push" : "",
+      MEETHAQ_PUSH_VAPID_JSON: "",
       OWNER_EMAIL: "",
       RESEND_API_KEY: "",
     },

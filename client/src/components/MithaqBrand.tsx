@@ -9,7 +9,7 @@ export function MithaqMark() {
 }
 
 export default function MithaqBrand({ onNavigate }: { onNavigate?: () => void } = {}) {
-  return <Link href="/" onClick={onNavigate} className="brand mithaq-brand" aria-label="مِيثَاق، الرئيسية" dir="rtl">
+  return <Link href="/" onClick={onNavigate} className="brand mithaq-brand" dir="rtl">
     <MithaqMark />
     <span><b>مِيثَاق</b><small>رفقةٌ على هدي الوحي</small></span>
   </Link>;

@@ -1,4 +1,4 @@
-import { randomBytes, timingSafeEqual } from "node:crypto";
+import { createECDH, randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import type { Express, RequestHandler } from "express";
@@ -15,6 +15,7 @@ const webPush = webPushModule as unknown as {
 };
 const code = /^[A-Za-z0-9_-]+$/;
 const key = (bytes: number) => z.string().regex(code).refine(value => Buffer.from(value, "base64url").length === bytes);
+const vapidKeyPair = z.object({ publicKey: key(65), privateKey: key(32) });
 const mode = z.enum(["off", "silent", "sound", "adhan"]);
 const time = z.object({ on: z.boolean(), time: z.string().regex(/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/) });
 const offset = z.number().int().min(-30).max(30).optional();
@@ -79,26 +80,40 @@ function rateLimit({ windowMs, max }: { windowMs: number; max: number }): Reques
 
 export function registerWebPush(app: Express) {
   const dataPath = process.env.MEETHAQ_PUSH_DATA?.trim();
-  if (!dataPath) {
+  const runtimeKeys = process.env.MEETHAQ_PUSH_VAPID_JSON?.trim();
+  const directory = dataPath ? resolve(dataPath) : undefined;
+  if (directory) mkdirSync(directory, { recursive: true, mode: 0o700 });
+
+  let vapid: ReturnType<typeof webPush.generateVAPIDKeys> | undefined;
+  if (runtimeKeys) {
+    try {
+      const configured = vapidKeyPair.parse(JSON.parse(runtimeKeys));
+      const pair = createECDH("prime256v1");
+      pair.setPrivateKey(Buffer.from(configured.privateKey, "base64url"));
+      if (!pair.getPublicKey().equals(Buffer.from(configured.publicKey, "base64url"))) throw new Error("VAPID keys do not match");
+      vapid = configured;
+    }
+    catch { console.warn("[Reminders] MEETHAQ_PUSH_VAPID_JSON is invalid. Push is disabled."); }
+  } else if (directory) {
+    const keyFile = join(directory, "vapid.json");
+    try { vapid = JSON.parse(readFileSync(keyFile, "utf8")); }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      vapid = webPush.generateVAPIDKeys();
+      writeFileSync(keyFile, JSON.stringify(vapid), { flag: "wx", mode: 0o600 });
+    }
+  }
+  if (!vapid) {
     app.get("/api/reminders/config", (_req, res) => res.set("Cache-Control", "no-store").json({ available: false }));
     return;
   }
-  const directory = resolve(dataPath);
-  mkdirSync(directory, { recursive: true, mode: 0o700 });
-  const file = join(directory, "subscriptions.json");
-  const keyFile = join(directory, "vapid.json");
-  let vapid: ReturnType<typeof webPush.generateVAPIDKeys>;
-  try { vapid = JSON.parse(readFileSync(keyFile, "utf8")); }
-  catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    vapid = webPush.generateVAPIDKeys();
-    writeFileSync(keyFile, JSON.stringify(vapid), { flag: "wx", mode: 0o600 });
-  }
+  const vapidDetails = { ...vapid, subject: process.env.MEETHAQ_PUSH_CONTACT || "https://meethaq.local" };
+  const file = directory ? join(directory, "subscriptions.json") : undefined;
   let importing: Promise<void> | undefined;
   async function database() {
     const db = await getDb();
     if (!db) throw new Error("Push storage unavailable");
-    if (existsSync(file)) {
+    if (file && directory && existsSync(file)) {
       importing ??= (async () => {
         const previous = z.array(legacyEntry).parse(JSON.parse(readFileSync(file, "utf8")));
         if (previous.length) await db.insert(pushDevices).values(previous.map(({ token, ...record }) => ({
@@ -120,7 +135,7 @@ export function registerWebPush(app: Express) {
   const send = async (entry: Device, reminder: typeof TEST_REMINDER) => {
     const endpoint = entry.record.subscription.endpoint;
     try {
-      await webPush.sendNotification(entry.record.subscription, JSON.stringify(reminder), { TTL: 90, timeout: 8000, vapidDetails: { ...vapid, subject: process.env.MEETHAQ_PUSH_CONTACT || "https://meethaq.local" } });
+      await webPush.sendNotification(entry.record.subscription, JSON.stringify(reminder), { TTL: 90, timeout: 8000, vapidDetails });
       return true;
     } catch (error) {
       if ([404, 410].includes(Number((error as { statusCode?: number }).statusCode))) {
@@ -135,7 +150,7 @@ export function registerWebPush(app: Express) {
 
   app.get("/api/reminders/config", handle(async (_req, res) => {
     await database();
-    res.set("Cache-Control", "no-store").json({ available: true, publicKey: vapid.publicKey });
+    res.set("Cache-Control", "no-store").json({ available: true, publicKey: vapidDetails.publicKey });
   }));
   app.use("/api/reminders", (req, res, next) => {
     const site = req.get("Sec-Fetch-Site");

@@ -23,7 +23,7 @@ export default memo(function PrayerLogCard({ today }: { today: number }) {
       <span className="companion-count" aria-label={`الصلوات المسجّلة ${arNumber(total)} من ${arNumber(PRAYERS.length)}`}>{arNumber(total)} <span aria-hidden="true">/</span> {arNumber(PRAYERS.length)}</span>
     </header>
     <div className="prayer-week" aria-label="آخر سبعة أيام" role="group">
-      {week.map(entry => <button type="button" key={entry.key} aria-pressed={entry.key === active.key} aria-label={entry.key === todayKey ? "اليوم" : fullDate.format(entry.day)} onClick={() => { setSelected(entry.key); setError(false); }}>
+      {week.map(entry => <button type="button" key={entry.key} aria-pressed={entry.key === active.key} aria-description={fullDate.format(entry.day)} onClick={() => { setSelected(entry.key); setError(false); }}>
         <span>{entry.key === todayKey ? "اليوم" : weekday.format(entry.day)}</span><strong>{dayNumber.format(entry.day)}</strong><i aria-hidden="true" data-count={entry.done.filter(Boolean).length} />
       </button>)}
     </div>

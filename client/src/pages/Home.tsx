@@ -12,7 +12,6 @@ import GlassHeading from "@/components/GlassHeading";
 import MithaqBrand from "@/components/MithaqBrand";
 import { MithaqMobileLinks, MithaqSidebar, ReferenceHeader } from "@/components/ReferenceHome";
 import DailyHome from "@/components/DailyHome";
-import QuranReader from "@/components/QuranReader";
 import Login from "@/pages/Login";
 import TasbihPage from "@/components/TasbihPage";
 import ReminderSettings from "@/components/ReminderSettings";
@@ -32,6 +31,7 @@ import {
 
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then(module => ({ default: module.AIChatBox })));
 const AdminContent = lazy(() => import("@/components/AdminContent"));
+const QuranReader = lazy(() => import("@/components/QuranReader"));
 
 function Header({ onMenu, onSearch, menuOpen, searchOpen }: { onMenu: () => void; onSearch: () => void; menuOpen: boolean; searchOpen: boolean }) {
   const [location] = useLocation();
@@ -203,8 +203,9 @@ function RafiqPage() {
     setMessages(current => [...current, question]);
     ask(question);
   };
+  // These two codes carry a clear Arabic message from the server (provider down, or the daily quota is used up).
   const error = chat.error
-    ? chat.error.data?.code === "SERVICE_UNAVAILABLE" ? chat.error.message : "تعذّر إكمال السؤال. حاول مرة أخرى."
+    ? chat.error.data?.code === "SERVICE_UNAVAILABLE" || chat.error.data?.code === "TOO_MANY_REQUESTS" ? chat.error.message : "تعذّر إكمال السؤال. حاول مرة أخرى."
     : null;
 
   if (loading) return <main className="section-wrap rafiq-page"><div className="admin-loading">جارٍ التحقق من الحساب…</div></main>;
@@ -295,7 +296,7 @@ export default function Home() {
   const readerActive = location === "/quran";
   const [readerVisited, setReaderVisited] = useState(readerActive);
   useEffect(() => { if (readerActive) setReaderVisited(true); setMenu(false); }, [location, readerActive]);
-  const page = Page ? <Page /> : isExplore(location) ? <ExplorePage path={location} /> : <ContentPage kind={KIND_BY_PATH[location]} omitReader={readerActive} />;
+  const page = Page ? <Page /> : isExplore(location) ? <ExplorePage path={location} /> : <ContentPage kind={KIND_BY_PATH[location]} />;
   return <div ref={shell} dir="rtl" className={`meethaq-app launch-shell launch-clean atmosphere-shell reference-shell${location === "/" ? "" : " mithaq-inner-shell"}`}>
     <Header menuOpen={menu} searchOpen={searching} onMenu={() => setMenu(open => !open)} onSearch={() => { setMenu(false); setSearching(true); }} />
     <SearchPalette open={searching} close={() => setSearching(false)} />
@@ -303,7 +304,9 @@ export default function Home() {
   <div className="launch-route">
       <div className="reference-home mithaq-inner-frame" hidden={location === "/"}>
         <div className="mithaq-inner-content">
-          {(readerVisited || readerActive) && <main className="section-wrap section-page quran-mushaf-page" hidden={!readerActive}><QuranReader active={readerActive} /></main>}
+          {(readerVisited || readerActive) && <main className="section-wrap section-page quran-mushaf-page" hidden={!readerActive}>
+            <Suspense fallback={<p className="quran-reader-message" role="status">جارٍ تجهيز المصحف…</p>}><QuranReader active={readerActive} /></Suspense>
+          </main>}
           {location !== "/" && <div key={location}>{page}</div>}
         </div>
         <MithaqSidebar />

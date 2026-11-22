@@ -50,6 +50,14 @@ http://localhost:5000
 
 للنشر الإنتاجي، عيّن `MEETHAQ_SESSION_SECRET` إلى قيمة عشوائية طويلة، واستخدم HTTPS. اترك المفاتيح الخاصة في إعدادات الخادم فقط.
 
+## إعداد معاينة HTTPS من حاوية Docker
+
+ابنِ `Dockerfile` من فرع المراجعة، واعرض منفذ HTTP الذي يعيّنه الخادم في `PORT` أو المنفذ `3000` عند غياب المتغير. استخدم `/api/health` لفحص الجاهزية. يدعم Hostless نشر Docker من Git وتخصيص عنوان HTTPS. راجع حدود حسابك قبل إنشاء الخدمة. [تطبيقات Hostless](https://docs.hostless.cloud/app/overview) · [الخطة](https://hostless.cloud/pricing)
+
+- عيّن `DATABASE_URL` و`MEETHAQ_SESSION_SECRET` كأسرار وقت التشغيل. تحتاج القاعدة إلى ترحيلات `pnpm db:migrate` من بيئة موثوقة تستطيع الوصول إليها. صورة التشغيل لا تحتوي على أدوات الترحيل.
+- شغّل نسخة واحدة من الخادم للتنبيهات. مرّر محتوى `vapid.json` كما هو في سر `MEETHAQ_PUSH_VAPID_JSON` لتثبيت مفاتيح الخدمة بين الإصدارات، أو استخدم المجلد الخاص `MEETHAQ_PUSH_DATA` على قرص دائم. اضبط `MEETHAQ_PUSH_CONTACT` على عنوان تواصل صالح. يحتفظ PostgreSQL باشتراكات الأجهزة.
+- بعد صدور عنوان HTTPS، اضبط `GOOGLE_REDIRECT_URI` على `/api/auth/google/callback` تحت عنوان الخدمة، وسجّل الرابط الكامل في عميل Google الحالي. للبريد، اضبط `APP_URL` على العنوان نفسه وأضف `RESEND_API_KEY` و`MAIL_FROM` بعد توثيق نطاق الإرسال. [نطاقات الإرسال في Resend](https://resend.com/docs/dashboard/domains/introduction)
+
 ## إعداد رفيق
 
 رابط قاعدة البيانات لا يوفّر اتصال الذكاء الاصطناعي. لتشغيل رفيق، أضف مفتاح مزود متوافق مع OpenAI واسم النموذج إلى `.env` عبر `OPENAI_API_KEY` و`OPENAI_MODEL`، ثم أعد تشغيل الموقع. يمكن تحديد عنوان بديل عبر `OPENAI_API_BASE_URL`. لا تضع المفتاح في المحادثة أو في ملفات الواجهة. إذا تركت الحقول فارغة، تعرض صفحة رفيق بوضوح أنه غير مفعّل.

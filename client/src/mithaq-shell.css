@@ -40,20 +40,16 @@ html.dark .launch-shell {
 .launch-shell .site-header .brand small { font-size: .66rem !important; line-height: 1.35; }
 .launch-shell .header-actions { justify-self: end; gap: 9px; min-width: 0; }
 .launch-shell .header-actions .icon-btn { width: 37px; height: 37px; border-radius: 10px; border-color: var(--launch-line); color: var(--launch-accent); }
-.launch-discover { padding: 7px 4px; border-radius: 8px; white-space: nowrap; color: var(--launch-accent); font: 700 .8rem/1.5 var(--launch-kufi) !important; }
 .launch-shell .header-actions :is(.login-link,.profile-chip,.logout-btn,.profile-chip span,.logout-btn span) { white-space: nowrap; font-family: var(--launch-kufi); font-size: .76rem !important; }
 .launch-shell .footer-inner { padding-block: 22px; gap: 14px; }
 .launch-shell .site-footer { border-color: var(--launch-line); }
-.launch-home, .directory-page { width: min(100% - 60px, 1184px); max-width: none; margin-inline: auto; padding: clamp(30px, 4vw, 56px) 0 54px; }
-.launch-welcome, .directory-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 23px; }
-.launch-welcome h1, .directory-heading h1 { font: 700 clamp(2.2rem, 4vw, 3.6rem)/1.06 var(--launch-serif); letter-spacing: -.012em; margin: 10px 0 0; }
+.directory-page { width: min(100% - 60px, 1184px); max-width: none; margin-inline: auto; padding: clamp(30px, 4vw, 56px) 0 54px; }
+.directory-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 23px; }
+.directory-heading h1 { font: 700 clamp(2.2rem, 4vw, 3.6rem)/1.06 var(--launch-serif); letter-spacing: -.012em; margin: 10px 0 0; }
 .launch-date { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; color: var(--launch-soft); font: 600 .78rem/1.6 var(--launch-kufi) !important; }
 .launch-date span { font-size: inherit !important; }
 .launch-date svg { color: var(--launch-accent); }
-.launch-settings { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid var(--launch-line); background: var(--launch-surface); color: var(--launch-accent); padding: 6px 12px; border-radius: 12px; }
-.launch-settings span { font: 700 .78rem/1.4 var(--launch-kufi) !important; }
 .launch-dashboard { display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(270px, 1fr); gap: 16px; }
-.launch-workspace { display: grid; grid-template-rows: minmax(300px, auto) auto; min-width: 0; gap: 12px; }
 .launch-focus {
   position: relative; isolation: isolate; display: grid; align-items: center; overflow: hidden;
   padding: clamp(24px, 4vw, 49px); border-radius: 25px; color: #fbf8eb;
@@ -68,14 +64,12 @@ html.dark .launch-shell {
 .launch-focus h2 { margin: 0; font: 700 clamp(2.6rem, 5.2vw, 5.1rem)/1.07 var(--launch-serif); color: inherit; }
 .launch-focus-copy { margin: 11px 0 25px; color: #e0ebe2; font: 500 clamp(.86rem, 1.25vw, 1.04rem)/1.8 var(--launch-kufi) !important; }
 .launch-focus-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 11px 18px; }
-.launch-cta, .launch-text-link, .launch-section-heading a, .launch-home-links a, .launch-prayer-actions a, .launch-season a {
+.launch-cta, .launch-home-links a, .launch-prayer-actions a, .launch-season a {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 11px; min-block-size: 43px;
   font: 700 .82rem/1.55 var(--launch-kufi) !important; border-radius: 10px;
 }
 .launch-cta { background: #ecd9a8; color: #183726; padding-inline: 15px; }
 .launch-cta:hover { background: #fff0c8; }
-.launch-text-link { color: #fcf5e1; background: #0d3429af; border: 1px solid #acb9a674; }
-.launch-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .launch-tile, .launch-prayer, .launch-season, .directory-panel, .directory-nav {
   background: var(--launch-surface); border: 1px solid var(--launch-line); border-radius: 17px; color: var(--launch-text);
 }
@@ -85,7 +79,7 @@ html.dark .launch-shell {
 .launch-tile small { color: var(--launch-soft); font: 500 .71rem/1.65 var(--launch-kufi) !important; }
 .launch-tile > svg:last-child, .directory-entries a > svg:last-child { margin-inline-start: auto; color: var(--launch-accent); flex: none; }
 .launch-tile-icon, .directory-entry-icon { display: inline-grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 12px; background: var(--launch-raised); color: var(--launch-accent); }
-.launch-tile:hover, .directory-entries a:hover, .launch-settings:hover { border-color: var(--launch-accent); }
+.launch-tile:hover, .directory-entries a:hover { border-color: var(--launch-accent); }
 .launch-prayer { padding: clamp(16px, 2.2vw, 26px); display: flex; flex-direction: column; border-radius: 25px; }
 .launch-prayer-top, .launch-prayer-now, .launch-prayer-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .launch-prayer-top p { margin: 0; color: var(--launch-soft); font: 700 .8rem/1.5 var(--launch-kufi) !important; }
@@ -103,11 +97,8 @@ html.dark .launch-shell {
 .launch-prayer-actions { display: flex; gap: 8px; margin-top: auto; }
 .launch-prayer-actions a { flex: 1; border: 1px solid var(--launch-line); color: var(--launch-accent); }
 .launch-prayer-actions a:hover { background: var(--launch-raised); }
-.launch-study { margin-top: 32px; }
-.launch-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
-.launch-section-heading h2, .launch-season h2 { margin: 0; font: 700 1.8rem/1.25 var(--launch-serif); }
-.launch-section-heading a, .launch-home-links a, .launch-season a { color: var(--launch-accent); }
-.launch-study-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.launch-season h2 { margin: 0; font: 700 1.8rem/1.25 var(--launch-serif); }
+.launch-home-links a, .launch-season a { color: var(--launch-accent); }
 .launch-home-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .launch-season { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 12px; }
 .launch-season > svg { color: var(--launch-accent); flex: none; }
@@ -151,7 +142,6 @@ html.dark .launch-shell {
 @media (max-width: 820px) {
   .meethaq-app.launch-shell { padding-bottom: 68px; }
   .launch-shell .header-inner { width: calc(100% - 34px); min-height: 60px; grid-template-columns: 1fr auto; gap: 10px; }
-  .launch-shell .launch-discover { display: none; }
   .launch-shell .site-header .brand small { display: none; }
   .launch-shell .site-header .brand b { font-size: 1.55rem; }
   .launch-shell .site-header .brand-mark { width: 34px; height: 34px; }
@@ -160,36 +150,22 @@ html.dark .launch-shell {
   .launch-shell .bottom-nav a { color: var(--launch-soft); padding-block: 5px; min-height: 42px; }
   .launch-shell .bottom-nav a span { font: 700 .7rem/1.35 var(--launch-kufi) !important; }
   .launch-shell .bottom-nav a.active { background: var(--launch-raised); color: var(--launch-accent); }
-  .launch-home, .directory-page { width: calc(100% - 32px); padding-top: 25px; }
+  .directory-page { width: calc(100% - 32px); padding-top: 25px; }
 }
 @media (max-width: 670px) {
   .launch-dashboard { grid-template-columns: minmax(0, 1fr); gap: 11px; }
-  .launch-workspace { grid-template-rows: minmax(218px, auto) auto; gap: 10px; }
-  .launch-welcome { margin-bottom: 15px; align-items: center; }
-  .launch-welcome h1 { font-size: clamp(1.95rem, 8vw, 2.55rem); }
   .launch-date { gap: 5px; font-size: .66rem !important; }
-  .launch-settings { width: 42px; height: 42px; padding: 0; justify-content: center; flex: none; }
-  .launch-settings span { display: none; }
   .launch-focus { padding: 20px 15px; border-radius: 19px; }
   .launch-arch { background-position: center, 24% 50%, center; }
   .launch-focus h2 { font-size: clamp(2.15rem, 10vw, 3rem); }
   .launch-focus-copy { margin: 7px 0 14px; }
   .launch-focus-actions { gap: 8px; }
   .launch-focus :is(.launch-cta,.launch-text-link) { font-size: .72rem !important; min-height: 41px; padding-inline: 9px; }
-  .launch-quick { gap: 7px; }
-  .launch-quick .launch-tile { padding: 8px; gap: 5px; min-height: 70px; }
-  .launch-quick .launch-tile-icon { width: 32px; height: 32px; border-radius: 8px; }
-  .launch-quick .launch-tile-icon svg { width: 16px; }
-  .launch-quick .launch-tile > svg:last-child { display: none; }
-  .launch-quick .launch-tile strong { font-size: .78rem; }
   .launch-prayer { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 4px 8px; border-radius: 17px; padding: 13px; }
   .launch-prayer-top, .launch-prayer-actions { grid-column: 1 / -1; }
   .launch-prayer-now { margin: 5px 0; flex-wrap: wrap; }
   .launch-countdown { margin: 8px 0; }
   .launch-prayer-list, .launch-prayer-list-label { display: none; }
-  .launch-study { margin-top: 21px; }
-  .launch-study-grid { grid-template-columns: minmax(0, 1fr); gap: 7px; }
-  .launch-study-grid .launch-tile { min-height: 63px; padding-block: 8px; }
   .directory-heading { display: grid; }
   .directory-search { width: 100%; }
   .directory-layout { grid-template-columns: minmax(0, 1fr); gap: 9px; }
@@ -220,15 +196,6 @@ html.dark .launch-shell {
 .meethaq-app.launch-shell .site-footer .footer-links a { display: inline-flex; align-items: center; min-height: 36px; }
 .meethaq-app.launch-shell .site-footer .footer-links a:hover { color: var(--launch-accent); }
 .meethaq-app.launch-shell .site-footer .footer-name { color: var(--launch-accent); font: 700 1.6rem/1.45 var(--launch-serif) !important; }
-.launch-shell .header-actions .launch-personal { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; inline-size: auto; min-inline-size: 38px; gap: 6px; padding-inline: 8px; }
-.launch-shell .launch-personal span { font: 800 .76rem/1.4 var(--launch-kufi) !important; }
-.launch-shell .launch-personal[aria-current="page"] { background: var(--launch-raised); }
-.launch-top-actions { display: flex; align-items: center; gap: 8px; }
-.launch-focus-shine {
-  position: absolute; inset: 0; pointer-events: none; z-index: -1;
-  background: radial-gradient(ellipse at 22% 75%, #ffe3ac32, transparent 46%);
-  animation: companion-light 1.6s ease-out both;
-}
 .launch-focus :is(.launch-cta,.launch-text-link) { transition: transform .17s ease, background-color .17s ease, box-shadow .17s ease; }
 .launch-focus .launch-cta:hover { box-shadow: 0 6px 22px #f3d58f39; }
 .launch-focus :is(.launch-cta,.launch-text-link):active { transform: scale(.975); }
@@ -326,7 +293,7 @@ html.dark .launch-shell {
 .qibla-west { left: 7px; top: 47%; }
 .qibla-south { bottom: 7px; left: 50%; transform: translateX(-50%); }
 .prayer-guide .tool-verse { margin-block: 12px; }
-.companion-page :is(a,button,select,summary):focus-visible, .launch-personal:focus-visible { outline: 2px solid var(--launch-accent); outline-offset: 2px; }
+.companion-page :is(a,button,select,summary):focus-visible { outline: 2px solid var(--launch-accent); outline-offset: 2px; }
 .prayer-cover-actions a:focus-visible { outline-color: #f3d48a; }
 .companion-page :is(.prayer-week button,.prayer-log-actions button,.prayer-times-grid button,.companion-link,.companion-primary,.prayer-cover-actions a) { transition: border-color .18s, background-color .18s, transform .18s; }
 .companion-page :is(.prayer-week button,.prayer-log-actions button,.prayer-times-grid button,.companion-link,.companion-primary,.prayer-cover-actions a):active { transform: scale(.97); }
@@ -334,9 +301,6 @@ html.dark .launch-shell {
 @keyframes companion-confirm { from { transform: translateY(3px); opacity: .72; } to { transform: translateY(0); opacity: 1; } }
 @keyframes companion-pop { from { transform: scale(.76); } 55% { transform: scale(1.16); } to { transform: scale(1); } }
 @keyframes companion-light { from { opacity: 0; transform: translateX(-6%); } to { opacity: 1; transform: translateX(0); } }
-@media (max-width: 1080px) {
-  .launch-shell .launch-personal span { display: none; }
-}
 @media (max-width: 820px) {
   .companion-page { width: calc(100% - 32px); }
   .launch-shell .header-actions { gap: 6px; }
@@ -360,7 +324,7 @@ html.dark .launch-shell {
   .meethaq-app.launch-shell .site-footer .copyright { margin-inline-start: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .launch-shell > .launch-route, .launch-focus-shine, .prayer-time-detail, .prayer-log-actions, .prayer-log-actions button[aria-pressed="true"] svg { animation: none; }
+  .launch-shell > .launch-route, .prayer-time-detail, .prayer-log-actions, .prayer-log-actions button[aria-pressed="true"] svg { animation: none; }
   .companion-page *, .launch-focus :is(.launch-cta,.launch-text-link) { transition: none !important; }
 }
 
@@ -372,10 +336,6 @@ html.dark .launch-shell {
 .study-rail-pages { display: none; }
 .ward-complete .daily-icon, .routine-finish .daily-icon { color: var(--launch-accent); animation: companion-pop .32s ease-out; }
 @media (max-width: 670px) {
-  .launch-study-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 2px; margin-inline: -2px; }
-  .launch-study-grid::-webkit-scrollbar { display: none; }
-  .launch-study-grid::after { content: ""; flex: 0 0 max(calc(17% - 7px),calc(100% - 337px)); }
-  .launch-study-grid .launch-tile { flex: 0 0 min(83%,330px); scroll-snap-align: start; }
   .study-rail-pages { display: flex; justify-content: center; gap: 3px; }
   .study-rail-pages button { width: 38px; min-height: 39px; display: grid; place-items: center; padding: 2px; background: transparent; }
   .study-rail-pages button span { height: 5px; width: 6px; border-radius: 5px; background: var(--launch-soft); opacity: .65; transition: width .22s ease,opacity .22s ease; }
@@ -387,7 +347,6 @@ html.dark .launch-shell {
   html[data-meethaq-motion] .launch-shell > .site-header { view-transition-name: meethaq-header; }
   html[data-meethaq-motion] .launch-shell > .bottom-nav { view-transition-name: meethaq-nav; }
   html[data-meethaq-motion="prayer"] :is(.launch-prayer,.prayer-cover) { view-transition-name: meethaq-prayer; }
-  html[data-meethaq-motion] .launch-focus-shine { animation: none; }
   html[data-meethaq-motion]::view-transition-old(root),
   html[data-meethaq-motion]::view-transition-old(meethaq-header),
   html[data-meethaq-motion]::view-transition-old(meethaq-nav) { display: none; }
@@ -1545,7 +1504,7 @@ html:not(.dark) .atmosphere-shell :is([data-glass-light],.glass-heading,.dhikr-s
   position:absolute; right:50%; translate:50% 0; bottom:7px;
   z-index: 3; display:flex; gap:1px; align-items:center; justify-content:center;
 }
-.reference-dots button { min-width:21px; height:25px; display:grid; place-items:center; padding:3px; }
+.reference-dots button { min-width:26px; height:26px; display:grid; place-items:center; padding:3px; }
 .reference-dots button span { display:block; width:12px; height:12px; border-radius:100px; background:#a0bbb8aa; transition:width .2s,background-color .2s; }
 .reference-dots button[aria-pressed="true"] span { width:24px; background:linear-gradient(#fff0af,#f3c663); box-shadow:inset 0 1px 1px #fff9ce,0 0 9px #fbe29680; }
 
@@ -1729,6 +1688,7 @@ html:not(.dark) .meethaq-app.mithaq-inner-shell.launch-clean::before { opacity:.
 .reference-shell .mithaq-brand { gap:10px; align-items:center; min-inline-size:0; inline-size:max-content; color:#fff8df; }
 .reference-shell .mithaq-brand b { font:700 clamp(1.6rem,2.2vw,2.35rem)/1.25 var(--launch-serif) !important; color:#fff2cb; }
 .reference-shell .mithaq-brand small { display:block; color:#d2e8dd; }
+:root:not(.dark) .reference-shell .mithaq-brand small { color:#31574d; }
 .reference-shell .reference-top-nav {
   display:flex; justify-content:center; gap:clamp(4px,.8vw,14px);
   min-width:0;

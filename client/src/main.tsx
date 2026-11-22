@@ -8,7 +8,6 @@ import App from "./App";
 import { startLogin } from "./const";
 import { installProgressStorageObserver } from "@/lib/progressSync";
 import "./index.css";
-import "./quran-reader.css";
 import "./rafiq.css";
 import "./mithaq-shell.css";
 
@@ -66,9 +65,11 @@ createRoot(document.getElementById("root")!).render(
 );
 
 if (window.isSecureContext && "serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+  const registerOfflineShell = () => {
     navigator.serviceWorker.register("/service-worker.js").catch(error => {
       console.warn("Could not register the offline shell:", error);
     });
-  });
+  };
+  if (document.readyState === "complete") registerOfflineShell();
+  else window.addEventListener("load", registerOfflineShell, { once: true });
 }
