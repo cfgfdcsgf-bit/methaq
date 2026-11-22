@@ -4,13 +4,14 @@ export type ProgressEntry = { v: string; t: number };
 export type ProgressItems = Record<string, ProgressEntry>;
 
 const META_KEY = "meethaq-progress-timestamps";
-const OWNER_KEY = "meethaq-progress-local-owner";
+export const PROGRESS_ACCOUNT_KEY = "meethaq-progress-local-owner";
 const CACHE_PREFIX = "meethaq-progress-cache:";
 const CHANGE_EVENT = "meethaq:local-progress-change";
 const MAX_KEYS = 300;
 const MAX_BYTES = 200_000;
 let nativeSetItem: Storage["setItem"] | null = null;
 let suppressObserver = false;
+let activeAccount = "guest";
 
 function storageAvailable() {
   try { return typeof window !== "undefined" && Boolean(window.localStorage); } catch { return false; }
@@ -42,10 +43,14 @@ export function installProgressStorageObserver() {
   const original = nativeSetItem;
   try {
     Storage.prototype.setItem = function (key: string, value: string) {
-      original.call(this, key, value);
       let local = false;
       try { local = this === window.localStorage; } catch {}
-      if (suppressObserver || !local || !isSyncableProgressKey(key)) return;
+      const progressWrite = !suppressObserver && local && isSyncableProgressKey(key);
+      if (progressWrite && (window.localStorage.getItem(PROGRESS_ACCOUNT_KEY) ?? "guest") !== activeAccount) {
+        throw new DOMException("The progress account changed in another tab", "InvalidStateError");
+      }
+      original.call(this, key, value);
+      if (!progressWrite) return;
       const meta = readMeta();
       meta[key] = Date.now();
       writeMeta(meta);
@@ -107,13 +112,18 @@ export function activateProgressAccount(userId: number | null): boolean {
   if (!storageAvailable() || (userId !== null && (!Number.isSafeInteger(userId) || userId <= 0))) return false;
   const account = userId === null ? "guest" : String(userId);
   let owner: string | null = null;
-  try { owner = window.localStorage.getItem(OWNER_KEY); } catch { return false; }
+  try { owner = window.localStorage.getItem(PROGRESS_ACCOUNT_KEY); } catch { return false; }
   if (!owner) {
-    if (userId === null) return false;
-    try { rawSet(OWNER_KEY, account); } catch { throw new Error("Could not persist progress account scope"); }
+    if (userId !== null) {
+      try { rawSet(PROGRESS_ACCOUNT_KEY, account); } catch { throw new Error("Could not persist progress account scope"); }
+    }
+    activeAccount = account;
     return false; // Existing guest progress is adopted by the first signed-in account.
   }
-  if (owner === account) return false;
+  if (owner === account) {
+    activeAccount = account;
+    return false;
+  }
 
   const previousItems = boundedItems(currentItems());
   const previousMeta = readMeta();
@@ -126,7 +136,7 @@ export function activateProgressAccount(userId: number | null): boolean {
       if (key && isSyncableProgressKey(key)) window.localStorage.removeItem(key);
     }
     rawSet(META_KEY, "{}");
-    rawSet(OWNER_KEY, account);
+    rawSet(PROGRESS_ACCOUNT_KEY, account);
     let cache: unknown = null;
     try { cache = JSON.parse(window.localStorage.getItem(CACHE_PREFIX + account) ?? "null"); } catch {}
     const restored = validCache(cache);
@@ -134,8 +144,16 @@ export function activateProgressAccount(userId: number | null): boolean {
       for (const [key, entry] of Object.entries(restored.items)) rawSet(key, entry.v);
       writeMeta(restored.meta);
     }
+    activeAccount = account;
   } finally { suppressObserver = false; }
   return true;
+}
+
+export function isActiveProgressAccount(userId: number): boolean {
+  const account = String(userId);
+  try {
+    return activeAccount === account && window.localStorage.getItem(PROGRESS_ACCOUNT_KEY) === account;
+  } catch { return false; }
 }
 
 export function readProgressSnapshot(): ProgressItems {

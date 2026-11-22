@@ -230,8 +230,13 @@ export const appRouter = router({
 
   progress: router({
     sync: protectedProcedure
-      .input(z.object({ items: progressItems }).strict())
-      .mutation(({ input, ctx }) => db.mergeProgress(ctx.user.id, input.items)),
+      .input(z.object({ accountId: z.number().int().positive().optional(), items: progressItems }).strict())
+      .mutation(({ input, ctx }) => {
+        if (input.accountId !== undefined && input.accountId !== ctx.user.id) {
+          throw new TRPCError({ code: "CONFLICT", message: "تغيّر الحساب أثناء مزامنة التقدم." });
+        }
+        return db.mergeProgress(ctx.user.id, input.items);
+      }),
   }),
 
   permissions: router({

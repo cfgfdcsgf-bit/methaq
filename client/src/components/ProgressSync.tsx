@@ -4,25 +4,35 @@ import { trpc } from "@/lib/trpc";
 import {
   activateProgressAccount,
   applyMergedProgress,
+  isActiveProgressAccount,
+  PROGRESS_ACCOUNT_KEY,
   PROGRESS_CHANGE_EVENT,
   readProgressSnapshot,
 } from "@/lib/progressSync";
 
 export default function ProgressSync({ onHydrated }: { onHydrated: () => void }) {
-  const { user, loading, error } = useAuth();
+  const { user, loading, error, refresh } = useAuth();
   const { mutateAsync } = trpc.progress.sync.useMutation();
   const mutateRef = useRef(mutateAsync);
   mutateRef.current = mutateAsync;
+  const refreshRef = useRef(refresh);
+  refreshRef.current = refresh;
   const readyRef = useRef(false);
 
   useEffect(() => {
-    if (loading) return;
+    const checkAccount = (event: StorageEvent) => {
+      if (event.key === PROGRESS_ACCOUNT_KEY) void refreshRef.current();
+    };
+    window.addEventListener("storage", checkAccount);
+    return () => window.removeEventListener("storage", checkAccount);
+  }, []);
+
+  useEffect(() => {
+    if (loading || error) return;
     if (!user) {
       readyRef.current = false;
-      if (!error) {
-        try { if (activateProgressAccount(null)) onHydrated(); }
-        catch (error) { console.warn("Guest progress could not be activated.", error); }
-      }
+      try { if (activateProgressAccount(null)) onHydrated(); }
+      catch (error) { console.warn("Guest progress could not be activated.", error); }
       return;
     }
 
@@ -32,23 +42,23 @@ export default function ProgressSync({ onHydrated }: { onHydrated: () => void })
     let pending = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     readyRef.current = false;
-    let switchedAccount = false;
     try {
-      switchedAccount = activateProgressAccount(user.id);
+      if (activateProgressAccount(user.id)) onHydrated();
     } catch (error) {
       console.warn("Progress sync is paused because local account storage could not be isolated.", error);
       return;
     }
 
     const sync = async () => {
+      if (!isActiveProgressAccount(user.id)) return;
       if (!active || inFlight) { pending = true; return; }
       inFlight = true;
       pending = false;
       try {
-        const merged = await mutateRef.current({ items: readProgressSnapshot() });
-        if (!active) return;
+        const merged = await mutateRef.current({ accountId: user.id, items: readProgressSnapshot() });
+        if (!active || !isActiveProgressAccount(user.id)) return;
         const changed = applyMergedProgress(merged);
-        if (initial && (switchedAccount || changed)) onHydrated();
+        if (initial && changed) onHydrated();
       } catch (error) {
         // The local copy remains authoritative until a successful retry.
         console.debug("Progress sync deferred; local progress is preserved.", error);

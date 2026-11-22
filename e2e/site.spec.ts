@@ -157,6 +157,35 @@ test("a registered account restores its tasbih count on a second browser profile
   } finally { await second.close(); }
 });
 
+test("a stale tab cannot write progress into the account signed in by another tab", async ({ page, context }) => {
+  test.skip(!process.env.MEETHAQ_E2E_DATABASE_URL, "Requires an isolated PostgreSQL database.");
+  const password = "عبارة مرور اختبارية 82";
+  await register(page, `${randomUUID()}@example.com`, password);
+  const firstAccount = (await (await page.request.get("/api/trpc/auth.me")).json()).result.data.json.id;
+  await page.goto("/tasbih");
+  const counter = page.getByRole("button", { name: "زيادة العدّاد" });
+  const saved = page.waitForResponse(response => response.url().includes("progress.sync") && response.ok() && response.request().postData()?.includes('"tasbih"') === true);
+  await counter.click();
+  await saved;
+  await page.route("**/*auth.me*", route => route.abort());
+
+  const other = await context.newPage();
+  const logout = await other.request.post("/api/trpc/auth.logout", { data: { json: null } });
+  expect(logout.ok()).toBe(true);
+  await register(other, `${randomUUID()}@example.com`, password);
+  const newAccount = (await (await other.request.get("/api/trpc/auth.me")).json()).result.data.json.id;
+  await expect.poll(() => other.evaluate(() => localStorage.getItem("meethaq-progress-local-owner"))).toBe(String(newAccount));
+  await expect(counter.locator("strong")).toHaveText("١");
+  await counter.click();
+  expect(await other.evaluate(() => localStorage.getItem("tasbih"))).toBeNull();
+
+  const stale = await page.request.post("/api/trpc/progress.sync", { data: { json: { accountId: firstAccount, items: { tasbih: { v: "99", t: Date.now() } } } } });
+  expect(stale.status()).toBe(409);
+  const current = await other.request.post("/api/trpc/progress.sync", { data: { json: { accountId: newAccount, items: {} } } });
+  expect(current.ok()).toBe(true);
+  expect((await current.json()).result.data.json).not.toHaveProperty("tasbih");
+});
+
 test("an owner can archive and restore a hadith and the reader keeps keyboard focus", async ({ page }) => {
   const connectionString = process.env.MEETHAQ_E2E_DATABASE_URL;
   test.skip(!connectionString, "Requires an isolated PostgreSQL database.");

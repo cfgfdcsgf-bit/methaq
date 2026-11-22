@@ -197,26 +197,15 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 
 /* ===== Modern devotional look: dark emerald hero, 3D mushaf, tilt cards, reveal ===== */
 .meethaq-app{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23b69657' stroke-opacity='.16' stroke-width='1'%3E%3Crect x='25' y='25' width='40' height='40'/%3E%3Crect x='25' y='25' width='40' height='40' transform='rotate(45 45 45)'/%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3C/g%3E%3C/svg%3E")}
-.hero-bg{position:relative;overflow:hidden;color:#fff;background:radial-gradient(120% 90% at 80% 0%,#0f6b5a 0%,#08382f 45%,#041e1a 100%)}
-.hero-bg:before{content:"";position:absolute;inset:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23e5d4a7' stroke-opacity='.10' stroke-width='1'%3E%3Crect x='25' y='25' width='40' height='40'/%3E%3Crect x='25' y='25' width='40' height='40' transform='rotate(45 45 45)'/%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3C/g%3E%3C/svg%3E")}
-.hero-spot{position:absolute;inset:0;background:radial-gradient(420px circle at var(--sx,70%) var(--sy,30%),rgba(229,212,167,.20),transparent 60%);pointer-events:none;transition:background .1s}.hero-bg h1{color:#fff;line-height:1.3!important}.hero-bg h1 em{background:linear-gradient(180deg,#fff2c4,#d6b36a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-bg .eyebrow{color:var(--gold-light)}
-.hero-bg .primary-cta{background:linear-gradient(135deg,#f0e2b6,#c9a45e);color:#082f2a;box-shadow:0 12px 30px rgba(201,164,94,.35)}.hero-bg .primary-cta:hover{transform:translateY(-3px);filter:brightness(1.06)}.hero-bg .secondary-cta{color:var(--gold-light)}
-.bsm-banner{display:flex;align-items:center;gap:16px;font:700 clamp(32px,4.4vw,56px)/1.9 'Amiri',serif;background:linear-gradient(180deg,#fff4cf 0%,#e3c47f 55%,#b8923f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 14px rgba(229,212,167,.35));margin-bottom:6px;white-space:nowrap}
-.bsm-banner:after{content:"";height:1px;flex:1;max-width:120px;background:linear-gradient(90deg,#e5d4a7,transparent)}
 .halo{position:absolute;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(229,212,167,.34),transparent 65%);filter:blur(8px);animation:breathe 6s ease-in-out infinite}
 .star-spin{position:absolute;width:470px;height:470px;opacity:.55;animation:spin 70s linear infinite;transform:translate3d(calc(var(--px,0)*10px),calc(var(--py,0)*8px),0)}
-.hero-bg .mihrab{position:absolute;bottom:18px;width:340px;height:450px;border:1px solid rgba(229,212,167,.4);border-bottom:0;border-radius:180px 180px 0 0;background:linear-gradient(180deg,rgba(229,212,167,.08),transparent);box-shadow:inset 0 0 70px rgba(229,212,167,.12);transform:translate3d(calc(var(--px,0)*-6px),0,0)}
-.hero-bg .mihrab:after{content:"";position:absolute;inset:16px;border:1px solid rgba(229,212,167,.22);border-bottom:0;border-radius:165px 165px 0 0}
 .spark{position:absolute;bottom:10%;width:4px;height:4px;border-radius:50%;background:#f0e2b6;box-shadow:0 0 10px 2px rgba(240,226,182,.7);opacity:0;animation:rise 8s linear infinite}
-.mushaf-scene{position:relative;transform-style:preserve-3d;transform:translate3d(calc(var(--px,0)*-16px),calc(var(--py,0)*-10px),0) rotateX(calc(18deg + var(--py,0)*-7deg)) rotateY(calc(var(--px,0)*12deg));transition:transform .18s ease-out}
 .mushaf{direction:ltr;display:flex;transform-style:preserve-3d;animation:float 6.5s ease-in-out infinite;filter:drop-shadow(0 38px 36px rgba(0,0,0,.5))}
 .mushaf:before{content:"";position:absolute;inset:-12px -14px -14px;background:linear-gradient(135deg,#0d4a3f,#062f28);border:2px solid #c9a45e;border-radius:12px;transform:translateZ(-14px);box-shadow:inset 0 0 0 5px #0a3a32,inset 0 0 0 6px rgba(229,212,167,.5)}
 .page{width:178px;height:250px;position:relative;padding:11px;background:linear-gradient(#fffaf0,#efe2c3)}
 .page.left{transform-origin:right center;transform:rotateY(13deg);border-radius:8px 0 0 8px;box-shadow:-3px 0 0 #e6d9b8,-6px 0 0 #d8c9a2;background:linear-gradient(270deg,#e7d9b6 0%,#fffaf0 22%,#fffaf0)}
 .page.right{transform-origin:left center;transform:rotateY(-13deg);border-radius:0 8px 8px 0;box-shadow:3px 0 0 #e6d9b8,6px 0 0 #d8c9a2;background:linear-gradient(90deg,#e7d9b6 0%,#fffaf0 22%,#fffaf0)}
-.frame{height:100%;border:2px solid #b69657;outline:1px solid #b69657;outline-offset:-7px;display:grid;place-items:center;padding:14px;text-align:center}
-.bsm-page{font:700 24px/2.4 'Amiri',serif;color:#0e5a4d;text-shadow:0 1px 0 rgba(182,150,87,.4)}.rosette{width:100%;opacity:.9;animation:spin 40s linear infinite}
+.frame{height:100%;border:2px solid #b69657;outline:1px solid #b69657;outline-offset:-7px;display:grid;place-items:center;padding:14px;text-align:center}.rosette{width:100%;opacity:.9;animation:spin 40s linear infinite}
 @keyframes spin{to{rotate:360deg}}@keyframes breathe{50%{transform:scale(1.08);opacity:.8}}@keyframes float{50%{translate:0 -12px}}@keyframes rise{0%{opacity:0;translate:0 0}15%{opacity:.9}100%{opacity:0;translate:0 -380px}}
 /* tilt + glare */
 .mat-card,.feature-card,.login-card,.tasbih-card,.control-card{position:relative;overflow:hidden;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s;will-change:transform}
@@ -228,7 +217,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .rv{opacity:0;translate:0 26px;transition:opacity .7s ease,translate .7s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;translate:0 0}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;translate:none}.mushaf,.star-spin,.halo,.spark,.rosette{animation:none}}
 /* mobile hero: keep the book, scaled */
-@media (max-width:800px){.bsm-banner{white-space:normal;font-size:34px}.bsm-banner:after{display:none}.hero-bg h1{font-size:46px}}
 /* richer cards */.feature-card,.login-card,.tasbih-card{border-radius:16px}
 
 /* ===== whole-site 3D polish ===== */
@@ -239,7 +227,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .page-hero,.page-hero.compact{position:relative;max-width:900px;padding:38px 36px;border-radius:22px;overflow:hidden;color:#fff;background:radial-gradient(120% 120% at 88% 0,#0f6b5a,#08382f 55%,#041e1a);box-shadow:0 24px 50px rgba(8,56,47,.22);transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .page-hero:before,.page-hero:after{content:"";position:absolute;inset-inline-end:-70px;top:-70px;width:260px;height:260px;border:1px solid rgba(229,212,167,.3);animation:spin 60s linear infinite;pointer-events:none}.page-hero:after{transform:rotate(45deg);animation:none}
 .page-hero h1{color:#fff!important}.page-hero p{color:#bcd3c8!important}.page-hero .kicker{color:var(--gold-light)}.page-hero .page-icon{background:rgba(229,212,167,.14);color:var(--gold-light);box-shadow:0 10px 24px rgba(0,0,0,.25);animation:float 5s ease-in-out infinite}
-.today-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:-26px;position:relative;z-index:2}
 .today-item{display:flex;gap:12px;align-items:center;padding:16px 18px;border-radius:14px;background:var(--paper);border:1px solid var(--line);box-shadow:0 14px 30px rgba(8,56,47,.10);color:var(--green)}.today-item small{display:block;color:var(--muted);font-size:12px}.today-item b{font:700 18px 'Amiri',serif;color:var(--ink)}
 .tool-card,.pray-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;position:relative;overflow:hidden;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
 .tool-card:after,.pray-card:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(229,212,167,.3),transparent 65%)}.tool-card.tilting:after,.pray-card.tilting:after{opacity:1}
@@ -253,12 +240,9 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .ring{width:150px;height:150px;rotate:-90deg}.ring-bg{fill:none;stroke:#e5eadf;stroke-width:12}.ring-fg{fill:none;stroke:var(--gold);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .8s}.ring text{rotate:90deg;transform-origin:80px 80px;font:700 30px 'Amiri',serif;fill:var(--green)}
 .tool-note{color:var(--muted);font-size:13px;line-height:2;margin-top:18px;max-width:760px}
 .dark .tool-ic,.dark .compass-ring{background:#1d2f29}.dark .checks button.on{background:#1d2f29}.dark .ring-bg{stroke:#25352f}
-@media (max-width:800px){.pray-two{grid-template-columns:1fr}.today-strip{margin-top:-14px}.mushaf3d{--W:150px;--H:216px}.page-hero,.page-hero.compact{padding:28px 22px}}
+@media (max-width:800px){.pray-two{grid-template-columns:1fr}.mushaf3d{--W:150px;--H:216px}.page-hero,.page-hero.compact{padding:28px 22px}}
 
 /* ===== Meethaq v0.4 design layer ===== */
-.today-strip{margin-top:0!important;padding-top:26px;padding-bottom:6px}
-.hero-bg{position:relative;overflow:hidden}
-.hero-bg::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg at 70% 40%,transparent,rgba(217,184,106,.16),transparent 30%,rgba(20,140,110,.22),transparent 60%);animation:aurSpin 32s linear infinite;pointer-events:none}
 @keyframes aurSpin{to{transform:rotate(360deg)}}
 .mihrab{-webkit-mask-image:linear-gradient(#000 55%,transparent 98%);mask-image:linear-gradient(#000 55%,transparent 98%)}
 .marquee{overflow:hidden;border-block:1px solid var(--line);background:var(--paper);padding:14px 0;direction:ltr}
@@ -301,7 +285,7 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .name-face.b{transform:rotateY(180deg);background:var(--green);color:#fff;font:600 12px 'Cairo',sans-serif;padding:8px}
 @media (max-width:900px){.atlas{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.atlas{grid-template-columns:1fr}.atlas-card.wide{grid-column:auto}.atlas-section{padding-block:48px 20px}}
-@media (prefers-reduced-motion:reduce){.hero-bg::before,.marquee-track,.ex-hero .page-icon{animation:none}}
+@media (prefers-reduced-motion:reduce){.marquee-track,.ex-hero .page-icon{animation:none}}
 
 /* ===== v0.5: ليل ميثاق + mega menu + bento + covers ===== */
 @keyframes floaty{50%{transform:translateY(-14px) rotate(1.5deg)}}
@@ -311,7 +295,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .dark .today-item,.dark .ex-card,.dark .tl-item,.dark .name-face,.dark .marquee{background:rgba(255,255,255,.035);border-color:rgba(229,212,167,.14)}
 .dark .atlas-card{background:linear-gradient(160deg,rgba(255,255,255,.045),color-mix(in srgb,var(--c) 16%,transparent));border-color:rgba(229,212,167,.14)}
 .dark .marquee-track span{color:#e5d4a7}
-.mushaf-scene{animation:floaty 8s ease-in-out infinite;filter:drop-shadow(0 34px 40px rgba(0,0,0,.5)) drop-shadow(0 0 44px rgba(217,184,106,.2))}
 .mega-panel{position:absolute;top:calc(100% - 8px);left:50%;transform:translate(-50%,12px);width:min(820px,92vw);display:grid;grid-template-columns:repeat(3,1fr);gap:8px 22px;padding:22px 24px;border-radius:22px;background:var(--paper);border:1px solid var(--line);box-shadow:0 34px 70px rgba(0,0,0,.35);opacity:0;visibility:hidden;transition:opacity .22s,transform .22s,visibility .22s;z-index:30}
 .dark .mega-panel{background:rgba(10,24,20,.96);backdrop-filter:blur(16px);border-color:rgba(229,212,167,.18)}
 .mega:hover .mega-panel,.mega:focus-within .mega-panel{opacity:1;visibility:visible;transform:translate(-50%,0)}
@@ -329,7 +312,7 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .ex-names .ex-cover::after,.ex-achv .ex-cover::after{content:"";position:absolute;inset:0;background:radial-gradient(color-mix(in srgb,var(--c) 28%,transparent) 1.2px,transparent 1.6px) 0 0/22px 22px}
 .ex-events .ex-cover::after{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg at 85% 90%,transparent,color-mix(in srgb,var(--c) 22%,transparent),transparent 25%)}
 @media (max-width:900px){.atlas-card:nth-child(n){grid-column:auto;grid-row:auto}.atlas-card:nth-child(1){grid-column:span 2}.stats-band{grid-template-columns:1fr}.mega-panel{display:none}}
-@media (prefers-reduced-motion:reduce){.mushaf-scene,.ex-bgicon{animation:none}}
+@media (prefers-reduced-motion:reduce){.ex-bgicon{animation:none}}
 
 /* Responsive navigation, reader, and sign-in feedback */
 .mega{z-index:80}
@@ -354,7 +337,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .stats-band{grid-template-columns:repeat(2,minmax(0,1fr))}
 .stats-band span{font-size:15px}
 .name-card{width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:inherit}
-.mushaf-scene{width:min(100%,650px);transform:none!important;perspective:none;animation:none;filter:drop-shadow(0 22px 36px rgba(0,0,0,.34))}
 .mushaf-preview{width:100%;padding:0;border:0;background:transparent;box-shadow:none;transform:none;}
 .mushaf-viewer{position:relative;width:100%;aspect-ratio:1.5;overflow:hidden;border:1px solid rgba(229,212,167,.52);border-radius:18px;background:radial-gradient(ellipse at 50% 85%,rgba(229,212,167,.16),transparent 65%),#062a24;box-shadow:0 26px 54px rgba(0,0,0,.35),inset 0 0 0 5px rgba(229,212,167,.08)}
 .mushaf-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none;cursor:grab;outline:none}
@@ -372,7 +354,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 @media(max-width:900px){.mega-panel{z-index:130}.footer-links{gap:14px}}
 @media(max-width:800px){.mushaf-viewer{aspect-ratio:1.2}.mushaf-credit{max-width:420px;margin-inline:auto;padding-top:8px}.stats-band{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-inner p{font-size:14px}.footer-links{font-size:14px}.moon-art{width:104px;height:104px}.moon-art svg{width:48px;height:48px}}
 @media(max-width:420px){.moon-art{width:86px;height:86px;flex-shrink:0}.moon-art small{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.mushaf-scene{animation:none}}
 
 /* Larger type throughout the site, including labels and supporting copy. */
 .meethaq-app{font-size:19px}
@@ -596,8 +577,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 .dark .brand{min-width:150px}
 .dark .brand b{font-family:'Amiri','Noto Naskh Arabic',serif;font-size:29px;letter-spacing:.01em}
 .dark .brand small{font-size:13px!important;color:#c0cbbd}
-.dark .hero-bg{background:radial-gradient(80% 115% at 0% 0%,rgba(15,99,77,.5),transparent 64%),radial-gradient(45% 70% at 82% 40%,rgba(181,139,54,.1),transparent 68%),linear-gradient(140deg,#073c30,#06271f 66%,#041811);border-bottom:1px solid rgba(201,166,94,.18)}
-.dark .bsm-banner{font-family:'Amiri','Noto Naskh Arabic',serif;letter-spacing:0;color:#e5c981;text-shadow:0 4px 24px rgba(201,166,94,.18)}
 .dark .page-hero h1,.dark .dashboard-head h1,.dark .login-card h1,.dark .login-features h2,.dark .about-verse p,.dark .tasbih-card h1,.dark .content-intro h2{font-family:'Amiri','Noto Naskh Arabic',serif}
 .dark .mushaf-viewer{border-radius:22px;border-color:rgba(225,196,123,.58);box-shadow:0 32px 72px rgba(0,0,0,.48),inset 0 0 0 5px rgba(229,212,167,.08),inset 0 1px rgba(255,255,255,.08)}
 .dark .mushaf-credit{color:#bdcabe}
@@ -670,7 +649,6 @@ select,.form-grid input,.form-grid textarea,.json-box{border:1px solid var(--lin
 @media(max-width:1000px){.dark .meethaq-app{width:min(100% - 24px,1440px);margin:12px auto;border-radius:22px}.dark .header-inner{width:calc(100% - 36px)}}
 @media(max-width:800px){.dark .meethaq-app{width:100%;min-height:100vh;margin:0;border-radius:0;border-inline:0}.dark .site-header{height:70px}.dark .section-heading{align-items:flex-start;flex-direction:column}.dark .revelation-grid{grid-template-columns:1fr}.dark .footer-inner{gap:19px}.dark .footer-inner p{width:100%}.dark .footer-links{margin-inline-start:0}.dark .password-rules{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.dark .section-wrap{width:calc(100% - 32px)}.dark .header-inner{width:calc(100% - 28px)}.dark .mushaf-viewer{aspect-ratio:1.18}.dark .page-hero{padding:25px 20px}.dark .page-hero h1,.dark .dashboard-head h1{font-size:40px}.dark .page-hero p,.dark .dashboard-head p{font-size:16px!important}.dark .revelation-card blockquote{font-size:25px}.dark .moon-art{flex:none;width:80px;height:80px}.dark .moon-art svg{width:40px;height:40px}.dark .moon-art small{font-size:11px!important}.dark .password-rules{grid-template-columns:1fr}.dark .header-actions{gap:3px}.dark .quran-reader-access{grid-template-columns:auto 1fr;padding:18px;gap:13px}.dark .quran-reader-access>a{grid-column:1/-1;justify-content:center}.dark .quran-reader-emblem{width:48px;height:48px}.dark .quran-reader-access h2{font-size:23px}}
-@media(prefers-reduced-motion:reduce){.dark .mushaf-scene{animation:none}}
 
 /* Cloud AI reference: a geometric mihrab replaces the rotating 3D book. */
 
@@ -783,8 +761,6 @@ body,.meethaq-app{font-family:'Cairo',system-ui,sans-serif}
 .brand-mark svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--gold) 60%,transparent))}
 
 /* ---- hero ---- */
-.hero-bg h1{font-family:'Amiri',serif;font-weight:700;line-height:1.35!important;letter-spacing:0}
-.bsm-banner{font-family:'Aref Ruqaa','Amiri',serif}
 .mihrab-art{width:min(430px,100%);height:auto;filter:drop-shadow(0 34px 44px rgba(0,0,0,.5))}
 .art-name{font-family:'Aref Ruqaa','Amiri',serif;font-weight:700}
 .art-turn-a,.art-turn-b{transform-box:fill-box;transform-origin:center;animation:art-turn 160s linear infinite}
@@ -886,7 +862,6 @@ body, .meethaq-app { background-color: var(--ivory); color: var(--ink); }
 .primary-cta { font-family: var(--kufi); font-weight: 700; border-radius: 10px; background: var(--emerald); color: #fff8e4; border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent); box-shadow: inset 0 0 0 3px var(--emerald), inset 0 0 0 4px color-mix(in srgb, var(--gold) 45%, transparent), 0 10px 22px rgba(11, 74, 62, .18); }
 .primary-cta:hover { background: #0e5a4b; }
 .dark .primary-cta { background: #1d7a66; color: #fff; box-shadow: inset 0 0 0 3px #1d7a66, inset 0 0 0 4px color-mix(in srgb, var(--gold) 55%, transparent); }
-.hero-bg .primary-cta { background: linear-gradient(180deg, #f2dfa6, #cfa95c); color: #23190a; border-color: #f6e7b8; box-shadow: inset 0 0 0 3px #e3c984, inset 0 0 0 4px rgba(255, 244, 205, .6), 0 12px 28px rgba(0, 0, 0, .3); }
 .secondary-cta { font-family: var(--kufi); border-radius: 10px; }
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
@@ -937,8 +912,6 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .today-item { color: var(--gold-ink); }
 
 /* ---------- hero: night mihrab, ending in rising arches into the paper ---------- */
-.hero-bg { background: var(--tile-gold) center / 64px 64px, radial-gradient(110% 90% at 78% 0, #0f6b5a 0%, #08382f 45%, #031815 100%); padding-bottom: 14px; }
-.hero-bg::after { content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 14px; background: var(--ivory); -webkit-mask: var(--peaks) repeat-x center bottom / 40px 14px; mask: var(--peaks) repeat-x center bottom / 40px 14px; pointer-events: none; z-index: 3; }
 .mihrab-art { filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .35)); }
 
 /* ---------- footer: night, with the same arch edge ---------- */
@@ -979,13 +952,6 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .ornament i { background: linear-gradient(90deg, transparent, var(--gold)); }
 
 /* Keep the reference mihrab treatment above the older dark-mode hero override. */
-.dark .hero-bg {
-  background: var(--tile-gold) center / 64px 64px, radial-gradient(110% 90% at 78% 0, #0f6b5a 0%, #08382f 45%, #031815 100%);
-  border-bottom: 0;
-  padding-bottom: 14px;
-}
-.dark .hero-bg::before { content: none; animation: none; }
-.dark .hero-bg::after { background-color: var(--ivory); }
 
 /* Apply the same framed, illuminated-page language to dark-mode inner pages. */
 .dark .page-hero, .dark .page-hero.compact, .dark .page-hero.ex-hero, .dark .page-hero.ex-cover {
