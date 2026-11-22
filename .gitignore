@@ -119,3 +119,5 @@ client/public/__manus__/version.json
 /.work/
 /.manus-logs/
 /vendor/
+
+_to_delete/
