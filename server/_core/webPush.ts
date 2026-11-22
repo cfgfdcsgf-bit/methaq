@@ -87,7 +87,12 @@ export function registerWebPush(app: Express) {
   let vapid: ReturnType<typeof webPush.generateVAPIDKeys> | undefined;
   if (runtimeKeys) {
     try {
-      const configured = vapidKeyPair.parse(JSON.parse(runtimeKeys));
+      // Some hosting dashboards normalize quoted JSON values from .env imports.
+      // Accept an explicit base64url encoding so keys survive those parsers intact.
+      const serializedKeys = runtimeKeys.startsWith("base64url:")
+        ? Buffer.from(runtimeKeys.slice("base64url:".length), "base64url").toString("utf8")
+        : runtimeKeys;
+      const configured = vapidKeyPair.parse(JSON.parse(serializedKeys));
       const pair = createECDH("prime256v1");
       pair.setPrivateKey(Buffer.from(configured.privateKey, "base64url"));
       if (!pair.getPublicKey().equals(Buffer.from(configured.publicKey, "base64url"))) throw new Error("VAPID keys do not match");
