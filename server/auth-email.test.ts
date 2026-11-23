@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./db", () => ({
   createLocalUser: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock("./_core/passwords", () => ({
 }));
 
 import * as db from "./db";
-import { sendPasswordResetEmail, sendVerificationEmail } from "./_core/mailer";
+import { mailAvailable, sendPasswordResetEmail, sendVerificationEmail } from "./_core/mailer";
 import { appRouter } from "./routers";
 
 function caller() {
@@ -30,7 +30,11 @@ function caller() {
   return appRouter.createCaller(ctx);
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.mocked(mailAvailable).mockReturnValue(true);
+});
+afterEach(() => vi.unstubAllEnvs());
 
 describe("email authentication actions", () => {
   it("sends verification after registration without creating a session before confirmation", async () => {
@@ -43,6 +47,31 @@ describe("email authentication actions", () => {
     expect(result).toEqual({ role: "user", verificationRequired: true, emailSent: true });
     expect(db.createAuthToken).toHaveBeenCalledWith(17, "verify-email", 24 * 60 * 60 * 1000);
     expect(sendVerificationEmail).toHaveBeenCalledWith("new@example.com", "v".repeat(43));
+  });
+
+  it("does not allow production email registration when verification mail is unavailable", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.mocked(mailAvailable).mockReturnValue(false);
+
+    await expect(caller().auth.localRegister({ name: "New User", email: "new@example.com", password: "Valid-Pass-928!" }))
+      .rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+    expect(db.createLocalUser).not.toHaveBeenCalled();
+  });
+
+  it("does not sign in an unverified production account when mail is unavailable", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.mocked(mailAvailable).mockReturnValue(false);
+    vi.mocked(db.getUserByEmail).mockResolvedValue({
+      id: 21,
+      openId: "local-unverified",
+      email: "unverified@example.com",
+      emailVerified: false,
+      passwordHash: "scrypt$test-hash",
+    } as never);
+
+    await expect(caller().auth.localLogin({ email: "unverified@example.com", password: "Valid-Pass-928!" }))
+      .rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+    expect(db.recordPasswordSignIn).not.toHaveBeenCalled();
   });
 
   it("returns the same success response for an unknown verification address without sending mail", async () => {

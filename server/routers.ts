@@ -173,9 +173,13 @@ export const appRouter = router({
         if (!allowAuthAttempt(ctx.req.ip || "unknown")) {
           throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "محاولات كثيرة. انتظر قليلًا ثم حاول مرة أخرى." });
         }
+        const emailVerificationEnabled = mailAvailable();
+        if (ENV.isProduction && !emailVerificationEnabled) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "تسجيل البريد وكلمة المرور متوقف مؤقتًا حتى يجهز تأكيد البريد. يمكنك استخدام Google إن كان متاحًا." });
+        }
         try {
           const user = await db.createLocalUser({ ...input, passwordHash: await hashPassword(input.password) });
-          if (mailAvailable() && !user.emailVerified && user.email) {
+          if (emailVerificationEnabled && !user.emailVerified && user.email) {
             let emailSent = false;
             try {
               await sendVerificationEmail(user.email, await emailToken(user.id, "verify-email"));
@@ -210,7 +214,7 @@ export const appRouter = router({
         if (!user || !user.passwordHash || !valid) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "البريد الإلكتروني أو كلمة المرور غير صحيحة." });
         }
-        if (mailAvailable() && !user.emailVerified) {
+        if ((ENV.isProduction || mailAvailable()) && !user.emailVerified) {
           throw new TRPCError({ code: "PRECONDITION_FAILED", message: "البريد غير مؤكد. أعد إرسال رابط التفعيل إلى بريدك." });
         }
         const signedIn = await db.recordPasswordSignIn(user.openId, user.passwordHash);
