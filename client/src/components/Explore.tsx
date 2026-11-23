@@ -164,7 +164,7 @@ export function ExplorePage({ path }: { path: string }) {
     path === "/salah" ? "salah" :
     path === "/tajweed" || path === "/hifz" ? "quran" :
     path === "/fiqh" || path === "/hajj" ? "fiqh" : "";
-  return <main className={`section-wrap section-page ex-page ex-${sec.kind}`} style={sty(sec.c)}>
+  return <main className={`section-wrap section-page ex-page ${sec.kind === "grid" ? "" : `ex-${sec.kind}`}`} style={sty(sec.c)}>
     <div className="page-crumb"><Link href="/">الرئيسية</Link><ArrowLeft size={14} /><Link href="/explore">استكشف</Link><ArrowLeft size={14} />{sec.t}</div>
     <GlassHeading icon={Icon} title={sec.t} description={sec.p} action={courseTopic
       ? <Link href={`/learning?view=courses&topic=${courseTopic}`} className="detail-btn">دورات في هذا الموضوع <ArrowLeft size={16} aria-hidden="true" /></Link>

@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 4175;
+const port = Number(process.env.MEETHAQ_E2E_PORT || 4175);
 const database = process.env.MEETHAQ_E2E_DATABASE_URL;
 if (database && !["127.0.0.1", "localhost", "[::1]"].includes(new URL(database).hostname)) {
   throw new Error("Browser tests require an isolated loopback PostgreSQL database.");

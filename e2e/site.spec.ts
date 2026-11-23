@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import pg from "pg";
+import { hashPassword } from "../server/_core/passwords";
 
 test("production routing sends JSON for unknown APIs and supplies site headers", async ({ request }) => {
   const unknown = await request.get("/api/path-that-does-not-exist");
@@ -149,14 +150,35 @@ test("the light theme has a light surrounding canvas and legible navigation", as
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(251, 245, 230)");
 });
 
-async function register(page: import("@playwright/test").Page, email: string, password: string) {
+test("Ramadan sections keep their full-width layout instead of inheriting card-grid styles", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/ramadan");
+  const main = page.locator("main.ex-page");
+  await expect(main).toBeVisible();
+  await expect(main).not.toHaveClass(/\bex-grid\b/);
+  const mainWidth = await main.evaluate(element => element.getBoundingClientRect().width);
+  const dashboardWidth = await page.locator(".ramadan-dashboard").evaluate(element => element.getBoundingClientRect().width);
+  const curatedWidth = await page.locator(".curated-grid").evaluate(element => element.getBoundingClientRect().width);
+  expect(dashboardWidth).toBeGreaterThan(mainWidth * 0.8);
+  expect(curatedWidth).toBeGreaterThan(mainWidth * 0.8);
+});
+
+async function seedVerifiedAccountAndLogin(page: import("@playwright/test").Page, email: string, password: string) {
+  const connectionString = process.env.MEETHAQ_E2E_DATABASE_URL;
+  if (!connectionString) throw new Error("Browser account tests require the isolated PostgreSQL database.");
+  const db = new pg.Client({ connectionString });
+  await db.connect();
+  try {
+    await db.query(
+      `insert into users ("openId", name, email, "loginMethod", "passwordHash", "emailVerified")
+       values ($1, $2, $3, 'password', $4, true)`,
+      [`e2e-${randomUUID()}`, "حساب اختبار", email, await hashPassword(password)],
+    );
+  } finally { await db.end(); }
   await page.goto("/login");
-  await page.getByRole("button", { name: /أنشئ حسابًا/ }).click();
-  await page.getByLabel("الاسم", { exact: true }).fill("حساب اختبار");
   await page.getByLabel("البريد الإلكتروني", { exact: true }).fill(email);
-  await page.locator('input[autocomplete="new-password"]').nth(0).fill(password);
-  await page.locator('input[autocomplete="new-password"]').nth(1).fill(password);
-  await page.getByRole("button", { name: "إنشاء الحساب" }).click();
+  await page.locator('input[autocomplete="current-password"]').fill(password);
+  await page.getByRole("button", { name: "تسجيل الدخول", exact: true }).click();
   await expect(page).toHaveURL("/");
 }
 
@@ -164,7 +186,7 @@ test("a registered account restores its tasbih count on a second browser profile
   test.skip(!process.env.MEETHAQ_E2E_DATABASE_URL, "Requires an isolated PostgreSQL database.");
   const email = `${randomUUID()}@example.com`;
   const password = "عبارة مرور اختبارية 82";
-  await register(page, email, password);
+  await seedVerifiedAccountAndLogin(page, email, password);
   await page.goto("/tasbih");
   const sync = page.waitForResponse(response => response.url().includes("progress.sync") && response.ok() && response.request().postData()?.includes('"tasbih"') === true);
   await page.getByRole("button", { name: "زيادة العدّاد" }).click();
@@ -186,7 +208,7 @@ test("a registered account restores its tasbih count on a second browser profile
 test("a stale tab cannot write progress into the account signed in by another tab", async ({ page, context }) => {
   test.skip(!process.env.MEETHAQ_E2E_DATABASE_URL, "Requires an isolated PostgreSQL database.");
   const password = "عبارة مرور اختبارية 82";
-  await register(page, `${randomUUID()}@example.com`, password);
+  await seedVerifiedAccountAndLogin(page, `${randomUUID()}@example.com`, password);
   const firstAccount = (await (await page.request.get("/api/trpc/auth.me")).json()).result.data.json.id;
   await page.goto("/tasbih");
   const counter = page.getByRole("button", { name: "زيادة العدّاد" });
@@ -198,7 +220,7 @@ test("a stale tab cannot write progress into the account signed in by another ta
   const other = await context.newPage();
   const logout = await other.request.post("/api/trpc/auth.logout", { data: { json: null } });
   expect(logout.ok()).toBe(true);
-  await register(other, `${randomUUID()}@example.com`, password);
+  await seedVerifiedAccountAndLogin(other, `${randomUUID()}@example.com`, password);
   const newAccount = (await (await other.request.get("/api/trpc/auth.me")).json()).result.data.json.id;
   await expect.poll(() => other.evaluate(() => localStorage.getItem("meethaq-progress-local-owner"))).toBe(String(newAccount));
   await expect(counter.locator("strong")).toHaveText("١");
@@ -216,7 +238,7 @@ test("an owner can archive and restore a hadith and the reader keeps keyboard fo
   const connectionString = process.env.MEETHAQ_E2E_DATABASE_URL;
   test.skip(!connectionString, "Requires an isolated PostgreSQL database.");
   const email = `${randomUUID()}@example.com`;
-  await register(page, email, "عبارة اختبار طويلة 96");
+  await seedVerifiedAccountAndLogin(page, email, "عبارة اختبار طويلة 96");
   const id = await (async () => {
     const db = new pg.Client({ connectionString });
     await db.connect();
