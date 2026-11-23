@@ -5,8 +5,9 @@ import { sdk } from "./_core/sdk";
 import { listLLMModels } from "./_core/llm";
 import { generateImage } from "./_core/imageGeneration";
 import { COOKIE_NAME } from "../shared/const";
+import * as db from "./db";
 
-afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
 describe("current platform integration", () => {
   it("exposes only named public runtime configuration", () => {
     const env = { MANUS_PROJECT_ID: "project-test", MANUS_API_KEY: "server-only-test", MANUS_JWT_SECRET: "signing-only-test", DATABASE_URL: "db-only-test", MANUS_API_BROWSER_KEY: "public-browser-test", MANUS_ANALYTICS_ENDPOINT: "https://analytics.example", MANUS_ANALYTICS_WEBSITE_ID: "site-test" };
@@ -53,5 +54,23 @@ describe("current platform integration", () => {
     expect(await sdk.verifySession(token)).toMatchObject({ openId: "user-test" });
     vi.stubEnv("MANUS_PROJECT_ID", "different-project");
     expect(await sdk.verifySession(token)).toBeNull();
+  });
+  it("rejects a stale session for an unverified password account in production", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("MEETHAQ_SESSION_SECRET", "unit-test-email-verification-session-secret");
+    vi.spyOn(db, "getUserByOpenId").mockResolvedValue({
+      id: 5,
+      openId: "local-unverified",
+      loginMethod: "password",
+      email: "unverified@example.com",
+      emailVerified: false,
+      passwordHash: "scrypt$test-hash",
+      tokenVersion: 0,
+    } as never);
+    const token = await sdk.createSessionToken("local-unverified", { tokenVersion: 0 });
+
+    await expect(sdk.authenticateRequest({
+      headers: { cookie: `${COOKIE_NAME}=${token}` },
+    } as never)).rejects.toThrow("Email address is not verified");
   });
 });

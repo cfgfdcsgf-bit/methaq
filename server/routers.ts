@@ -214,7 +214,7 @@ export const appRouter = router({
         if (!user || !user.passwordHash || !valid) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "البريد الإلكتروني أو كلمة المرور غير صحيحة." });
         }
-        if ((ENV.isProduction || mailAvailable()) && !user.emailVerified) {
+        if (user.passwordHash && ENV.emailVerificationRequired && !user.emailVerified) {
           throw new TRPCError({ code: "PRECONDITION_FAILED", message: "البريد غير مؤكد. أعد إرسال رابط التفعيل إلى بريدك." });
         }
         const signedIn = await db.recordPasswordSignIn(user.openId, user.passwordHash);

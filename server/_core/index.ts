@@ -72,7 +72,7 @@ async function startServer() {
     res.set("Cache-Control", "no-store").json({ enabled: manusReady || openAiReady });
   });
   app.get("/api/auth/features", (_req, res) => {
-    res.set("Cache-Control", "no-store").json({ email: mailAvailable() });
+    res.set("Cache-Control", "no-store").json({ email: mailAvailable(), emailVerificationRequired: ENV.emailVerificationRequired });
   });
   app.get("/api/platform/config.js", (_req, res) => {
     res.set("Cache-Control", "no-store").type("application/javascript").send(publicPlatformScript());

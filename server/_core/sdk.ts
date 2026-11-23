@@ -98,6 +98,9 @@ class SessionService {
     if (!user || (session.openId.startsWith("local-") && !user.passwordHash)) {
       throw ForbiddenError("User not found");
     }
+    if (user.passwordHash && !user.emailVerified && ENV.emailVerificationRequired) {
+      throw ForbiddenError("Email address is not verified");
+    }
     if (session.tv !== user.tokenVersion) throw ForbiddenError("Session was revoked");
     return user;
   }

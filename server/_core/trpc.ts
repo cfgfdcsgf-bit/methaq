@@ -3,7 +3,6 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { TrpcContext } from "./context";
 import { ENV } from "./env";
-import { mailAvailable } from "./mailer";
 
 const t = initTRPC.context<TrpcContext>().create({
   transformer: superjson,
@@ -18,7 +17,7 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 
 function requireVerifiedEmail(user: NonNullable<TrpcContext["user"]>) {
-  if ((ENV.isProduction || mailAvailable()) && !user.emailVerified) {
+  if (user.passwordHash && ENV.emailVerificationRequired && !user.emailVerified) {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "أكد بريدك الإلكتروني للمتابعة." });
   }
 }

@@ -32,6 +32,7 @@ export const ENV = {
   get googleClientSecret() { return process.env.GOOGLE_CLIENT_SECRET?.trim() ?? ""; },
   get googleRedirectUri() { return process.env.GOOGLE_REDIRECT_URI?.trim() ?? ""; },
   get isProduction() { return process.env.NODE_ENV === "production"; },
+  get emailVerificationRequired() { return this.isProduction || this.mailConfigured; },
   get forgeApiUrl() { return process.env.MANUS_API_URL ?? ""; },
   get forgeApiKey() { return process.env.MANUS_API_KEY ?? ""; },
   get openaiApiKey() { return process.env.OPENAI_API_KEY ?? ""; },

@@ -229,6 +229,7 @@ export async function createLocalUser(input: { name: string; email: string; pass
       email,
       passwordHash: input.passwordHash,
       loginMethod: "password",
+      emailVerified: false,
       role: mayBecomeOwner ? "owner" : "user",
       lastSignedIn: new Date(),
     }).returning();
