@@ -111,7 +111,7 @@ export default function Login() {
     } catch (cause) {
       const message = readableError(cause);
       setError(message);
-      setCanResend(message.includes("البريد غير مؤكد"));
+      setCanResend(/البريد غير (?:مؤكد|موثق)|رابط التفعيل إلى بريدك/.test(message));
     }
   };
 
@@ -169,7 +169,7 @@ export default function Login() {
             {mode === "register" && <label>تأكيد كلمة المرور<div className="password-field"><input required type={showConfirmPassword ? "text" : "password"} minLength={8} maxLength={128} autoComplete="new-password" autoCapitalize="off" autoCorrect="off" spellCheck={false} dir="auto" value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} placeholder="أعد كتابة كلمة المرور" /><button type="button" onClick={() => setShowConfirmPassword(value => !value)} aria-label={showConfirmPassword ? "إخفاء تأكيد كلمة المرور" : "إظهار تأكيد كلمة المرور"} aria-pressed={showConfirmPassword}>{showConfirmPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></label>}
             <button type="submit" className="primary-cta login-submit" disabled={pending || (mode === "register" && !passwordRules.every(rule => rule.valid))}>{pending ? "جارٍ التحقق…" : mode === "login" ? "تسجيل الدخول" : "إنشاء الحساب"} <ArrowLeft size={17} /></button>
           </form>
-          {canResend && emailEnabled && <button className="auth-mode-toggle" type="button" disabled={pending} onClick={() => { void resend(); }}>إعادة إرسال رابط التفعيل</button>}
+          {canResend && <button className="auth-mode-toggle" type="button" disabled={pending} onClick={() => { void resend(); }}>إعادة إرسال رابط التفعيل</button>}
           {mode === "login" && emailEnabled && <button className="auth-mode-toggle" type="button" onClick={() => { setRecoveryMode(true); setError(""); setSuccessMessage(""); }}>نسيت كلمة المرور؟</button>}
           {googleStatusReady && googleEnabled && <>
             <div className="login-divider"><span>أو</span></div>
