@@ -39,10 +39,11 @@ export const ENV = {
   get openaiModel() { return process.env.OPENAI_MODEL ?? ""; },
   /** Public https address of the site; used to build links in emails. */
   get appUrl() { return (process.env.APP_URL ?? "").trim().replace(/\/$/, ""); },
-  /** Transactional email through the Resend HTTP API. Leave empty to disable verification and reset emails. */
+  /** Transactional email provider credentials. Brevo is preferred when both are present. */
+  get brevoApiKey() { return process.env.BREVO_API_KEY?.trim() ?? ""; },
   get mailApiKey() { return process.env.RESEND_API_KEY?.trim() ?? ""; },
   get mailFrom() { return process.env.MAIL_FROM?.trim() ?? ""; },
-  get mailConfigured() { return Boolean(this.mailApiKey && this.mailFrom && this.appUrl); },
+  get mailConfigured() { return Boolean((this.brevoApiKey || this.mailApiKey) && this.mailFrom && this.appUrl); },
   /** Questions each signed-in account may ask Rafiq per day, and the site-wide daily ceiling. */
   get rafiqDailyPerUser() { return positiveInt(process.env.RAFIQ_DAILY_LIMIT_PER_USER, 20); },
   get rafiqDailyGlobal() { return positiveInt(process.env.RAFIQ_DAILY_LIMIT_GLOBAL, 600); },
