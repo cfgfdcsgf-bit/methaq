@@ -36,7 +36,7 @@ async function startServer() {
     throw new Error("MEETHAQ_SESSION_SECRET is required in production. Set a long random value in the host's environment variables.");
   }
   if (!ENV.ownerEmail) console.warn("[Auth] OWNER_EMAIL is not set: no account can become the site owner until you set it in .env.");
-  if (!mailAvailable()) console.warn("[Mail] RESEND_API_KEY, MAIL_FROM and APP_URL are not all set: email verification and password reset are switched off.");
+  if (!mailAvailable()) console.warn("[Mail] BREVO_API_KEY (or RESEND_API_KEY), MAIL_FROM and APP_URL are not all set: email verification and password reset are switched off.");
   const app = express();
   app.disable("x-powered-by");
   // Behind a hosting reverse proxy, req.ip must be the visitor (not the proxy) or all visitors share one login rate limit.
@@ -101,7 +101,7 @@ async function startServer() {
   const port = Number(process.env.PORT || "3000");
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Invalid PORT");
   server.on("error", error => { console.error("Server failed:", error.message); process.exit(1); });
-  server.listen(port, "0.0.0.0", () => console.log(`Server listening on port ${port}`));
+  server.listen(port, "0.0.0.0", () => console.log("Server listening on port " + port));
 }
 
 startServer().catch(error => { console.error(error); process.exit(1); });
