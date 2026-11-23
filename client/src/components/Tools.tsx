@@ -211,38 +211,51 @@ export function KhatmaPage() {
   const [editing, setEditing] = useState(!plan);
   const portion = plan && dailyPortion(plan);
   const complete = plan?.read === MUSHAF_PAGES;
+  const remainingDays = plan ? Math.max(0, plan.end - plan.day + 1) : 0;
+  const dailyEstimate = Math.ceil((MUSHAF_PAGES - (plan?.baseline ?? 0)) / Math.max(1, days));
   const adjust = () => { setPlan(planKhatma(days)); setEditing(false); };
-  return <main className="section-wrap companion-page khatma-page">
+  return <main className="section-wrap companion-page khatma-page khatma-journey">
     <header className="khatma-scene" data-glass-light>
       <div className="khatma-scene-copy">
-        <p className="launch-kicker"><BookOpen size={17} aria-hidden="true" /> {seasonal ? "ختمة رمضان" : "ورد القرآن"}</p>
-        <h1>خطّة الختمة</h1>
-        <p>{plan ? `قرأت ${arNumber(plan.read)} من ${arNumber(MUSHAF_PAGES)} صفحة.` : "اختر مدة تناسب يومك، وتابع القراءة من موضعك."}</p>
-        <Link className="scene-secondary-action" href="/my-day">متابعتي <ArrowLeft size={16} /></Link>
+        <p className="launch-kicker"><BookOpen size={17} aria-hidden="true" /> {seasonal ? "ختمة رمضان" : "ختمتي"}</p>
+        <h1>رحلتك مع القرآن</h1>
+        <p>{plan ? <>قرأت <bdi dir="ltr">{arNumber(plan.read)}</bdi> من <bdi dir="ltr">{arNumber(MUSHAF_PAGES)}</bdi> صفحة، ووردك اليومي محسوب من المصحف.</> : "اختر مدة تناسب يومك، وسنقسّم المصحف إلى ورد واضح تتابعه صفحةً صفحة."}</p>
+        {plan && portion && !complete && !portion.overdue && <Link className="khatma-hero-action" href={wardUrl(plan)}>{portion.remaining ? "ابدأ القراءة" : "افتح المصحف"} <ArrowLeft size={17} aria-hidden="true" /></Link>}
+        {complete && <p className="khatma-complete-note">أتممت صفحات المصحف كاملةً، تقبّل الله منك.</p>}
+        {portion?.overdue && <p className="khatma-complete-note">انتهت مدة خطتك؛ غيّر المدة لتوزيع الورد المتبقي.</p>}
       </div>
-      {plan && <KhatmaMeter pages={plan.read} />}
+      {plan && <div className="khatma-scene-progress">
+        <KhatmaMeter pages={plan.read} />
+        <div><span>التقدّم الكلي</span><strong>{arNumber(plan.read)} <small>من {arNumber(MUSHAF_PAGES)} صفحة</small></strong></div>
+      </div>}
     </header>
-    {plan && portion && <dl className="khatma-glance" aria-label="ملخّص الختمة">
-      <div><dt>المتبقّي من المصحف</dt><dd>{arNumber(MUSHAF_PAGES - plan.read)} <small>صفحة</small></dd></div>
-      <div><dt>قراءة اليوم</dt><dd>{arNumber(portion.readToday)} <small>صفحة</small></dd></div>
-      <div><dt>الوقت المتبقّي</dt><dd>{complete || portion.overdue ? "—" : <>{arNumber(plan.end - plan.day + 1)} <small>يومًا</small></>}</dd></div>
-    </dl>}
-    <div className="personal-grid">
-      <section className="companion-panel khatma-options"><div className="companion-panel-head"><span className="launch-tile-icon"><CalendarDays size={21} /></span><div><h2>{editing ? "مدة الختمة" : "ورد اليوم"}</h2></div></div>
-        {editing ? <><div className="chips" aria-label="مدة الخطة">{[...new Set([7, 15, 30, 60, 90, suggested, plan?.days ?? 30])].sort((a, b) => a - b).map(value => <button key={value} aria-pressed={days === value} className={days === value ? "active" : ""} onClick={() => setDays(value)}>{arNumber(value)} يومًا</button>)}</div>
-        <p className="khatma-estimate" aria-live="polite">{arNumber(Math.ceil((MUSHAF_PAGES - (plan?.baseline ?? 0)) / days))} صفحة للورد الأول</p>
-        <button className="primary-cta" onClick={adjust}>{plan ? "حفظ المدة الجديدة" : "ابدأ الخطة"}</button></> : <>
-        <p className="big-num">{complete ? "أتممت الختمة" : portion?.overdue ? "تحتاج الخطة إلى مدة جديدة" : portion?.remaining ? `${arNumber(portion.remaining)} صفحة متبقية` : "أتممت ورد اليوم"}</p>
-        {plan && portion && !complete && !portion.overdue && portion.remaining > 0 && <><p>من الصفحة {arNumber(portion.first)} إلى {arNumber(portion.last)}</p><Link href={wardUrl(plan)} className="primary-cta">اقرأ وردك <ArrowLeft size={16} /></Link></>}
+    <div className={`khatma-layout${plan ? "" : " is-planning"}`}>
+      {plan && portion && <section className="companion-panel khatma-today-card" aria-labelledby="khatma-today-title">
+        <div className="companion-panel-head"><span className="launch-tile-icon"><BookOpen size={21} aria-hidden="true" /></span><div><h2 id="khatma-today-title">ورد اليوم</h2><p>{portion.overdue ? "مدّد الخطة وواصل من موضعك" : <>من الصفحة <bdi dir="ltr">{arNumber(portion.first)}</bdi> إلى <bdi dir="ltr">{arNumber(portion.last)}</bdi></>}</p></div></div>
+        <div className={`khatma-daily-target${portion.remaining === 0 ? " is-done" : ""}`} aria-live="polite">
+          <strong>{complete ? "أتممت الختمة" : portion.overdue ? "انتهت مدة الخطة" : portion.remaining ? arNumber(portion.remaining) : "تمّ ورد اليوم"}</strong>
+          {!complete && !portion.overdue && portion.remaining > 0 && <span>صفحة متبقية اليوم</span>}
+        </div>
+        {!complete && !portion.overdue && <div className="khatma-day-progress">
+          <progress className="daily-progress" max={Math.max(1, portion.goal)} value={Math.min(portion.readToday, portion.goal)} aria-label="تقدّم ورد اليوم" />
+          <span><bdi dir="ltr">{arNumber(Math.min(portion.readToday, portion.goal))}</bdi> من <bdi dir="ltr">{arNumber(portion.goal)}</bdi> صفحة</span>
+        </div>}
+        <div className="khatma-reading-actions">
+          {!complete && !portion.overdue && <Link href={wardUrl(plan)} className="primary-cta">{portion.remaining ? "ابدأ القراءة" : "افتح المصحف"} <ArrowLeft size={16} aria-hidden="true" /></Link>}
+          <div className="reader-actions"><button disabled={complete || portion.overdue || !portion.remaining} onClick={() => setPlan(recordPages("today"))}>سجّل ورد اليوم</button><button aria-label="تسجيل صفحة مقروءة" disabled={complete} onClick={() => setPlan(recordPages(1))}>+ صفحة</button><button aria-label="التراجع عن صفحة" disabled={!plan.read} onClick={() => setPlan(recordPages(-1))}>− صفحة</button></div>
+        </div>
+      </section>}
+      <section className="companion-panel khatma-options" id="khatma-plan" aria-labelledby="khatma-plan-title">
+        <div className="companion-panel-head"><span className="launch-tile-icon"><CalendarDays size={21} aria-hidden="true" /></span><div><h2 id="khatma-plan-title">{editing ? (plan ? "عدّل خطتك" : "اختر مدة الختمة") : "خطتك"}</h2><p>{editing ? "اختر وتيرة تناسب يومك." : "كل يوم له ورد واضح، ويمكنك تغيير المدة متى احتجت."}</p></div></div>
+        {editing ? <><div className="chips" role="group" aria-label="مدة الخطة">{[...new Set([7, 15, 30, 60, 90, suggested, plan?.days ?? 30])].sort((a, b) => a - b).map(value => <button key={value} aria-pressed={days === value} className={days === value ? "active" : ""} onClick={() => setDays(value)}>{arNumber(value)} يومًا{seasonal && value === suggested ? " · رمضان" : ""}</button>)}</div>
+        <p className="khatma-estimate" aria-live="polite">معدل الورد: <strong>{arNumber(dailyEstimate)}</strong> صفحة يوميًا</p>
+        <button className="primary-cta" onClick={adjust}>{plan ? "حفظ المدة الجديدة" : "ابدأ الخطة"} <ArrowLeft size={16} aria-hidden="true" /></button></> : <>
+        <div className="khatma-plan-summary"><div><span>مدة الخطة</span><strong>{arNumber(plan!.days)} يومًا</strong></div><div><span>الأيام الباقية</span><strong>{complete ? "اكتملت" : portion?.overdue ? "انتهت" : arNumber(remainingDays)}</strong></div><div><span>باقي المصحف</span><strong>{arNumber(MUSHAF_PAGES - (plan?.read ?? 0))} صفحة</strong></div></div>
         {!complete && <button className="detail-btn" onClick={() => setEditing(true)}>تغيير مدة الختمة</button>}
-        {plan && !complete && !portion?.overdue && plan.day > plan.start && <p className="tool-note">تُوزّع الصفحات المتبقية على الأيام الباقية في الخطة.</p>}
+        {plan && <details className="khatma-reset"><summary>بدء ختمة جديدة</summary><p>سيُصفّر تقدّم الختمة الحالية.</p><button className="detail-btn" onClick={() => { setPlan(planKhatma(days, true)); setEditing(false); }}>ابدأ من الصفحة الأولى</button></details>}
         </>}
       </section>
-      {plan && portion && <section className="companion-panel"><div className="companion-panel-head"><span className="launch-tile-icon"><BookOpen size={21} /></span><h2>تقدّم الختمة</h2></div><progress className="daily-progress" max={MUSHAF_PAGES} value={plan.read} aria-label="تقدم الختمة" /><p>{arNumber(plan.read)} من {arNumber(MUSHAF_PAGES)} صفحة</p>
-        <div className="reader-actions"><button disabled={complete || portion.overdue || !portion.remaining} onClick={() => setPlan(recordPages("today"))}>سجّل ورد اليوم</button><button disabled={complete} onClick={() => setPlan(recordPages(1))}>+ صفحة</button><button disabled={!plan.read} onClick={() => setPlan(recordPages(-1))}>− صفحة</button></div>
-        <details><summary>بدء ختمة جديدة</summary><p>سيُصفّر تقدّم الختمة الحالية.</p><button className="detail-btn" onClick={() => { setPlan(planKhatma(days, true)); setEditing(false); }}>ابدأ من الصفحة الأولى</button></details></section>}
     </div>
-    <details className="companion-panel prayer-guide"><summary>دليل تخطيط الورد <ChevronDown size={18} /></summary><ContentPage kind="learning" topic={{ category: "مخطط الختمة", heading: "مواد للقراءة" }} /></details>
   </main>;
 }
 

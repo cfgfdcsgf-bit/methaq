@@ -333,6 +333,113 @@ html.dark .launch-shell {
 .khatma-page .prayer-guide { margin-top: 12px; }
 @media (prefers-reduced-motion: reduce) { .routine-count-value { animation: none; } }
 
+/* Khatma is a reading journey: one clear daily action, one quiet plan panel. */
+.khatma-journey .khatma-scene {
+  align-items: center;
+  min-height: clamp(280px,31vw,368px);
+  padding: clamp(24px,4.2vw,52px);
+  border-radius: 30px;
+  background: #092820;
+}
+.khatma-journey .khatma-scene::before {
+  background:
+    linear-gradient(90deg,#09271ff5 0%,#09271fbf 43%,#09271f4a 100%),
+    linear-gradient(0deg,#09271f93 0%,transparent 65%),
+    var(--scene-mushaf) left 55% / cover no-repeat;
+}
+.khatma-scene-copy { max-width: 590px; width: min(62%,590px); }
+.khatma-journey .khatma-scene h1 { max-width: 10ch; margin: 8px 0 10px; font-size: clamp(2.65rem,5.6vw,4.6rem); }
+.khatma-journey .khatma-scene-copy > p:not(.launch-kicker) { max-width: 43ch; margin: 0 0 17px; font-size: .96rem; }
+.khatma-hero-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 47px; padding: 9px 17px;
+  color: #1a3026; border: 1px solid #ffe5a7; border-radius: 999px;
+  background: linear-gradient(145deg,#ffe8a8,#e8c36e 72%,#d4a84e);
+  box-shadow: 0 8px 24px #e7bb5b37, inset 0 1px 0 #fff9d9;
+  font: 800 .86rem/1.4 var(--launch-kufi); transition: transform .2s var(--glass-ease), box-shadow .2s ease;
+}
+.khatma-hero-action:hover { transform: translateY(-2px); box-shadow: 0 12px 30px #e7bb5b4a, inset 0 1px 0 #fff9d9; }
+.khatma-complete-note { color: #f6e1ac !important; font-weight: 800 !important; }
+.khatma-scene-progress {
+  display: grid; justify-items: center; align-content: center; gap: 11px; flex: none;
+  width: clamp(185px,23vw,268px); min-height: 206px; padding: 19px 14px;
+  border: 1px solid #e3d19573; border-radius: 25px;
+  background: linear-gradient(145deg,#e2efd11c,#09251fa8 72%);
+  box-shadow: inset 0 1px 0 #fff9d253, 0 16px 38px #001b1761;
+  -webkit-backdrop-filter: blur(15px); backdrop-filter: blur(15px);
+}
+.khatma-scene-progress .khatma-meter { inline-size: clamp(118px,13vw,156px); padding: 6px; box-shadow: 0 6px 28px #031b15b0; }
+.khatma-scene-progress .khatma-meter-face { background: #0c3028; }
+.khatma-scene-progress > div:last-child { display: grid; justify-items: center; gap: 2px; color: #d4e7d7; font: 700 .75rem/1.5 var(--launch-kufi); }
+.khatma-scene-progress strong { color: #fff5da; font: 800 .88rem/1.5 var(--launch-kufi); }
+.khatma-scene-progress small { color: #d4e7d7; font: inherit; }
+.khatma-layout { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(320px,.88fr); align-items: stretch; gap: 14px; margin-top: 15px; }
+.khatma-layout > .companion-panel { min-height: 100%; border-radius: 23px; padding: clamp(17px,2.5vw,27px); box-shadow: inset 0 1px 0 var(--liquid-rim), 0 13px 30px #001b1540; }
+.khatma-today-card { display: flex; flex-direction: column; background: radial-gradient(ellipse at 5% 2%,#d5bb6621,transparent 42%),var(--launch-surface); }
+.khatma-today-card .companion-panel-head { margin-bottom: 22px; }
+.khatma-daily-target { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 0 0 7px; color: var(--launch-accent); }
+.khatma-daily-target strong { font: 800 clamp(1.85rem,4vw,3rem)/1.25 var(--launch-kufi); }
+.khatma-daily-target span { color: var(--launch-soft); font: 700 .84rem/1.5 var(--launch-kufi); }
+.khatma-daily-target.is-done strong { color: #e7d296; font-size: clamp(1.35rem,3vw,2rem); }
+.khatma-day-progress { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; margin: 8px 0 17px; }
+.khatma-day-progress .daily-progress { width: 100%; height: 9px; }
+.khatma-day-progress > span { color: var(--launch-soft); white-space: nowrap; font: 700 .72rem/1.5 var(--launch-kufi); }
+.khatma-reading-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: auto; }
+.khatma-reading-actions > .primary-cta { min-height: 46px; border-radius: 999px; }
+.khatma-reading-actions .reader-actions { margin: 0; }
+.khatma-reading-actions .reader-actions button { min-height: 43px; }
+.khatma-options .companion-panel-head { align-items: flex-start; }
+.khatma-options .companion-panel-head h2 { font-size: clamp(1.42rem,2.5vw,1.8rem); }
+.khatma-options .chips { gap: 7px; }
+.khatma-options .chips button { min-height: 43px; padding-inline: 12px; }
+.khatma-estimate { margin: 14px 0; padding: 11px 13px; border-inline-start: 2px solid var(--launch-accent); border-radius: 9px; background: color-mix(in srgb,var(--launch-raised) 68%,transparent); }
+.khatma-estimate strong { color: var(--launch-text); }
+.khatma-options > .primary-cta { min-height: 46px; border-radius: 999px; }
+.khatma-plan-summary { display: grid; gap: 9px; margin: 16px 0; }
+.khatma-plan-summary > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--launch-line); border-radius: 12px; background: color-mix(in srgb,var(--launch-raised) 52%,transparent); }
+.khatma-plan-summary span { color: var(--launch-soft); font: 700 .8rem/1.5 var(--launch-kufi); }
+.khatma-plan-summary strong { color: var(--launch-text); font: 800 .9rem/1.5 var(--launch-kufi); }
+.khatma-options > .detail-btn { min-height: 44px; border-radius: 999px; }
+.khatma-reset { margin-top: 13px; border-top: 1px solid var(--launch-line); padding-top: 9px; }
+.khatma-reset summary { min-height: 42px; color: var(--launch-soft); cursor: pointer; font: 700 .78rem/1.5 var(--launch-kufi); }
+.khatma-reset p { color: var(--launch-soft); font: 600 .78rem/1.7 var(--launch-kufi); }
+.khatma-reset .detail-btn { min-height: 42px; border-radius: 999px; }
+@media (any-hover:hover) and (any-pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .khatma-hero-action:hover { transform: translateY(-2px); }
+}
+@media (max-width: 760px) {
+  .khatma-layout { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .khatma-scene-copy { width: min(67%,590px); }
+  .khatma-scene-progress { width: clamp(155px,25vw,210px); min-height: 186px; }
+}
+@media (max-width: 560px) {
+  .khatma-journey .khatma-scene { min-height: 0; align-items: end; padding: 18px 15px; border-radius: 21px; gap: 8px; }
+  .khatma-journey .khatma-scene::before { background-position: 38% center; background-image: linear-gradient(90deg,#09271feF 0%,#09271fdc 45%,#09271fa8 100%),linear-gradient(0deg,#09271fbb,transparent 76%),var(--scene-mushaf); background-size: cover; }
+  .khatma-scene-copy { width: auto; max-width: none; flex: 1; }
+  .khatma-journey .khatma-scene h1 { max-width: 12ch; margin: 5px 0 7px; font-size: clamp(2rem,8.3vw,2.75rem); }
+  .khatma-journey .khatma-scene-copy > p:not(.launch-kicker) { font-size: .79rem; line-height: 1.65; }
+  .khatma-hero-action { min-height: 42px; padding: 7px 12px; font-size: .76rem; }
+  .khatma-scene-progress { width: 94px; min-height: 0; gap: 5px; padding: 8px 5px; border-radius: 17px; }
+  .khatma-scene-progress .khatma-meter { inline-size: 70px; padding: 4px; }
+  .khatma-scene-progress .khatma-meter-face { gap: 0; }
+  .khatma-scene-progress .khatma-meter-face svg { width: 15px; height: 15px; }
+  .khatma-scene-progress .khatma-meter-face b { font-size: .76rem; }
+  .khatma-scene-progress > div:last-child { font-size: .6rem; }
+  .khatma-scene-progress strong { font-size: .62rem; }
+  .khatma-scene-progress small { display: none; }
+  .khatma-layout > .companion-panel { padding: 15px 13px; border-radius: 19px; }
+  .khatma-today-card .companion-panel-head { margin-bottom: 12px; }
+  .khatma-daily-target strong { font-size: 1.8rem; }
+  .khatma-reading-actions { align-items: stretch; }
+  .khatma-reading-actions > .primary-cta { flex: 1 1 100%; }
+  .khatma-reading-actions .reader-actions { justify-content: center; }
+  .khatma-options .chips { gap: 6px; }
+  .khatma-options .chips button { padding-inline: 10px; font-size: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .khatma-hero-action { transition: none; }
+  .khatma-hero-action:hover { transform: none; }
+}
+
 .study-rail-pages { display: none; }
 .ward-complete .daily-icon, .routine-finish .daily-icon { color: var(--launch-accent); animation: companion-pop .32s ease-out; }
 @media (max-width: 670px) {
@@ -1953,3 +2060,20 @@ html[data-effects="reduced"] .meethaq-app :where(*, *::before, *::after) {
 }
 html[data-effects="reduced"] .meethaq-app [data-glass-active] { transform:none !important; }
 html[data-effects="reduced"] .meethaq-app [data-reveal] { opacity:1 !important; }
+
+/* Final Khatma overrides: keep the updated layout ahead of legacy scene rules. */
+.khatma-layout.is-planning { grid-template-columns:minmax(0,1fr); }
+.khatma-journey .khatma-scene-copy { width:min(62%,590px); max-width:590px; }
+.khatma-journey .khatma-layout > .companion-panel { min-width:0; }
+.khatma-journey .khatma-reading-actions .reader-actions { display:flex; flex-wrap:wrap; }
+.khatma-journey .khatma-reading-actions .reader-actions button { min-height:42px; }
+@media (max-width:760px) {
+  .khatma-journey .khatma-scene-copy { width:min(67%,590px); }
+}
+@media (max-width:620px) {
+  .khatma-journey .khatma-scene { min-height:0; align-items:end; padding:18px 15px; }
+  .khatma-journey .khatma-scene-copy { width:auto; max-width:none; flex:1; }
+  .khatma-journey .khatma-scene::before { background-position:38% center; }
+  .khatma-journey .khatma-scene-progress { width:88px; }
+  .khatma-journey .khatma-layout { grid-template-columns:minmax(0,1fr); }
+}

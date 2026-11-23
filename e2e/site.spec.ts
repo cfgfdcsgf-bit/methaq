@@ -163,6 +163,34 @@ test("Ramadan sections keep their full-width layout instead of inheriting card-g
   expect(curatedWidth).toBeGreaterThan(mainWidth * 0.8);
 });
 
+test("khatma page leads with today's reading and fits a mobile viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    const now = new Date();
+    const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86_400_000);
+    localStorage.setItem("meethaq-khatma-v2", JSON.stringify({ days: 30, read: 50, start: day, end: day + 29, day, baseline: 50 }));
+  });
+  await page.goto("/khatma");
+  await expect(page.getByRole("heading", { name: "رحلتك مع القرآن", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ورد اليوم" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "ورد اليوم" }).getByRole("link", { name: "ابدأ القراءة" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "تغيير مدة الختمة" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: "temp/khatma-mobile-review.png", fullPage: true });
+  const daily = page.getByRole("region", { name: "ورد اليوم" });
+  await daily.getByRole("button", { name: "تسجيل صفحة مقروءة" }).click();
+  await expect(daily).toContainText("١ من ١٩ صفحة");
+  await daily.getByRole("button", { name: "التراجع عن صفحة" }).click();
+  await expect(daily).toContainText("٠ من ١٩ صفحة");
+  await page.getByRole("button", { name: "تغيير مدة الختمة" }).click();
+  await page.getByRole("button", { name: /١٥ يومًا/ }).click();
+  await page.getByRole("button", { name: "حفظ المدة الجديدة" }).click();
+  await expect(page.locator(".khatma-plan-summary")).toContainText("١٥ يومًا");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: "temp/khatma-desktop-review.png", fullPage: true });
+});
+
 async function seedVerifiedAccountAndLogin(page: import("@playwright/test").Page, email: string, password: string) {
   const connectionString = process.env.MEETHAQ_E2E_DATABASE_URL;
   if (!connectionString) throw new Error("Browser account tests require the isolated PostgreSQL database.");
